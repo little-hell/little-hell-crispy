@@ -31,7 +31,7 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#include "opl.h"
+#include "libs/opl/opl.h"
 #include "midifile.h"
 
 // #define OPL_MIDI_DEBUG
@@ -436,7 +436,7 @@ static void ReleaseVoice(int index)
     voice->note = 0;
 
     double_voice = voice->current_instr_voice != 0;
-    
+
     // Remove from alloced list.
 
     voice_alloced_num--;
@@ -609,7 +609,7 @@ static void InitVoices(void)
     int i;
 
     // Start with an empty free list.
-    
+
     voice_free_num = num_opl_voices;
     voice_alloced_num = 0;
 
@@ -1172,7 +1172,7 @@ static void AllNotesOff(opl_channel_data_t *channel, unsigned int param)
             // Finished with this voice now.
 
             ReleaseVoice(i);
-            
+
             i--;
         }
     }

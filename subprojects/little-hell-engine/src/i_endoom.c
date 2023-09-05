@@ -22,12 +22,12 @@
 #include "doomtype.h"
 #include "i_video.h"
 
-#include "txt_main.h"
+#include "libs/textscreen/txt_main.h"
 
 #define ENDOOM_W 80
 #define ENDOOM_H 25
 
-// 
+//
 // Displays the text mode ending screen after the game quits
 //
 

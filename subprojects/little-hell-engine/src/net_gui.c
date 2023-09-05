@@ -15,7 +15,7 @@
 //
 //  * The client waiting screen when we are waiting for the server to
 //    start the game.
-//   
+//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +35,7 @@
 #include "net_query.h"
 #include "net_server.h"
 
-#include "textscreen.h"
+#include "libs/textscreen/textscreen.h"
 
 static txt_window_t *window;
 static int old_max_players;
@@ -269,10 +269,10 @@ static void CheckSHA1Sums(void)
     }
 
     correct_wad = memcmp(net_local_wad_sha1sum,
-                         net_client_wait_data.wad_sha1sum, 
+                         net_client_wait_data.wad_sha1sum,
                          sizeof(sha1_digest_t)) == 0;
     correct_deh = memcmp(net_local_deh_sha1sum,
-                         net_client_wait_data.deh_sha1sum, 
+                         net_client_wait_data.deh_sha1sum,
                          sizeof(sha1_digest_t)) == 0;
     same_freedoom = net_client_wait_data.is_freedoom == net_local_is_freedoom;
 
@@ -292,7 +292,7 @@ static void CheckSHA1Sums(void)
     {
         printf("Warning: Mixing Freedoom with non-Freedoom\n");
         printf("Local: %u  Server: %i\n",
-               net_local_is_freedoom, 
+               net_local_is_freedoom,
                net_client_wait_data.is_freedoom);
     }
 
@@ -406,7 +406,7 @@ void NET_WaitForLaunch(void)
     TXT_SetColor(TXT_COLOR_BRIGHT_GREEN, 249, 227, 0);  // 0xF9, 0xE3, 0x00
     TXT_SetColor(TXT_COLOR_CYAN, 220, 153, 0);          // 0xDC, 0x99, 0x00
     TXT_SetColor(TXT_COLOR_BRIGHT_CYAN, 76, 160, 223);  // 0x4C, 0xA0, 0xDF
-    
+
     I_InitWindowIcon();
 
     ParseCommandLineArgs();

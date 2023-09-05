@@ -47,8 +47,12 @@ game_source_files = files(
     'sounds.c',
     's_sound.c',
     'statdump.c',
-    'hud' / 'widget.c',
-    'hud' / 'statusbar.c',
+    'st_lib.c',
+    'st_stuff.c',
+    'hu_lib.c',
+    'hu_stuff.c',
+    #'hud' / 'widget.c',
+    #'hud' / 'statusbar.c',
     'wi_stuff.c'
 )
 
@@ -61,11 +65,11 @@ executable('my-little-hell-example-game',
     dependencies: littlehell_dep 
 )
 
-run_target('clang-tidy',
-  command : 'scripts/clang-tidy.sh')
+#run_target('clang-tidy',
+#  command : 'scripts/clang-tidy.sh')
 
-run_target('clang-format',
-  command : 'scripts/clang-format.sh')
+#run_target('clang-format',
+#  command : 'scripts/clang-format.sh')
 
-run_target('cppcheck',
-  command : 'scripts/cppcheck.sh')
+#run_target('cppcheck',
+#  command : 'scripts/cppcheck.sh')
