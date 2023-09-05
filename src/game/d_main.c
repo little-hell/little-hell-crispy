@@ -27,7 +27,6 @@
 #include <time.h> // [crispy] time_t, time(), struct tm, localtime()
 
 #include "config.h"
-#include "deh_main.h"
 #include "doomdef.h"
 #include "doomstat.h"
 
@@ -142,11 +141,11 @@ void D_CheckNetGame(void);
 void D_ProcessEvents (void)
 {
     event_t*	ev;
-	
+
     // IF STORE DEMO, DO NOT ACCEPT INPUT
     if (storedemo)
         return;
-	
+
     while ((ev = D_PopEvent()) != NULL)
     {
 	if (M_Responder (ev))
@@ -177,9 +176,9 @@ boolean D_Display (void)
     int				y;
     boolean			wipe;
     boolean			redrawsbar;
-		
+
     redrawsbar = false;
-    
+
     // change the view size if needed
     if (setsizeneeded)
     {
@@ -199,7 +198,7 @@ boolean D_Display (void)
 
     if (gamestate == GS_LEVEL && gametic)
 	HU_Erase();
-    
+
     // do buffered drawing
     switch (gamestate)
     {
@@ -232,10 +231,10 @@ boolean D_Display (void)
 	D_PageDrawer ();
 	break;
     }
-    
+
     // draw buffered stuff to screen
     I_UpdateNoBlit ();
-    
+
     // draw the view directly
     if (gamestate == GS_LEVEL && (!automapactive || crispy->automapoverlay) && gametic)
     {
@@ -250,11 +249,11 @@ boolean D_Display (void)
     // the HUD is drawn on top of everything else
     if (gamestate == GS_LEVEL && gametic && !(automapactive && crispy->automapoverlay))
 	HU_Drawer ();
-    
+
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
 #ifndef CRISPY_TRUECOLOR
-	I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+	I_SetPalette (W_CacheLumpName ("PLAYPAL",PU_CACHE));
 #else
 	I_SetPalette (0);
 #endif
@@ -290,7 +289,7 @@ boolean D_Display (void)
     viewactivestate = viewactive;
     inhelpscreensstate = inhelpscreens;
     oldgamestate = wipegamestate = gamestate;
-    
+
     // [crispy] in automap overlay mode,
     // draw the automap and HUD on top of everything else
     if (automapactive && crispy->automapoverlay)
@@ -327,7 +326,7 @@ boolean D_Display (void)
 	else
 	    y = (viewwindowy >> crispy->hires)+4;
 	V_DrawPatchDirect((viewwindowx >> crispy->hires) + ((scaledviewwidth >> crispy->hires) - 68) / 2 - WIDESCREENDELTA, y,
-                          W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE));
+                          W_CacheLumpName ("M_PAUSE", PU_CACHE));
     }
 
 
@@ -346,11 +345,11 @@ void EnableLoadingDisk(void) // [crispy] un-static
     {
         if (M_CheckParm("-cdrom") > 0)
         {
-            disk_lump_name = DEH_String("STCDROM");
+            disk_lump_name = "STCDROM";
         }
         else
         {
-            disk_lump_name = DEH_String("STDISK");
+            disk_lump_name = "STDISK";
         }
 
         V_EnableLoadingDisk(disk_lump_name,
@@ -496,8 +495,8 @@ boolean D_GrabMouseCallback(void)
     if (drone)
         return false;
 
-    // when menu is active or game is paused, release the mouse 
- 
+    // when menu is active or game is paused, release the mouse
+
     if (menuactive || paused)
         return false;
 
@@ -680,11 +679,11 @@ void D_DoAdvanceDemo (void)
     /*
     if (gameversion == exe_ultimate || gameversion == exe_final)
     */
-    if (W_CheckNumForName(DEH_String("demo4")) >= 0)
+    if (W_CheckNumForName("demo4") >= 0)
       demosequence = (demosequence+1)%7;
     else
       demosequence = (demosequence+1)%6;
-    
+
     switch (demosequence)
     {
       case 0:
@@ -693,29 +692,29 @@ void D_DoAdvanceDemo (void)
 	else
 	    pagetic = 170;
 	gamestate = GS_DEMOSCREEN;
-	pagename = DEH_String("TITLEPIC");
+	pagename = "TITLEPIC";
 	if ( gamemode == commercial )
 	  S_StartMusic(mus_dm2ttl);
 	else
 	  S_StartMusic (mus_intro);
 	break;
       case 1:
-	G_DeferedPlayDemo(DEH_String("demo1"));
+	G_DeferedPlayDemo("demo1");
 	break;
       case 2:
 	pagetic = 200;
 	gamestate = GS_DEMOSCREEN;
-	pagename = DEH_String("CREDIT");
+	pagename = "CREDIT";
 	break;
       case 3:
-	G_DeferedPlayDemo(DEH_String("demo2"));
+	G_DeferedPlayDemo("demo2");
 	break;
       case 4:
 	gamestate = GS_DEMOSCREEN;
 	if ( gamemode == commercial)
 	{
 	    pagetic = TICRATE * 11;
-	    pagename = DEH_String("TITLEPIC");
+	    pagename = "TITLEPIC";
 	    S_StartMusic(mus_dm2ttl);
 	}
 	else
@@ -723,17 +722,17 @@ void D_DoAdvanceDemo (void)
 	    pagetic = 200;
 
 	    if (gameversion >= exe_ultimate)
-	      pagename = DEH_String("CREDIT");
+	      pagename = "CREDIT";
 	    else
-	      pagename = DEH_String("HELP2");
+	      pagename = "HELP2";
 	}
 	break;
       case 5:
-	G_DeferedPlayDemo(DEH_String("demo3"));
+	G_DeferedPlayDemo("demo3");
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
-	G_DeferedPlayDemo(DEH_String("demo4"));
+	G_DeferedPlayDemo("demo4");
 	break;
     }
 
@@ -743,7 +742,7 @@ void D_DoAdvanceDemo (void)
         && W_CheckNumForName("titlepic") < 0)
     {
         // [crispy] use DMENUPIC instead of TITLEPIC, it's awesome
-        pagename = DEH_String("DMENUPIC");
+        pagename = "DMENUPIC";
     }
 }
 
@@ -808,7 +807,7 @@ static const char *banners[] =
 //
 // Get game name: if the startup banner has been replaced, use that.
 // Otherwise, use the name given
-// 
+//
 
 static char *GetGameName(const char *gamename)
 {
@@ -819,7 +818,7 @@ static char *GetGameName(const char *gamename)
         const char *deh_sub;
         // Has the banner been replaced?
 
-        deh_sub = DEH_String(banners[i]);
+        deh_sub = banners[i];
 
         if (deh_sub != banners[i])
         {
@@ -838,7 +837,7 @@ static char *GetGameName(const char *gamename)
                 I_Error("GetGameName: Failed to allocate new string");
             }
             version = G_VanillaVersionCode();
-            DEH_snprintf(deh_gamename, gamename_size, banners[i],
+            M_snprintf(deh_gamename, gamename_size, banners[i],
                          version / 100, version % 100);
 
             while (deh_gamename[0] != '\0' && isspace(deh_gamename[0]))
@@ -896,10 +895,10 @@ static void SetMissionForPackName(const char *pack_name)
 
 void D_IdentifyVersion(void)
 {
-    // gamemission is set up by the D_FindIWAD function.  But if 
-    // we specify '-iwad', we have to identify using 
+    // gamemission is set up by the D_FindIWAD function.  But if
+    // we specify '-iwad', we have to identify using
     // IdentifyIWADByName.  However, if the iwad does not match
-    // any known IWAD name, we may have a dilemma.  Try to 
+    // any known IWAD name, we may have a dilemma.  Try to
     // identify by its contents.
 
     if (gamemission == none)
@@ -912,7 +911,7 @@ void D_IdentifyVersion(void)
             {
                 gamemission = doom2;
                 break;
-            } 
+            }
             else if (!strncasecmp(lumpinfo[i]->name, "E1M1", 8))
             {
                 gamemission = doom;
@@ -939,7 +938,7 @@ void D_IdentifyVersion(void)
             // Ultimate Doom
 
             gamemode = retail;
-        } 
+        }
         else if (W_CheckNumForName("E3M1") > 0)
         {
             gamemode = registered;
@@ -1021,7 +1020,7 @@ static void D_SetGameDescription(void)
         }
         else if (logical_gamemission == pack_plut)
         {
-            gamedescription = GetGameName("DOOM 2: Plutonia Experiment"); 
+            gamedescription = GetGameName("DOOM 2: Plutonia Experiment");
         }
         else if (logical_gamemission == pack_tnt)
         {
@@ -1057,7 +1056,7 @@ static boolean D_AddFile(char *filename)
 }
 
 // Copyright message banners
-// Some dehacked mods replace these.  These are only displayed if they are 
+// Some dehacked mods replace these.  These are only displayed if they are
 // replaced by dehacked.
 
 static const char *copyright_banners[] =
@@ -1089,7 +1088,7 @@ void PrintDehackedBanners(void)
     {
         const char *deh_s;
 
-        deh_s = DEH_String(copyright_banners[i]);
+        deh_s = copyright_banners[i];
 
         if (deh_s != copyright_banners[i])
         {
@@ -1106,7 +1105,7 @@ void PrintDehackedBanners(void)
     }
 }
 
-static struct 
+static struct
 {
     const char *description;
     const char *cmdline;
@@ -1136,11 +1135,11 @@ static void InitGameVersion(void)
     int i;
     boolean status;
 
-    //! 
+    //!
     // @arg <version>
     // @category compat
     //
-    // Emulate a specific version of Doom.  Valid values are "1.2", 
+    // Emulate a specific version of Doom.  Valid values are "1.2",
     // "1.666", "1.7", "1.8", "1.9", "ultimate", "final", "final2",
     // "hacx" and "chex".
     //
@@ -1157,8 +1156,8 @@ static void InitGameVersion(void)
                 break;
             }
         }
-        
-        if (gameversions[i].description == NULL) 
+
+        if (gameversions[i].description == NULL)
         {
             printf("Supported game versions:\n");
 
@@ -1167,7 +1166,7 @@ static void InitGameVersion(void)
                 printf("\t%s (%s)\n", gameversions[i].cmdline,
                         gameversions[i].description);
             }
-            
+
             I_Error("Unknown game version '%s'", myargv[p+1]);
         }
     }
@@ -1256,7 +1255,7 @@ static void InitGameVersion(void)
     {
         deathmatch = 1;
     }
-    
+
     // The original exe does not support retail - 4th episode not supported
 
     if (gameversion < exe_ultimate && gamemode == retail)
@@ -1304,7 +1303,7 @@ static void D_Endoom(void)
         return;
     }
 
-    endoom = W_CacheLumpName(DEH_String("ENDOOM"), PU_STATIC);
+    endoom = W_CacheLumpName("ENDOOM", PU_STATIC);
 
     I_Endoom(endoom);
 }
@@ -1510,7 +1509,7 @@ void D_DoomMain (void)
     //
     // Disable monsters.
     //
-	
+
     nomonsters = M_CheckParm ("-nomonsters");
 
     //!
@@ -1575,8 +1574,8 @@ void D_DoomMain (void)
 	deathmatch = 3;
 
     if (devparm)
-	DEH_printf(D_DEVSTR);
-    
+	_printf(D_DEVSTR);
+
     // find which dir to use for config files
 
 #ifdef _WIN32
@@ -1616,26 +1615,26 @@ void D_DoomMain (void)
     if ( (p=M_CheckParm ("-turbo")) )
     {
 	int     scale = 200;
-	
+
 	if (p<myargc-1)
 	    scale = atoi (myargv[p+1]);
 	if (scale < 10)
 	    scale = 10;
 	if (scale > 400)
 	    scale = 400;
-        DEH_printf("turbo scale: %i%%\n", scale);
+        printf("turbo scale: %i%%\n", scale);
 	forwardmove[0] = forwardmove[0]*scale/100;
 	forwardmove[1] = forwardmove[1]*scale/100;
 	sidemove[0] = sidemove[0]*scale/100;
 	sidemove[1] = sidemove[1]*scale/100;
     }
-    
+
     // init subsystems
-    DEH_printf("V_Init: allocate screens.\n");
+    printf("V_Init: allocate screens.\n");
     V_Init ();
 
     // Load configuration files before initialising other subsystems.
-    DEH_printf("M_LoadDefaults: Load system defaults.\n");
+    printf("M_LoadDefaults: Load system defaults.\n");
     M_SetConfigFilenames("default.cfg", PROGRAM_PREFIX "doom.cfg");
     D_BindVariables();
     M_LoadDefaults();
@@ -1656,7 +1655,7 @@ void D_DoomMain (void)
 
     modifiedgame = false;
 
-    DEH_printf("W_Init: Init WADfiles.\n");
+    printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
     numiwadlumps = numlumps;
 
@@ -1826,7 +1825,7 @@ void D_DoomMain (void)
 	    }
 	    else
 	    {
-		DEH_snprintf(file, sizeof(file), "%s.wad", myargv[p+1]);
+		M_snprintf(file, sizeof(file), "%s.wad", myargv[p+1]);
 	    }
 
 	    merged = W_MergeDump(file);
@@ -1939,7 +1938,7 @@ void D_DoomMain (void)
         }
         else
         {
-            DEH_snprintf(file, sizeof(file), "%s.lmp", myargv[p+1]);
+            M_snprintf(file, sizeof(file), "%s.lmp", myargv[p+1]);
         }
 
         free(uc_filename);
@@ -2070,17 +2069,17 @@ void D_DoomMain (void)
 	    "dphoof","bfgga0","heada1","cybra1","spida1d1"
 	};
 	int i;
-	
+
 	if ( gamemode == shareware)
-	    I_Error(DEH_String("\nYou cannot -file with the shareware "
-			       "version. Register!"));
+	    I_Error("\nYou cannot -file with the shareware "
+			       "version. Register!");
 
 	// Check for fake IWAD with right name,
-	// but w/o all the lumps of the registered version. 
+	// but w/o all the lumps of the registered version.
 	if (gamemode == registered)
 	    for (i = 0;i < 23; i++)
 		if (W_CheckNumForName(name[i])<0)
-		    I_Error(DEH_String("\nThis is not the registered version."));
+		    I_Error("\nThis is not the registered version.");
     }
 
 // [crispy] disable meaningless warning, we always use "-merge" anyway
@@ -2098,7 +2097,7 @@ void D_DoomMain (void)
     I_PrintStartupBanner(gamedescription);
     PrintDehackedBanners();
 
-    DEH_printf("I_Init: Setting up machine state.\n");
+    printf("I_Init: Setting up machine state.\n");
     I_CheckIsScreensaver();
     I_InitTimer();
     I_InitJoystick();
@@ -2190,10 +2189,10 @@ void D_DoomMain (void)
 	startmap = 1;
 	autostart = true;
     }
-	
+
     timelimit = 0;
 
-    //! 
+    //!
     // @arg <n>
     // @category net
     // @vanilla
@@ -2309,7 +2308,7 @@ void D_DoomMain (void)
     //
 
     p = M_CheckParmWithArgs("-loadgame", 1);
-    
+
     if (p)
     {
         startloadgame = atoi(myargv[p+1]);
@@ -2320,27 +2319,27 @@ void D_DoomMain (void)
         startloadgame = -1;
     }
 
-    DEH_printf("M_Init: Init miscellaneous info.\n");
+    printf("M_Init: Init miscellaneous info.\n");
     M_Init ();
 
-    DEH_printf("R_Init: Init DOOM refresh daemon - ");
+    printf("R_Init: Init DOOM refresh daemon - ");
     R_Init ();
 
-    DEH_printf("\nP_Init: Init Playloop state.\n");
+    printf("\nP_Init: Init Playloop state.\n");
     P_Init ();
 
-    DEH_printf("S_Init: Setting up sound.\n");
+    printf("S_Init: Setting up sound.\n");
     S_Init (sfxVolume * 8, musicVolume * 8);
 
-    DEH_printf("D_CheckNetGame: Checking network game status.\n");
+    printf("D_CheckNetGame: Checking network game status.\n");
     D_CheckNetGame ();
 
     PrintGameVersion();
 
-    DEH_printf("HU_Init: Setting up heads up display.\n");
+    printf("HU_Init: Setting up heads up display.\n");
     HU_Init ();
 
-    DEH_printf("ST_Init: Init status bar.\n");
+    printf("ST_Init: Init status bar.\n");
     ST_Init ();
 
     // If Doom II without a MAP01 lump, this is a store demo.
@@ -2353,7 +2352,7 @@ void D_DoomMain (void)
     if (M_CheckParmWithArgs("-statdump", 1))
     {
         I_AtExit(StatDump, true);
-        DEH_printf("External statistics registered.\n");
+        printf("External statistics registered.\n");
     }
 
     //!
@@ -2380,20 +2379,20 @@ void D_DoomMain (void)
 	D_DoomLoop ();  // never returns
     }
     crispy->demowarp = 0; // [crispy] we don't play a demo, so don't skip maps
-	
+
     p = M_CheckParmWithArgs("-timedemo", 1);
     if (p)
     {
 	G_TimeDemo (demolumpname);
 	D_DoomLoop ();  // never returns
     }
-	
+
     if (startloadgame >= 0)
     {
         M_StringCopy(file, P_SaveGameFile(startloadgame), sizeof(file));
 	G_LoadGame(file);
     }
-	
+
     if (gameaction != ga_loadgame )
     {
 	if (autostart || netgame)

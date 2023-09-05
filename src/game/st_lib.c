@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "deh_main.h"
 #include "doomdef.h"
 
 #include "z_zone.h"
@@ -47,8 +46,8 @@ patch_t*		sttminus;
 
 void STlib_init(void)
 {
-    if (W_CheckNumForName(DEH_String("STTMINUS")) >= 0)
-        sttminus = (patch_t *) W_CacheLumpName(DEH_String("STTMINUS"), PU_STATIC);
+    if (W_CheckNumForName("STTMINUS") >= 0)
+        sttminus = (patch_t *) W_CacheLumpName("STTMINUS"), PU_STATIC);
     else
         sttminus = NULL;
 }
@@ -75,7 +74,7 @@ STlib_initNum
 }
 
 
-// 
+//
 // A fairly efficient way to draw a number
 //  based on differences from the old number.
 // Note: worth the trouble?
@@ -88,11 +87,11 @@ STlib_drawNum
 
     int		numdigits = n->width;
     int		num = *n->num;
-    
+
     int		w = SHORT(n->p[0]->width);
     int		h = SHORT(n->p[0]->height);
     int		x = n->x;
-    
+
     int		neg;
 
     // [crispy] redraw only if necessary
@@ -111,7 +110,7 @@ STlib_drawNum
 	    num = -9;
 	else if (numdigits == 3 && num < -99)
 	    num = -99;
-	
+
 	num = -num;
     }
 

@@ -20,7 +20,6 @@
 
 #include "doomtype.h"
 
-#include "deh_str.h"
 #include "i_sound.h"
 #include "m_misc.h"
 #include "w_wad.h"
@@ -246,11 +245,11 @@ static int I_PCS_GetSfxLumpNum(sfxinfo_t* sfx)
 
     if (use_sfx_prefix)
     {
-        M_snprintf(namebuf, sizeof(namebuf), "dp%s", DEH_String(sfx->name));
+        M_snprintf(namebuf, sizeof(namebuf), "dp%s", sfx->name);
     }
     else
     {
-        M_StringCopy(namebuf, DEH_String(sfx->name), sizeof(namebuf));
+        M_StringCopy(namebuf, sfx->name, sizeof(namebuf));
     }
 
      // [crispy] make missing sounds non-fatal

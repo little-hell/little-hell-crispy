@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include "doomstat.h"
-#include "deh_main.h"
 #include "d_iwad.h"
 #include "m_argv.h"
 #include "m_config.h"

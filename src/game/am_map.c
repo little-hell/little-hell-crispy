@@ -19,8 +19,6 @@
 
 #include <stdio.h>
 
-#include "deh_main.h"
-
 #include "z_zone.h"
 #include "doomkeys.h"
 #include "doomdef.h"
@@ -95,7 +93,7 @@ extern boolean inhelpscreens; // [crispy]
 #define MAPUNIT (1<<MAPBITS)
 #define FRACTOMAPBITS (FRACBITS-MAPBITS)
 
-// [crispy] New radius to use with FRACTOMAPBITS, since orginal 
+// [crispy] New radius to use with FRACTOMAPBITS, since orginal
 // PLAYERRADIUS macro can't be used in this implementation.
 #define MAPPLAYERRADIUS (16*(1<<MAPBITS))
 
@@ -286,7 +284,7 @@ static int64_t 	m_h;
 
 // based on level size
 static fixed_t 	min_x;
-static fixed_t	min_y; 
+static fixed_t	min_y;
 static fixed_t 	max_x;
 static fixed_t  max_y;
 
@@ -448,20 +446,20 @@ void AM_findMinMaxBoundaries(void)
 
     min_x = min_y =  INT_MAX;
     max_x = max_y = -INT_MAX;
-  
+
     for (i=0;i<numvertexes;i++)
     {
 	if (vertexes[i].x < min_x)
 	    min_x = vertexes[i].x;
 	else if (vertexes[i].x > max_x)
 	    max_x = vertexes[i].x;
-    
+
 	if (vertexes[i].y < min_y)
 	    min_y = vertexes[i].y;
 	else if (vertexes[i].y > max_y)
 	    max_y = vertexes[i].y;
     }
-  
+
     // [crispy] cope with huge level dimensions which span the entire INT range
     max_w = (max_x >>= FRACTOMAPBITS) - (min_x >>= FRACTOMAPBITS);
     max_h = (max_y >>= FRACTOMAPBITS) - (min_y >>= FRACTOMAPBITS);
@@ -471,7 +469,7 @@ void AM_findMinMaxBoundaries(void)
 
     a = FixedDiv(f_w<<FRACBITS, max_w);
     b = FixedDiv(f_h<<FRACBITS, max_h);
-  
+
     min_scale_mtof = a < b ? a : b;
     max_scale_mtof = FixedDiv(f_h<<FRACBITS, 2*MAPPLAYERRADIUS);
 
@@ -530,7 +528,7 @@ void AM_changeWindowLoc(void)
 	next_m_x = m_x = max_x - m_w/2;
     else if (m_x + m_w/2 < min_x)
 	next_m_x = m_x = min_x - m_w/2;
-  
+
     if (m_y + m_h/2 > max_y)
 	next_m_y = m_y = max_y - m_h/2;
     else if (m_y + m_h/2 < min_y)
@@ -583,16 +581,16 @@ void AM_initVariables(void)
 }
 
 //
-// 
+//
 //
 void AM_loadPics(void)
 {
     int i;
     char namebuf[9];
-  
+
     for (i=0;i<10;i++)
     {
-	DEH_snprintf(namebuf, 9, "AMMNUM%d", i);
+	M_snprintf(namebuf, 9, "AMMNUM%d", i);
 	marknums[i] = W_CacheLumpName(namebuf, PU_STATIC);
     }
 
@@ -602,10 +600,10 @@ void AM_unloadPics(void)
 {
     int i;
     char namebuf[9];
-  
+
     for (i=0;i<10;i++)
     {
-	DEH_snprintf(namebuf, 9, "AMMNUM%d", i);
+	M_snprintf(namebuf, 9, "AMMNUM%d", i);
 	W_ReleaseLumpName(namebuf);
     }
 }
@@ -682,7 +680,7 @@ void AM_LevelInit(boolean reinit)
                 color_shades[color * NUMSHADES + shade] = colormaps[shade_index[shade]];
             }
         }
-		
+
         // [crispy] Make secret wall colors independent from PLAYPAL color indexes
         secretwallcolors = V_GetPaletteIndex(playpal, 255, 0, 255);
         revealedsecretwallcolors = V_GetPaletteIndex(playpal, 119, 255, 111);
@@ -850,9 +848,9 @@ AM_Responder
 	{
 		followplayer = !followplayer;
 		if (followplayer)
-			plr->message = DEH_String(AMSTR_FOLLOWON);
+			plr->message = AMSTR_FOLLOWON;
 		else
-			plr->message = DEH_String(AMSTR_FOLLOWOFF);
+			plr->message = AMSTR_FOLLOWOFF;
 	}
 	else
 	if (!followplayer && (ev->data2 || ev->data3))
@@ -926,29 +924,29 @@ AM_Responder
         {
             followplayer = !followplayer;
             if (followplayer)
-                plr->message = DEH_String(AMSTR_FOLLOWON);
+                plr->message = AMSTR_FOLLOWON;
             else
-                plr->message = DEH_String(AMSTR_FOLLOWOFF);
+                plr->message = AMSTR_FOLLOWOFF;
         }
         else if (key == key_map_grid)
         {
             grid = !grid;
             if (grid)
-                plr->message = DEH_String(AMSTR_GRIDON);
+                plr->message = AMSTR_GRIDON;
             else
-                plr->message = DEH_String(AMSTR_GRIDOFF);
+                plr->message = AMSTR_GRIDOFF;
         }
         else if (key == key_map_mark)
         {
             M_snprintf(buffer, sizeof(buffer), "%s %d",
-                       DEH_String(AMSTR_MARKEDSPOT), markpointnum);
+                       AMSTR_MARKEDSPOT, markpointnum);
             plr->message = buffer;
             AM_addMark();
         }
         else if (key == key_map_clearmark)
         {
             AM_clearMarks();
-            plr->message = DEH_String(AMSTR_MARKSCLEARED);
+            plr->message = AMSTR_MARKSCLEARED;
         }
         else if (key == key_map_overlay)
         {
@@ -957,17 +955,17 @@ AM_Responder
 
             crispy->automapoverlay = !crispy->automapoverlay;
             if (crispy->automapoverlay)
-                plr->message = DEH_String(AMSTR_OVERLAYON);
+                plr->message = AMSTR_OVERLAYON;
             else
-                plr->message = DEH_String(AMSTR_OVERLAYOFF);
+                plr->message = AMSTR_OVERLAYOFF;
         }
         else if (key == key_map_rotate)
         {
             crispy->automaprotate = !crispy->automaprotate;
             if (crispy->automaprotate)
-                plr->message = DEH_String(AMSTR_ROTATEON);
+                plr->message = AMSTR_ROTATEON;
             else
-                plr->message = DEH_String(AMSTR_ROTATEOFF);
+                plr->message = AMSTR_ROTATEOFF;
         }
         else
         {
@@ -1079,7 +1077,7 @@ void AM_updateLightLev(void)
     //static int litelevels[] = { 0, 3, 5, 6, 6, 7, 7, 7 };
     static int litelevels[] = { 0, 4, 7, 10, 12, 14, 15, 15 };
     static int litelevelscnt = 0;
-   
+
     // Change light level
     if (amclock>nexttic)
     {
@@ -1156,16 +1154,16 @@ AM_clipMline
 	BOTTOM	=4,
 	TOP	=8
     };
-    
+
     register int	outcode1 = 0;
     register int	outcode2 = 0;
     register int	outside;
-    
+
     fpoint_t	tmp;
     int		dx;
     int		dy;
 
-    
+
 #define DOOUTCODE(oc, mx, my) \
     (oc) = 0; \
     if ((my) < 0) (oc) |= TOP; \
@@ -1173,7 +1171,7 @@ AM_clipMline
     if ((mx) < 0) (oc) |= LEFT; \
     else if ((mx) >= f_w) (oc) |= RIGHT;
 
-    
+
     // do trivial rejects and outcodes
     if (ml->a.y > m_y2)
 	outcode1 = TOP;
@@ -1184,7 +1182,7 @@ AM_clipMline
 	outcode2 = TOP;
     else if (ml->b.y < m_y)
 	outcode2 = BOTTOM;
-    
+
     if (outcode1 & outcode2)
 	return false; // trivially outside
 
@@ -1192,12 +1190,12 @@ AM_clipMline
 	outcode1 |= LEFT;
     else if (ml->a.x > m_x2)
 	outcode1 |= RIGHT;
-    
+
     if (ml->b.x < m_x)
 	outcode2 |= LEFT;
     else if (ml->b.x > m_x2)
 	outcode2 |= RIGHT;
-    
+
     if (outcode1 & outcode2)
 	return false; // trivially outside
 
@@ -1221,7 +1219,7 @@ AM_clipMline
 	    outside = outcode1;
 	else
 	    outside = outcode2;
-	
+
 	// clip to each side
 	if (outside & TOP)
 	{
@@ -1268,7 +1266,7 @@ AM_clipMline
 	    fl->b = tmp;
 	    DOOUTCODE(outcode2, fl->b.x, fl->b.y);
 	}
-	
+
 	if (outcode1 & outcode2)
 	    return false; // trivially outside
     }
@@ -1295,18 +1293,6 @@ AM_drawFline_Vanilla
     register int ax;
     register int ay;
     register int d;
-    
-    static int fuck = 0;
-
-    // For debugging only
-    if (      fl->a.x < 0 || fl->a.x >= f_w
-	   || fl->a.y < 0 || fl->a.y >= f_h
-	   || fl->b.x < 0 || fl->b.x >= f_w
-	   || fl->b.y < 0 || fl->b.y >= f_h)
-    {
-        DEH_fprintf(stderr, "fuck %d \r", fuck++);
-	return;
-    }
 
 #define PUTDOT_RAW(xx,yy,cc) fb[(yy)*f_w+(flipscreenwidth[xx])]=(cc)
 #ifndef CRISPY_TRUECOLOR
@@ -1766,7 +1752,7 @@ AM_rotate
     tmpx =
 	FixedMul(*x,finecosine[a>>ANGLETOFINESHIFT])
 	- FixedMul(*y,finesine[a>>ANGLETOFINESHIFT]);
-    
+
     *y   =
 	FixedMul(*x,finesine[a>>ANGLETOFINESHIFT])
 	+ FixedMul(*y,finecosine[a>>ANGLETOFINESHIFT]);
@@ -1842,7 +1828,7 @@ AM_drawLineCharacter
 
 	if (angle)
 	    AM_rotate(&l.b.x, &l.b.y, angle);
-	
+
 	l.b.x += x;
 	l.b.y += y;
 
@@ -1909,7 +1895,7 @@ void AM_drawPlayers(void)
 	    color = 246; // *close* to black
 	else
 	    color = their_colors[their_color];
-	
+
 	// [crispy] interpolate other player arrows
 	if (crispy->uncapped && leveltime > oldleveltime)
 	{

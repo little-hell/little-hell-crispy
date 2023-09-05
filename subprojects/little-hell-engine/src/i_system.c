@@ -34,7 +34,6 @@
 
 #include "config.h"
 
-#include "deh_str.h"
 #include "doomtype.h"
 #include "m_argv.h"
 #include "m_config.h"
@@ -196,7 +195,7 @@ void I_PrintStartupBanner(const char *gamedescription)
     I_PrintDivider();
     I_PrintBanner(gamedescription);
     I_PrintDivider();
-    
+
     printf(
     " " PACKAGE_NAME " is free software, covered by the GNU General Public\n"
     " License.  There is NO warranty; not even for MERCHANTABILITY or FITNESS\n"
@@ -206,7 +205,7 @@ void I_PrintStartupBanner(const char *gamedescription)
     I_PrintDivider();
 }
 
-// 
+//
 // I_ConsoleStdout
 //
 // Returns true if stdout is a real console, false if it is a file
@@ -249,8 +248,8 @@ void I_Quit (void)
     atexit_listentry_t *entry;
 
     // Run through all exit functions
- 
-    entry = exit_funcs; 
+
+    entry = exit_funcs;
 
     while (entry != NULL)
     {

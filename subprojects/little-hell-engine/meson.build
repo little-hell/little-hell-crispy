@@ -26,26 +26,6 @@ engine_source_files = files(
     src_dir / 'i_glob.c',
     src_dir / 'i_input.c',
 
-    src_dir / 'deh_ammo.c',
-    src_dir / 'deh_bexincl.c',
-    src_dir / 'deh_bexpars.c',
-    src_dir / 'deh_bexptr.c',
-    src_dir / 'deh_bexstr.c',
-    src_dir / 'deh_cheat.c',
-    src_dir / 'deh_defs.h',
-    src_dir / 'deh_doom.c',
-    src_dir / 'deh_frame.c',
-    src_dir / 'deh_io.c',
-    src_dir / 'deh_main.c',
-    src_dir / 'deh_mapping.c',
-    src_dir / 'deh_misc.c',
-    src_dir / 'deh_ptr.c',
-    src_dir / 'deh_sound.c',
-    src_dir / 'deh_str.c',
-    src_dir / 'deh_text.c',
-    src_dir / 'deh_thing.c',
-    src_dir / 'deh_weapon.c',
-
     src_dir / 'gusconf.c',
 
 

@@ -23,7 +23,6 @@
 #include "config.h"
 #include "doomstat.h"
 #include "doomtype.h"
-#include "deh_main.h"
 #include "m_misc.h"
 #include "p_extsaveg.h"
 #include "p_local.h"
