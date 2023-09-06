@@ -41,8 +41,6 @@
 #define BONUSADD	6
 
 
-
-
 // a weapon is found with two clip loads,
 // a big item has five clip loads
 int	maxammo[NUMAMMO] = {200, 50, 300, 50};
@@ -389,13 +387,13 @@ P_TouchSpecialThing
     {
 	// armor
       case SPR_ARM1:
-	if (!P_GiveArmor (player, green_armor_class))
+	if (!P_GiveArmor (player, DEFAULT_GREEN_ARMOR_CLASS))
 	    return;
 	player->message = GOTARMOR;
 	break;
 
       case SPR_ARM2:
-	if (!P_GiveArmor (player, blue_armor_class))
+	if (!P_GiveArmor (player, DEFAULT_BLUE_ARMOR_CLASS))
 	    return;
 	player->message = GOTMEGA;
 	break;
@@ -403,17 +401,17 @@ P_TouchSpecialThing
 	// bonus items
       case SPR_BON1:
 	player->health++;		// can go over 100%
-	if (player->health > max_health)
-	    player->health = max_health;
+	if (player->health > DEFAULT_MAX_HEALTH)
+	    player->health = DEFAULT_MAX_HEALTH;
 	player->mo->health = player->health;
 	player->message = GOTHTHBONUS;
 	break;
 
       case SPR_BON2:
 	player->armorpoints++;		// can go over 100%
-	if (player->armorpoints > max_armor && gameversion > exe_doom_1_2)
-	    player->armorpoints = max_armor;
-        // green_armor_class only applies to the green armor shirt;
+	if (player->armorpoints > DEFAULT_MAX_ARMOR && gameversion > exe_doom_1_2)
+	    player->armorpoints = DEFAULT_MAX_ARMOR;
+        // DEFAULT_GREEN_ARMOR_CLASS only applies to the green armor shirt;
         // for the armor helmets, armortype 1 is always used.
 	if (!player->armortype)
 	    player->armortype = 1;
@@ -421,9 +419,9 @@ P_TouchSpecialThing
 	break;
 
       case SPR_SOUL:
-	player->health += soulsphere_health;
-	if (player->health > max_soulsphere)
-	    player->health = max_soulsphere;
+	player->health += DEFAULT_SOULSPHERE_HEALTH;
+	if (player->health > DEFAULT_MAX_SOULSPHERE_HEALTH)
+	    player->health = DEFAULT_MAX_SOULSPHERE_HEALTH;
 	player->mo->health = player->health;
 	player->message = GOTSUPER;
 	if (gameversion > exe_doom_1_2)
@@ -433,7 +431,7 @@ P_TouchSpecialThing
       case SPR_MEGA:
 	if (gamemode != commercial)
 	    return;
-	player->health = megasphere_health;
+	player->health = DEFAULT_MEGASPHERE_HELATH;
 	player->mo->health = player->health;
         // We always give armor type 2 for the megasphere; dehacked only
         // affects the MegaArmor.

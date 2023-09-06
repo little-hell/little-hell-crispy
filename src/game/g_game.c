@@ -240,6 +240,7 @@ int		bodyqueslot;
 int             vanilla_savegame_limit = 1;
 int             vanilla_demo_limit = 1;
 
+
 // [crispy] store last cmd to track joins
 static ticcmd_t* last_cmd = NULL;
 
@@ -1459,13 +1460,13 @@ void G_PlayerReborn (int player)
 
     p->usedown = p->attackdown = true;	// don't do anything immediately
     p->playerstate = PST_LIVE;
-    p->health = deh_initial_health;     // Use dehacked value
+    p->health = DEFAULT_INITIAL_HEALTH;
     // [crispy] negative player health
     p->neghealth = p->health;
     p->readyweapon = p->pendingweapon = wp_pistol;
     p->weaponowned[wp_fist] = true;
     p->weaponowned[wp_pistol] = true;
-    p->ammo[am_clip] = deh_initial_bullets;
+    p->ammo[am_clip] = DEFAULT_INITIAL_BULLETS;
 
     for (i=0 ; i<NUMAMMO ; i++)
 	p->maxammo[i] = maxammo[i];

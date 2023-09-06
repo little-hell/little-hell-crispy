@@ -775,9 +775,9 @@ ST_Responder (event_t* ev)
 	if (plyr->cheats & CF_GODMODE)
 	{
 	  if (plyr->mo)
-	    plyr->mo->health = god_mode_health;
+	    plyr->mo->health = DEFAULT_GOD_MODE_HEALTH;
 
-	  plyr->health = god_mode_health;
+	  plyr->health = DEFAULT_GOD_MODE_HEALTH;
 	  plyr->message = STSTR_DQDON;
 	}
 	else
@@ -790,8 +790,8 @@ ST_Responder (event_t* ev)
       // 'fa' cheat for killer fucking arsenal
       else if (cht_CheckCheatSP(&cheat_ammonokey, ev->data2))
       {
-	plyr->armorpoints = idfa_armor;
-	plyr->armortype = idfa_armor_class;
+	plyr->armorpoints = DEFAULT_IDFA_ARMOR;
+	plyr->armortype = DEFAULT_IDFA_ARMOR_CLASS;
 
 	// [crispy] give backpack
 	GiveBackpack(true);
@@ -811,8 +811,8 @@ ST_Responder (event_t* ev)
       // 'kfa' cheat for key full ammo
       else if (cht_CheckCheatSP(&cheat_ammo, ev->data2))
       {
-	plyr->armorpoints = idkfa_armor;
-	plyr->armortype = idkfa_armor_class;
+	plyr->armorpoints = DEFAULT_IDKFA_ARMOR;
+	plyr->armortype = DEFAULT_IDKFA_ARMOR_CLASS;
 
 	// [crispy] give backpack
 	GiveBackpack(true);
@@ -1088,7 +1088,7 @@ ST_Responder (event_t* ev)
 	    {
 		plyr->ammo[i] = 0;
 	    }
-	    plyr->ammo[am_clip] = initial_bullets;
+	    plyr->ammo[am_clip] = default_initial_bullets;
 
 	    if (plyr->readyweapon > wp_pistol)
 	    {
