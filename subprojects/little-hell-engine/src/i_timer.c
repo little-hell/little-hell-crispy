@@ -29,9 +29,9 @@
 
 static Uint32 basetime = 0;
 static uint64_t basecounter = 0; // [crispy]
-static uint64_t basefreq = 0; // [crispy]
+static uint64_t basefreq = 0;    // [crispy]
 
-int  I_GetTime (void)
+int I_GetTime(void)
 {
     Uint32 ticks;
 
@@ -42,7 +42,7 @@ int  I_GetTime (void)
 
     ticks -= basetime;
 
-    return (ticks * TICRATE) / 1000;    
+    return (ticks * TICRATE) / 1000;
 }
 
 //
@@ -103,5 +103,5 @@ void I_InitTimer(void)
 
 fixed_t I_GetFracRealTime(void)
 {
-    return (int64_t)I_GetTimeMS() * TICRATE % 1000 * FRACUNIT / 1000;
+    return (int64_t) I_GetTimeMS() * TICRATE % 1000 * FRACUNIT / 1000;
 }

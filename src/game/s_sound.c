@@ -59,7 +59,7 @@
 static int stereo_swing;
 
 #define NORM_PRIORITY 64
-#define NORM_SEP 128
+#define NORM_SEP      128
 
 typedef struct
 {
@@ -141,11 +141,11 @@ void S_Init(int sfxVolume, int musicVolume)
     // (the maximum numer of sounds rendered
     // simultaneously) within zone memory.
     // [crispy] variable number of sound channels
-    channels = I_Realloc(NULL, snd_channels*sizeof(channel_t));
-    sobjs = I_Realloc(NULL, snd_channels*sizeof(degenmobj_t));
+    channels = I_Realloc(NULL, snd_channels * sizeof(channel_t));
+    sobjs = I_Realloc(NULL, snd_channels * sizeof(degenmobj_t));
 
     // Free all channels for use
-    for (i=0 ; i<snd_channels ; i++)
+    for (i = 0; i < snd_channels; i++)
     {
         channels[i].sfxinfo = 0;
     }
@@ -154,7 +154,7 @@ void S_Init(int sfxVolume, int musicVolume)
     mus_paused = 0;
 
     // Note that sounds have not been cached (yet).
-    for (i=1 ; i<NUMSFX ; i++)
+    for (i = 1; i < NUMSFX; i++)
     {
         S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
     }
@@ -205,7 +205,7 @@ static void S_StopChannel(int cnum)
 
         // check to see if other channels are playing the sound
 
-        for (i=0; i<snd_channels; i++)
+        for (i = 0; i < snd_channels; i++)
         {
             if (cnum != i && c->sfxinfo == channels[i].sfxinfo)
             {
@@ -235,7 +235,7 @@ void S_Start(void)
 
     // kill all playing sounds at start of level
     //  (trust me - a good idea)
-    for (cnum=0 ; cnum<snd_channels ; cnum++)
+    for (cnum = 0; cnum < snd_channels; cnum++)
     {
         if (channels[cnum].sfxinfo)
         {
@@ -245,12 +245,11 @@ void S_Start(void)
 
     // start new music for the level
     if (musicVolume) // [crispy] do not reset pause state at zero music volume
-    mus_paused = 0;
+        mus_paused = 0;
 
     if (gamemode == commercial)
     {
-        const int nmus[] =
-        {
+        const int nmus[] = {
             mus_messag,
             mus_ddtblu,
             mus_doom,
@@ -262,38 +261,36 @@ void S_Start(void)
             mus_ddtbl2,
         };
 
-        if ((gameepisode == 2 || gamemission == pack_nerve) &&
-            gamemap <= arrlen(nmus))
+        if ((gameepisode == 2 || gamemission == pack_nerve) && gamemap <= arrlen(nmus))
         {
             mnum = nmus[gamemap - 1];
         }
         else
-        mnum = mus_runnin + gamemap - 1;
+            mnum = mus_runnin + gamemap - 1;
     }
     else
     {
-        int spmus[]=
-        {
+        int spmus[] = {
             // Song - Who? - Where?
 
-            mus_e3m4,        // American     e4m1
-            mus_e3m2,        // Romero       e4m2
-            mus_e3m3,        // Shawn        e4m3
-            mus_e1m5,        // American     e4m4
-            mus_e2m7,        // Tim          e4m5
-            mus_e2m4,        // Romero       e4m6
-            mus_e2m6,        // J.Anderson   e4m7 CHIRON.WAD
-            mus_e2m5,        // Shawn        e4m8
-            mus_e1m9,        // Tim          e4m9
+            mus_e3m4, // American     e4m1
+            mus_e3m2, // Romero       e4m2
+            mus_e3m3, // Shawn        e4m3
+            mus_e1m5, // American     e4m4
+            mus_e2m7, // Tim          e4m5
+            mus_e2m4, // Romero       e4m6
+            mus_e2m6, // J.Anderson   e4m7 CHIRON.WAD
+            mus_e2m5, // Shawn        e4m8
+            mus_e1m9, // Tim          e4m9
         };
 
         if (gameepisode < 4 || gameepisode == 5) // [crispy] Sigil
         {
-            mnum = mus_e1m1 + (gameepisode-1)*9 + gamemap-1;
+            mnum = mus_e1m1 + (gameepisode - 1) * 9 + gamemap - 1;
         }
         else
         {
-            mnum = spmus[gamemap-1];
+            mnum = spmus[gamemap - 1];
 
             // [crispy] support dedicated music tracks for the 4th episode
             {
@@ -309,12 +306,12 @@ void S_Start(void)
 
     // [crispy] do not change music if not changing map (preserves IDMUS choice)
     {
-	const short curmap = (gameepisode << 8) + gamemap;
+        const short curmap = (gameepisode << 8) + gamemap;
 
-	if (prevmap == curmap || (nodrawers && singletics))
-	    return;
+        if (prevmap == curmap || (nodrawers && singletics))
+            return;
 
-	prevmap = curmap;
+        prevmap = curmap;
     }
 
     // [crispy] reset musinfo data at the start of a new map
@@ -327,7 +324,7 @@ void S_StopSound(mobj_t *origin)
 {
     int cnum;
 
-    for (cnum=0 ; cnum<snd_channels ; cnum++)
+    for (cnum = 0; cnum < snd_channels; cnum++)
     {
         if (channels[cnum].sfxinfo && channels[cnum].origin == origin)
         {
@@ -350,7 +347,7 @@ void S_UnlinkSound(mobj_t *origin)
 
     if (origin)
     {
-        for (cnum=0 ; cnum<snd_channels ; cnum++)
+        for (cnum = 0; cnum < snd_channels; cnum++)
         {
             if (channels[cnum].sfxinfo && channels[cnum].origin == origin)
             {
@@ -373,12 +370,12 @@ void S_UnlinkSound(mobj_t *origin)
 static int S_GetChannel(mobj_t *origin, sfxinfo_t *sfxinfo)
 {
     // channel number to use
-    int                cnum;
+    int cnum;
 
-    channel_t*        c;
+    channel_t *c;
 
     // Find an open channel
-    for (cnum=0 ; cnum<snd_channels ; cnum++)
+    for (cnum = 0; cnum < snd_channels; cnum++)
     {
         if (!channels[cnum].sfxinfo)
         {
@@ -395,7 +392,7 @@ static int S_GetChannel(mobj_t *origin, sfxinfo_t *sfxinfo)
     if (cnum == snd_channels)
     {
         // Look for lower priority
-        for (cnum=0 ; cnum<snd_channels ; cnum++)
+        for (cnum = 0; cnum < snd_channels; cnum++)
         {
             if (channels[cnum].sfxinfo->priority >= sfxinfo->priority)
             {
@@ -431,16 +428,16 @@ static int S_GetChannel(mobj_t *origin, sfxinfo_t *sfxinfo)
 // Otherwise, modifies parameters and returns 1.
 //
 
-static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source,
-                               int *vol, int *sep)
+static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep)
 {
-    fixed_t        approx_dist;
-    fixed_t        adx;
-    fixed_t        ady;
-    angle_t        angle;
+    fixed_t approx_dist;
+    fixed_t adx;
+    fixed_t ady;
+    angle_t angle;
 
     // [crispy] proper sound clipping in Doom 2 MAP08 and The Ultimate Doom E4M8 / Sigil E5M8
-    const boolean doom1map8 = (gamemap == 8 && ((gamemode != commercial && gameepisode < 4) || !crispy->soundfix));
+    const boolean doom1map8 =
+        (gamemap == 8 && ((gamemode != commercial && gameepisode < 4) || !crispy->soundfix));
 
     // calculate the distance to sound origin
     //  and clip it if necessary
@@ -448,7 +445,7 @@ static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source,
     ady = abs(listener->y - source->y);
 
     // From _GG1_ p.428. Appox. eucledian distance fast.
-    approx_dist = adx + ady - ((adx < ady ? adx : ady)>>1);
+    approx_dist = adx + ady - ((adx < ady ? adx : ady) >> 1);
 
     if (!doom1map8 && approx_dist > S_CLIPPING_DIST)
     {
@@ -456,10 +453,7 @@ static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source,
     }
 
     // angle of source to listener
-    angle = R_PointToAngle2(listener->x,
-                            listener->y,
-                            source->x,
-                            source->y);
+    angle = R_PointToAngle2(listener->x, listener->y, source->x, source->y);
 
     if (angle > listener->angle)
     {
@@ -487,16 +481,13 @@ static int S_AdjustSoundParams(mobj_t *listener, mobj_t *source,
             approx_dist = S_CLIPPING_DIST;
         }
 
-        *vol = 15+ ((snd_SfxVolume-15)
-                    *((S_CLIPPING_DIST - approx_dist)>>FRACBITS))
-            / S_ATTENUATOR;
+        *vol = 15 + ((snd_SfxVolume - 15) * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) /
+                        S_ATTENUATOR;
     }
     else
     {
         // distance effect
-        *vol = (snd_SfxVolume
-                * ((S_CLIPPING_DIST - approx_dist)>>FRACBITS))
-            / S_ATTENUATOR;
+        *vol = (snd_SfxVolume * ((S_CLIPPING_DIST - approx_dist) >> FRACBITS)) / S_ATTENUATOR;
     }
 
     return (*vol > 0);
@@ -564,15 +555,12 @@ void S_StartSound(void *origin_p, int sfx_id)
 
     // Check to see if it is audible,
     //  and if not, modify the params
-    if (origin && origin != players[displayplayer].mo && origin != players[displayplayer].so) // [crispy] weapon sound source
+    if (origin && origin != players[displayplayer].mo &&
+        origin != players[displayplayer].so) // [crispy] weapon sound source
     {
-        rc = S_AdjustSoundParams(players[displayplayer].mo,
-                                 origin,
-                                 &volume,
-                                 &sep);
+        rc = S_AdjustSoundParams(players[displayplayer].mo, origin, &volume, &sep);
 
-        if (origin->x == players[displayplayer].mo->x
-         && origin->y == players[displayplayer].mo->y)
+        if (origin->x == players[displayplayer].mo->x && origin->y == players[displayplayer].mo->y)
         {
             sep = NORM_SEP;
         }
@@ -590,18 +578,18 @@ void S_StartSound(void *origin_p, int sfx_id)
     // hacks to vary the sfx pitches
     if (sfx_id >= sfx_sawup && sfx_id <= sfx_sawhit)
     {
-        pitch += 8 - (M_Random()&15);
+        pitch += 8 - (M_Random() & 15);
     }
     else if (sfx_id != sfx_itemup && sfx_id != sfx_tink)
     {
-        pitch += 16 - (M_Random()&31);
+        pitch += 16 - (M_Random() & 31);
     }
     pitch = Clamp(pitch);
 
     // kill old sound
     if (!crispy->soundfull || origin || gamestate != GS_LEVEL)
     {
-    S_StopSound(origin);
+        S_StopSound(origin);
     }
 
     // try to find a channel
@@ -627,15 +615,14 @@ void S_StartSound(void *origin_p, int sfx_id)
     channels[cnum].handle = I_StartSound(sfx, cnum, volume, sep, channels[cnum].pitch);
 }
 
-void S_StartSoundOnce (void *origin_p, int sfx_id)
+void S_StartSoundOnce(void *origin_p, int sfx_id)
 {
     int cnum;
     const sfxinfo_t *const sfx = &S_sfx[sfx_id];
 
     for (cnum = 0; cnum < snd_channels; cnum++)
     {
-        if (channels[cnum].sfxinfo == sfx &&
-            channels[cnum].origin == origin_p)
+        if (channels[cnum].sfxinfo == sfx && channels[cnum].origin == origin_p)
         {
             return;
         }
@@ -685,16 +672,16 @@ void S_ResumeSound(void)
 
 void S_UpdateSounds(mobj_t *listener)
 {
-    int                audible;
-    int                cnum;
-    int                volume;
-    int                sep;
-    sfxinfo_t*        sfx;
-    channel_t*        c;
+    int audible;
+    int cnum;
+    int volume;
+    int sep;
+    sfxinfo_t *sfx;
+    channel_t *c;
 
     I_UpdateSound();
 
-    for (cnum=0; cnum<snd_channels; cnum++)
+    for (cnum = 0; cnum < snd_channels; cnum++)
     {
         c = &channels[cnum];
         sfx = c->sfxinfo;
@@ -723,12 +710,10 @@ void S_UpdateSounds(mobj_t *listener)
 
                 // check non-local sounds for distance clipping
                 //  or modify their params
-                if (c->origin && listener != c->origin && c->origin != players[displayplayer].so) // [crispy] weapon sound source
+                if (c->origin && listener != c->origin &&
+                    c->origin != players[displayplayer].so) // [crispy] weapon sound source
                 {
-                    audible = S_AdjustSoundParams(listener,
-                                                  c->origin,
-                                                  &volume,
-                                                  &sep);
+                    audible = S_AdjustSoundParams(listener, c->origin, &volume, &sep);
 
                     if (!audible)
                     {
@@ -754,8 +739,7 @@ void S_SetMusicVolume(int volume)
 {
     if (volume < 0 || volume > 127)
     {
-        I_Error("Attempt to set music volume at %d",
-                volume);
+        I_Error("Attempt to set music volume at %d", volume);
     }
 
     // [crispy] [JN] Fixed bug when music was hearable with zero volume
@@ -763,8 +747,7 @@ void S_SetMusicVolume(int volume)
     {
         S_PauseSound();
     }
-    else
-    if (!paused)
+    else if (!paused)
     {
         S_ResumeSound();
     }
@@ -799,33 +782,34 @@ void S_ChangeMusic(int musicnum, int looping)
 
     if (gamestate != GS_LEVEL)
     {
-	prevmap = -1;
+        prevmap = -1;
     }
     musinfo.current_item = -1;
 
     // [crispy] play no music if this is not the right map
     if (nodrawers && singletics)
-	return;
+        return;
 
     // [crispy] restart current music if IDMUS00 is entered
     if (looping == 2)
     {
-	music = mus_playing;
+        music = mus_playing;
     }
 
     // The Doom IWAD file has two versions of the intro music: d_intro
     // and d_introa.  The latter is used for OPL playback.
 
-    if (musicnum == mus_intro && (snd_musicdevice == SNDDEVICE_ADLIB
-                               || snd_musicdevice == SNDDEVICE_SB)
-        && W_CheckNumForName("D_INTROA") >= 0)
+    if (musicnum == mus_intro &&
+        (snd_musicdevice == SNDDEVICE_ADLIB || snd_musicdevice == SNDDEVICE_SB) &&
+        W_CheckNumForName("D_INTROA") >= 0)
     {
-        const int intro = W_GetNumForName("D_INTRO"),
-                  introa = W_GetNumForName("D_INTROA");
-        // [crispy] if D_INTRO is from a PWAD, and D_INTROA is from a different WAD file, play the former
-        if (W_IsIWADLump(lumpinfo[intro]) || (lumpinfo[intro]->wad_file == lumpinfo[introa]->wad_file))
+        const int intro = W_GetNumForName("D_INTRO"), introa = W_GetNumForName("D_INTROA");
+        // [crispy] if D_INTRO is from a PWAD, and D_INTROA is from a different WAD file, play the
+        // former
+        if (W_IsIWADLump(lumpinfo[intro]) ||
+            (lumpinfo[intro]->wad_file == lumpinfo[introa]->wad_file))
         {
-        musicnum = mus_introa;
+            musicnum = mus_introa;
         }
     }
 
@@ -852,14 +836,14 @@ void S_ChangeMusic(int musicnum, int looping)
     }
     else
     {
-      if (!music) // [crispy] restart current music if IDMUS00 is entered
-        music = &S_music[musicnum];
+        if (!music) // [crispy] restart current music if IDMUS00 is entered
+            music = &S_music[musicnum];
     }
 
     if (mus_playing == music)
     {
-      if (looping != 2) // [crispy] restart current music if IDMUS00 is entered
-        return;
+        if (looping != 2) // [crispy] restart current music if IDMUS00 is entered
+            return;
     }
 
     // shutdown old music
@@ -881,8 +865,8 @@ void S_ChangeMusic(int musicnum, int looping)
     {
         char name[9];
         M_snprintf(name, sizeof(name), "%s", lumpinfo[music->lumpnum]->name);
-        fprintf(stderr, "S_ChangeMusic: %s (%s)\n", name,
-                W_WadNameForLump(lumpinfo[music->lumpnum]));
+        fprintf(
+            stderr, "S_ChangeMusic: %s (%s)\n", name, W_WadNameForLump(lumpinfo[music->lumpnum]));
     }
 
     mus_playing = music;
@@ -890,14 +874,14 @@ void S_ChangeMusic(int musicnum, int looping)
     // [crispy] musinfo.items[0] is reserved for the map's default music
     if (!musinfo.items[0])
     {
-	musinfo.items[0] = music->lumpnum;
-	S_music[mus_musinfo].lumpnum = -1;
+        musinfo.items[0] = music->lumpnum;
+        S_music[mus_musinfo].lumpnum = -1;
     }
 }
 
 // [crispy] adapted from prboom-plus/src/s_sound.c:552-590
 
-void S_ChangeMusInfoMusic (int lumpnum, int looping)
+void S_ChangeMusInfoMusic(int lumpnum, int looping)
 {
     musicinfo_t *music;
 
@@ -907,20 +891,20 @@ void S_ChangeMusInfoMusic (int lumpnum, int looping)
     // [crispy] play no music if this is not the right map
     if (nodrawers && singletics)
     {
-	musinfo.current_item = lumpnum;
-	return;
+        musinfo.current_item = lumpnum;
+        return;
     }
 
     if (mus_playing && mus_playing->lumpnum == lumpnum)
     {
-	return;
+        return;
     }
 
     music = &S_music[mus_musinfo];
 
     if (music->lumpnum == lumpnum)
     {
-	return;
+        return;
     }
 
     S_StopMusic();
@@ -935,8 +919,11 @@ void S_ChangeMusInfoMusic (int lumpnum, int looping)
     {
         char name[9];
         M_snprintf(name, sizeof(name), "%s", lumpinfo[music->lumpnum]->name);
-        fprintf(stderr, "S_ChangeMusInfoMusic: %s (%s)\n", name,
-                W_WadNameForLump(lumpinfo[music->lumpnum]));
+        fprintf(
+            stderr,
+            "S_ChangeMusInfoMusic: %s (%s)\n",
+            name,
+            W_WadNameForLump(lumpinfo[music->lumpnum]));
     }
 
     mus_playing = music;
@@ -967,59 +954,58 @@ void S_StopMusic(void)
 }
 
 // [crispy] variable number of sound channels
-void S_UpdateSndChannels (int choice)
+void S_UpdateSndChannels(int choice)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < snd_channels; i++)
-	{
-		if (channels[i].sfxinfo)
-		{
-			S_StopChannel(i);
-		}
-	}
+    for (i = 0; i < snd_channels; i++)
+    {
+        if (channels[i].sfxinfo)
+        {
+            S_StopChannel(i);
+        }
+    }
 
-	if (choice)
-	{
-		snd_channels <<= 1;
-	}
-	else
-	{
-		snd_channels >>= 1;
-	}
+    if (choice)
+    {
+        snd_channels <<= 1;
+    }
+    else
+    {
+        snd_channels >>= 1;
+    }
 
-	if (snd_channels > 32)
-	{
-		snd_channels = 8;
-	}
-	else if (snd_channels < 8)
-	{
-		snd_channels = 32;
-	}
+    if (snd_channels > 32)
+    {
+        snd_channels = 8;
+    }
+    else if (snd_channels < 8)
+    {
+        snd_channels = 32;
+    }
 
-	channels = I_Realloc(channels, snd_channels * sizeof(channel_t));
-	sobjs = I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t));
+    channels = I_Realloc(channels, snd_channels * sizeof(channel_t));
+    sobjs = I_Realloc(sobjs, snd_channels * sizeof(degenmobj_t));
 
-	for (i = 0; i < snd_channels; i++)
-	{
-		channels[i].sfxinfo = 0;
-	}
+    for (i = 0; i < snd_channels; i++)
+    {
+        channels[i].sfxinfo = 0;
+    }
 }
 
-void S_UpdateStereoSeparation (void)
+void S_UpdateStereoSeparation(void)
 {
-	// [crispy] play all sound effects in mono
-	if (crispy->soundmono)
-	{
-		stereo_swing = 0;
-	}
-	else
-	if (crispy->fliplevels)
-	{
-		stereo_swing = -S_STEREO_SWING;
-	}
-	else
-	{
-		stereo_swing = S_STEREO_SWING;
-	}
+    // [crispy] play all sound effects in mono
+    if (crispy->soundmono)
+    {
+        stereo_swing = 0;
+    }
+    else if (crispy->fliplevels)
+    {
+        stereo_swing = -S_STEREO_SWING;
+    }
+    else
+    {
+        stereo_swing = S_STEREO_SWING;
+    }
 }

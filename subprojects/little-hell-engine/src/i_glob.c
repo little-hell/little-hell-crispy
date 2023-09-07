@@ -28,7 +28,7 @@
 // library that implements POSIX.
 #if defined(_MSC_VER)
 #include <win_opendir.h>
-#define S_ISDIR(m)      (((m)& S_IFMT) == S_IFDIR)
+#define S_ISDIR(m) (((m) &S_IFMT) == S_IFDIR)
 
 // If we're being built on a POSIX-compatible platform
 // (i.e Linux, macOS, or Windows using Cygwin/MSYS2
@@ -93,8 +93,7 @@ static void FreeStringList(char **globs, int num_globs)
     free(globs);
 }
 
-glob_t *I_StartMultiGlob(const char *directory, int flags,
-                         const char *glob, ...)
+glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob, ...)
 {
     char **globs;
     int num_globs;
@@ -253,8 +252,7 @@ static char *NextGlob(glob_t *glob)
         {
             return NULL;
         }
-    } while (IsDirectory(glob->directory, de)
-          || !MatchesAnyGlob(de->d_name, glob));
+    } while (IsDirectory(glob->directory, de) || !MatchesAnyGlob(de->d_name, glob));
 
     // Return the fully-qualified path, not just the bare filename.
     temp = M_StringJoin(glob->directory, DIR_SEPARATOR_S, de->d_name, NULL);
@@ -281,8 +279,7 @@ static void ReadAllFilenames(glob_t *glob)
         {
             break;
         }
-        glob->filenames = realloc(glob->filenames,
-                                  (glob->filenames_len + 1) * sizeof(char *));
+        glob->filenames = realloc(glob->filenames, (glob->filenames_len + 1) * sizeof(char *));
         glob->filenames[glob->filenames_len] = name;
         ++glob->filenames_len;
     }
@@ -299,7 +296,7 @@ static void SortFilenames(char **filenames, int len, int flags)
     }
     pivot = filenames[len - 1];
     left_len = 0;
-    for (i = 0; i < len-1; ++i)
+    for (i = 0; i < len - 1; ++i)
     {
         if ((flags & GLOB_FLAG_NOCASE) != 0)
         {

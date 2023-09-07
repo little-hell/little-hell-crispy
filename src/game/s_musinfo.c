@@ -37,10 +37,10 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define MAX_STRING_SIZE 64
-#define ASCII_COMMENT (';')
-#define ASCII_QUOTE (34)
-#define LUMP_SCRIPT 1
+#define MAX_STRING_SIZE  64
+#define ASCII_COMMENT    (';')
+#define ASCII_QUOTE      (34)
+#define LUMP_SCRIPT      1
 #define FILE_ZONE_SCRIPT 2
 
 // TYPES -------------------------------------------------------------------
@@ -103,16 +103,16 @@ static void OpenScript(const char *name, int type)
 {
     SC_Close();
     if (type == LUMP_SCRIPT)
-    {                           // Lump script
+    { // Lump script
         ScriptLumpNum = W_GetNumForName(name);
         ScriptBuffer = (char *) W_CacheLumpNum(ScriptLumpNum, PU_STATIC);
         ScriptSize = W_LumpLength(ScriptLumpNum);
         M_StringCopy(ScriptName, name, sizeof(ScriptName));
     }
     else if (type == FILE_ZONE_SCRIPT)
-    {                           // File script - zone
+    { // File script - zone
         ScriptLumpNum = -1;
-        ScriptSize = M_ReadFile(name, (byte **) & ScriptBuffer);
+        ScriptSize = M_ReadFile(name, (byte **) &ScriptBuffer);
         M_ExtractFileBase(name, ScriptName);
     }
     ScriptPtr = ScriptBuffer;
@@ -186,11 +186,11 @@ static boolean SC_GetString(void)
             return false;
         }
         if (*ScriptPtr != ASCII_COMMENT)
-        {                       // Found a token
+        { // Found a token
             foundToken = true;
         }
         else
-        {                       // Skip comment
+        { // Skip comment
             while (*ScriptPtr++ != '\n')
             {
                 if (ScriptPtr >= ScriptEndPtr)
@@ -205,13 +205,12 @@ static boolean SC_GetString(void)
     }
     text = sc_String;
     if (*ScriptPtr == ASCII_QUOTE)
-    {                           // Quoted string
+    { // Quoted string
         ScriptPtr++;
         while (*ScriptPtr != ASCII_QUOTE)
         {
             *text++ = *ScriptPtr++;
-            if (ScriptPtr == ScriptEndPtr
-                || text == &sc_String[MAX_STRING_SIZE - 1])
+            if (ScriptPtr == ScriptEndPtr || text == &sc_String[MAX_STRING_SIZE - 1])
             {
                 break;
             }
@@ -219,12 +218,11 @@ static boolean SC_GetString(void)
         ScriptPtr++;
     }
     else
-    {                           // Normal string
+    { // Normal string
         while ((*ScriptPtr > 32) && (*ScriptPtr != ASCII_COMMENT))
         {
             *text++ = *ScriptPtr++;
-            if (ScriptPtr == ScriptEndPtr
-                || text == &sc_String[MAX_STRING_SIZE - 1])
+            if (ScriptPtr == ScriptEndPtr || text == &sc_String[MAX_STRING_SIZE - 1])
             {
                 break;
             }
@@ -272,89 +270,92 @@ musinfo_t musinfo = {0};
 // Parses MUSINFO lump.
 //
 
-void S_ParseMusInfo (const char *mapid)
+void S_ParseMusInfo(const char *mapid)
 {
-  if (W_CheckNumForName("MUSINFO") != -1)
-  {
-    int num, lumpnum;
-    int inMap = false;
-
-    SC_OpenLump("MUSINFO");
-
-    while (SC_GetString())
+    if (W_CheckNumForName("MUSINFO") != -1)
     {
-      if (inMap || SC_Compare(mapid))
-      {
-        if (!inMap)
-        {
-          SC_GetString();
-          inMap = true;
-        }
+        int num, lumpnum;
+        int inMap = false;
 
-        if (sc_String[0] == 'E' || sc_String[0] == 'e' ||
-            sc_String[0] == 'M' || sc_String[0] == 'm')
-        {
-          break;
-        }
+        SC_OpenLump("MUSINFO");
 
-        // Check number in range
-        if (M_StrToInt(sc_String, &num) && num > 0 && num < MAX_MUS_ENTRIES)
+        while (SC_GetString())
         {
-          if (SC_GetString())
-          {
-            lumpnum = W_CheckNumForName(sc_String);
-
-            if (lumpnum > 0)
+            if (inMap || SC_Compare(mapid))
             {
-              musinfo.items[num] = lumpnum;
-//            printf("S_ParseMusInfo: (%d) %s\n", num, sc_String);
+                if (!inMap)
+                {
+                    SC_GetString();
+                    inMap = true;
+                }
+
+                if (sc_String[0] == 'E' || sc_String[0] == 'e' || sc_String[0] == 'M' ||
+                    sc_String[0] == 'm')
+                {
+                    break;
+                }
+
+                // Check number in range
+                if (M_StrToInt(sc_String, &num) && num > 0 && num < MAX_MUS_ENTRIES)
+                {
+                    if (SC_GetString())
+                    {
+                        lumpnum = W_CheckNumForName(sc_String);
+
+                        if (lumpnum > 0)
+                        {
+                            musinfo.items[num] = lumpnum;
+                            //            printf("S_ParseMusInfo: (%d) %s\n", num, sc_String);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "S_ParseMusInfo: Unknown MUS lump %s\n", sc_String);
+                        }
+                    }
+                }
+                else
+                {
+                    fprintf(
+                        stderr,
+                        "S_ParseMusInfo: Number not in range 1 to %d\n",
+                        MAX_MUS_ENTRIES - 1);
+                }
             }
-            else
-            {
-              fprintf(stderr, "S_ParseMusInfo: Unknown MUS lump %s\n", sc_String);
-            }
-          }
         }
-        else
-        {
-          fprintf(stderr, "S_ParseMusInfo: Number not in range 1 to %d\n", MAX_MUS_ENTRIES - 1);
-        }
-      }
+
+        SC_Close();
     }
-
-    SC_Close();
-  }
 }
 
-void T_MusInfo (void)
+void T_MusInfo(void)
 {
-  if (musinfo.tics < 0 || !musinfo.mapthing)
-  {
-    return;
-  }
-
-  if (musinfo.tics > 0)
-  {
-    musinfo.tics--;
-  }
-  else
-  {
-    if (!musinfo.tics && musinfo.lastmapthing != musinfo.mapthing)
+    if (musinfo.tics < 0 || !musinfo.mapthing)
     {
-      // [crispy] encode music lump number in mapthing health
-      int arraypt = musinfo.mapthing->health - 1000;
-
-      if (arraypt >= 0 && arraypt < MAX_MUS_ENTRIES)
-      {
-        int lumpnum = musinfo.items[arraypt];
-
-        if (lumpnum > 0 && lumpnum < numlumps)
-        {
-          S_ChangeMusInfoMusic(lumpnum, true);
-        }
-      }
-
-      musinfo.tics = -1;
+        return;
     }
-  }
+
+    if (musinfo.tics > 0)
+    {
+        musinfo.tics--;
+    }
+    else
+    {
+        if (!musinfo.tics && musinfo.lastmapthing != musinfo.mapthing)
+        {
+            // [crispy] encode music lump number in mapthing health
+            int arraypt = musinfo.mapthing->health - 1000;
+
+            if (arraypt >= 0 && arraypt < MAX_MUS_ENTRIES)
+            {
+                int lumpnum = musinfo.items[arraypt];
+
+                if (lumpnum > 0 && lumpnum < numlumps)
+                {
+                    S_ChangeMusInfoMusic(lumpnum, true);
+                }
+            }
+
+            musinfo.tics = -1;
+        }
+    }
 }

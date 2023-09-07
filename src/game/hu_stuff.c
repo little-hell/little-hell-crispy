@@ -34,9 +34,9 @@
 #include "m_misc.h"
 #include "m_menu.h"
 #include "w_wad.h"
-#include "m_argv.h" // [crispy] M_ParmExists()
+#include "m_argv.h"   // [crispy] M_ParmExists()
 #include "st_stuff.h" // [crispy] ST_HEIGHT, ST_WIDESCREENDELTA
-#include "p_setup.h" // maplumpinfo
+#include "p_setup.h"  // maplumpinfo
 
 #include "s_sound.h"
 
@@ -53,191 +53,148 @@
 //
 // Locally used constants, shortcuts.
 //
-#define HU_TITLE	(mapnames[(gameepisode-1)*9+gamemap-1])
-#define HU_TITLE2	(mapnames_commercial[gamemap-1])
-#define HU_TITLEP	(mapnames_commercial[gamemap-1 + 32])
-#define HU_TITLET	(mapnames_commercial[gamemap-1 + 64])
-#define HU_TITLEN	(mapnames_commercial[gamemap-1 + 96 + 3])
-#define HU_TITLEM	(mapnames_commercial[gamemap-1 + 105 + 3])
-#define HU_TITLE_CHEX   (mapnames_chex[(gameepisode-1)*9+gamemap-1])
-#define HU_TITLEHEIGHT	1
-#define HU_TITLEX	(0 - WIDESCREENDELTA)
-#define HU_TITLEY	(167 - SHORT(hu_font[0]->height))
+#define HU_TITLE       (mapnames[(gameepisode - 1) * 9 + gamemap - 1])
+#define HU_TITLE2      (mapnames_commercial[gamemap - 1])
+#define HU_TITLEP      (mapnames_commercial[gamemap - 1 + 32])
+#define HU_TITLET      (mapnames_commercial[gamemap - 1 + 64])
+#define HU_TITLEN      (mapnames_commercial[gamemap - 1 + 96 + 3])
+#define HU_TITLEM      (mapnames_commercial[gamemap - 1 + 105 + 3])
+#define HU_TITLE_CHEX  (mapnames_chex[(gameepisode - 1) * 9 + gamemap - 1])
+#define HU_TITLEHEIGHT 1
+#define HU_TITLEX      (0 - WIDESCREENDELTA)
+#define HU_TITLEY      (167 - SHORT(hu_font[0]->height))
 
-#define HU_INPUTTOGGLE	't'
-#define HU_INPUTX	HU_MSGX
-#define HU_INPUTY	(HU_MSGY + HU_MSGHEIGHT*(SHORT(hu_font[0]->height) +1))
-#define HU_INPUTWIDTH	64
-#define HU_INPUTHEIGHT	1
+#define HU_INPUTTOGGLE 't'
+#define HU_INPUTX      HU_MSGX
+#define HU_INPUTY      (HU_MSGY + HU_MSGHEIGHT * (SHORT(hu_font[0]->height) + 1))
+#define HU_INPUTWIDTH  64
+#define HU_INPUTHEIGHT 1
 
-#define HU_COORDX	((ORIGWIDTH - 8 * hu_font['A'-HU_FONTSTART]->width) + WIDESCREENDELTA)
+#define HU_COORDX ((ORIGWIDTH - 8 * hu_font['A' - HU_FONTSTART]->width) + WIDESCREENDELTA)
 
 
 char *chat_macros[10];
 
-const char *player_names[] =
-{
-    HUSTR_PLRGREEN,
-    HUSTR_PLRINDIGO,
-    HUSTR_PLRBROWN,
-    HUSTR_PLRRED
-};
+const char *player_names[] = {HUSTR_PLRGREEN, HUSTR_PLRINDIGO, HUSTR_PLRBROWN, HUSTR_PLRRED};
 
-char			chat_char; // remove later.
-static player_t*	plr;
-patch_t*		hu_font[HU_FONTSIZE];
-static hu_textline_t	w_title;
-static hu_textline_t	w_map;
-static hu_textline_t	w_kills;
-static hu_textline_t	w_items;
-static hu_textline_t	w_scrts;
-static hu_textline_t	w_ltime;
-static hu_textline_t	w_coordx;
-static hu_textline_t	w_coordy;
-static hu_textline_t	w_coorda;
-static hu_textline_t	w_fps;
-boolean			chat_on;
-static hu_itext_t	w_chat;
-static boolean		always_off = false;
-static char		chat_dest[MAXPLAYERS];
+char chat_char; // remove later.
+static player_t *plr;
+patch_t *hu_font[HU_FONTSIZE];
+static hu_textline_t w_title;
+static hu_textline_t w_map;
+static hu_textline_t w_kills;
+static hu_textline_t w_items;
+static hu_textline_t w_scrts;
+static hu_textline_t w_ltime;
+static hu_textline_t w_coordx;
+static hu_textline_t w_coordy;
+static hu_textline_t w_coorda;
+static hu_textline_t w_fps;
+boolean chat_on;
+static hu_itext_t w_chat;
+static boolean always_off = false;
+static char chat_dest[MAXPLAYERS];
 static hu_itext_t w_inputbuffer[MAXPLAYERS];
 
-static boolean		message_on;
-boolean			message_dontfuckwithme;
-static boolean		message_nottobefuckedwith;
-static boolean		secret_on;
+static boolean message_on;
+boolean message_dontfuckwithme;
+static boolean message_nottobefuckedwith;
+static boolean secret_on;
 
-static hu_stext_t	w_message;
-static int		message_counter;
-static hu_stext_t	w_secret;
-static int		secret_counter;
+static hu_stext_t w_message;
+static int message_counter;
+static hu_stext_t w_secret;
+static int secret_counter;
 
 
-static boolean		headsupactive = false;
+static boolean headsupactive = false;
 
 //
 // Builtin map names.
 // The actual names can be found in DStrings.h.
 //
 
-const char *mapnames[] =	// DOOM shareware/registered/retail (Ultimate) names.
-{
+const char *mapnames[] = // DOOM shareware/registered/retail (Ultimate) names.
+    {
 
-    HUSTR_E1M1,
-    HUSTR_E1M2,
-    HUSTR_E1M3,
-    HUSTR_E1M4,
-    HUSTR_E1M5,
-    HUSTR_E1M6,
-    HUSTR_E1M7,
-    HUSTR_E1M8,
-    HUSTR_E1M9,
+        HUSTR_E1M1,
+        HUSTR_E1M2,
+        HUSTR_E1M3,
+        HUSTR_E1M4,
+        HUSTR_E1M5,
+        HUSTR_E1M6,
+        HUSTR_E1M7,
+        HUSTR_E1M8,
+        HUSTR_E1M9,
 
-    HUSTR_E2M1,
-    HUSTR_E2M2,
-    HUSTR_E2M3,
-    HUSTR_E2M4,
-    HUSTR_E2M5,
-    HUSTR_E2M6,
-    HUSTR_E2M7,
-    HUSTR_E2M8,
-    HUSTR_E2M9,
+        HUSTR_E2M1,
+        HUSTR_E2M2,
+        HUSTR_E2M3,
+        HUSTR_E2M4,
+        HUSTR_E2M5,
+        HUSTR_E2M6,
+        HUSTR_E2M7,
+        HUSTR_E2M8,
+        HUSTR_E2M9,
 
-    HUSTR_E3M1,
-    HUSTR_E3M2,
-    HUSTR_E3M3,
-    HUSTR_E3M4,
-    HUSTR_E3M5,
-    HUSTR_E3M6,
-    HUSTR_E3M7,
-    HUSTR_E3M8,
-    HUSTR_E3M9,
+        HUSTR_E3M1,
+        HUSTR_E3M2,
+        HUSTR_E3M3,
+        HUSTR_E3M4,
+        HUSTR_E3M5,
+        HUSTR_E3M6,
+        HUSTR_E3M7,
+        HUSTR_E3M8,
+        HUSTR_E3M9,
 
-    HUSTR_E4M1,
-    HUSTR_E4M2,
-    HUSTR_E4M3,
-    HUSTR_E4M4,
-    HUSTR_E4M5,
-    HUSTR_E4M6,
-    HUSTR_E4M7,
-    HUSTR_E4M8,
-    HUSTR_E4M9,
+        HUSTR_E4M1,
+        HUSTR_E4M2,
+        HUSTR_E4M3,
+        HUSTR_E4M4,
+        HUSTR_E4M5,
+        HUSTR_E4M6,
+        HUSTR_E4M7,
+        HUSTR_E4M8,
+        HUSTR_E4M9,
 
-    // [crispy] Sigil
-    HUSTR_E5M1,
-    HUSTR_E5M2,
-    HUSTR_E5M3,
-    HUSTR_E5M4,
-    HUSTR_E5M5,
-    HUSTR_E5M6,
-    HUSTR_E5M7,
-    HUSTR_E5M8,
-    HUSTR_E5M9,
+        // [crispy] Sigil
+        HUSTR_E5M1,
+        HUSTR_E5M2,
+        HUSTR_E5M3,
+        HUSTR_E5M4,
+        HUSTR_E5M5,
+        HUSTR_E5M6,
+        HUSTR_E5M7,
+        HUSTR_E5M8,
+        HUSTR_E5M9,
 
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL"
-};
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL",
+        "NEWLEVEL"};
 
-const char *mapnames_chex[] =   // Chex Quest names.
-{
+const char *mapnames_chex[] = // Chex Quest names.
+    {
 
-    HUSTR_E1M1,
-    HUSTR_E1M2,
-    HUSTR_E1M3,
-    HUSTR_E1M4,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
+        HUSTR_E1M1, HUSTR_E1M2, HUSTR_E1M3, HUSTR_E1M4, HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
 
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
 
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
 
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
-    HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
+        HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5, HUSTR_E1M5,
 
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL",
-    "NEWLEVEL"
-};
+        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL",
+        "NEWLEVEL", "NEWLEVEL", "NEWLEVEL", "NEWLEVEL"};
 
 // List of names for levels in commercial IWADs
 // (doom2.wad, plutonia.wad, tnt.wad).  These are stored in a
@@ -245,8 +202,7 @@ const char *mapnames_chex[] =   // Chex Quest names.
 // the layout in the Vanilla executable, where it is possible to
 // overflow the end of one array into the next.
 
-const char *mapnames_commercial[] =
-{
+const char *mapnames_commercial[] = {
     // DOOM 2 map names.
 
     HUSTR_1,
@@ -362,8 +318,7 @@ const char *mapnames_commercial[] =
     // so include blank names instead of spilling over
     "",
     "",
-    ""
-    ,
+    "",
     NHUSTR_1,
     NHUSTR_2,
     NHUSTR_3,
@@ -394,78 +349,76 @@ const char *mapnames_commercial[] =
     MHUSTR_18,
     MHUSTR_19,
     MHUSTR_20,
-    MHUSTR_21
-};
+    MHUSTR_21};
 
 static const char *cr_stat, *cr_stat2, *kills;
 
 void HU_Init(void)
 {
 
-    int		i;
-    int		j;
-    char	buffer[9];
+    int i;
+    int j;
+    char buffer[9];
 
     // load the heads-up font
     j = HU_FONTSTART;
-    for (i=0;i<HU_FONTSIZE;i++)
+    for (i = 0; i < HU_FONTSIZE; i++)
     {
-	M_snprintf(buffer, 9, "STCFN%.3d", j++);
-	hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
+        M_snprintf(buffer, 9, "STCFN%.3d", j++);
+        hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
     }
 
     if (gameversion == exe_chex)
     {
-	cr_stat = crstr[CR_GREEN];
-	cr_stat2 = crstr[CR_GOLD];
-	kills = "F\t";
+        cr_stat = crstr[CR_GREEN];
+        cr_stat2 = crstr[CR_GOLD];
+        kills = "F\t";
     }
     else
     {
-	if (gameversion == exe_hacx)
-	{
-		cr_stat = crstr[CR_BLUE];
-	}
-	else
-	{
-		cr_stat = crstr[CR_RED];
-	}
-	cr_stat2 = crstr[CR_GREEN];
-	kills = "K\t";
+        if (gameversion == exe_hacx)
+        {
+            cr_stat = crstr[CR_BLUE];
+        }
+        else
+        {
+            cr_stat = crstr[CR_RED];
+        }
+        cr_stat2 = crstr[CR_GREEN];
+        kills = "K\t";
     }
 
     // [crispy] initialize the crosshair types
     for (i = 0; laserpatch[i].c; i++)
     {
-	patch_t *patch = NULL;
+        patch_t *patch = NULL;
 
-	// [crispy] check for alternative crosshair patches from e.g. prboom-plus.wad first
-//	if ((laserpatch[i].l = W_CheckNumForName(laserpatch[i].a)) == -1)
-	{
-		M_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
-		laserpatch[i].l = W_GetNumForName(buffer);
+        // [crispy] check for alternative crosshair patches from e.g. prboom-plus.wad first
+        //	if ((laserpatch[i].l = W_CheckNumForName(laserpatch[i].a)) == -1)
+        {
+            M_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
+            laserpatch[i].l = W_GetNumForName(buffer);
 
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+            patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
 
-		laserpatch[i].w -= SHORT(patch->leftoffset);
-		laserpatch[i].h -= SHORT(patch->topoffset);
+            laserpatch[i].w -= SHORT(patch->leftoffset);
+            laserpatch[i].h -= SHORT(patch->topoffset);
 
-		// [crispy] special-case the chevron crosshair type
-		if (toupper(laserpatch[i].c) == '^')
-		{
-			laserpatch[i].h -= SHORT(patch->height)/2;
-		}
-	}
+            // [crispy] special-case the chevron crosshair type
+            if (toupper(laserpatch[i].c) == '^')
+            {
+                laserpatch[i].h -= SHORT(patch->height) / 2;
+            }
+        }
 
-	if (!patch)
-	{
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
-	}
+        if (!patch)
+        {
+            patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+        }
 
-	laserpatch[i].w += SHORT(patch->width)/2;
-	laserpatch[i].h += SHORT(patch->height)/2;
+        laserpatch[i].w += SHORT(patch->width) / 2;
+        laserpatch[i].h += SHORT(patch->height) / 2;
     }
-
 }
 
 void HU_Stop(void)
@@ -521,22 +474,22 @@ static const speciallevel_t speciallevels[] = {
     {doom2, 0, 32, "teeth.wad", MHUSTR_21},
 };
 
-static void HU_SetSpecialLevelName (const char *wad, const char **name)
+static void HU_SetSpecialLevelName(const char *wad, const char **name)
 {
     int i;
 
     for (i = 0; i < arrlen(speciallevels); i++)
     {
-	const speciallevel_t speciallevel = speciallevels[i];
+        const speciallevel_t speciallevel = speciallevels[i];
 
-	if (logical_gamemission == speciallevel.mission &&
-	    (!speciallevel.episode || gameepisode == speciallevel.episode) &&
-	    gamemap == speciallevel.map &&
-	    (!speciallevel.wad || !strcasecmp(wad, speciallevel.wad)))
-	{
-	    *name = speciallevel.name ? speciallevel.name : maplumpinfo->name;
-	    break;
-	}
+        if (logical_gamemission == speciallevel.mission &&
+            (!speciallevel.episode || gameepisode == speciallevel.episode) &&
+            gamemap == speciallevel.map &&
+            (!speciallevel.wad || !strcasecmp(wad, speciallevel.wad)))
+        {
+            *name = speciallevel.name ? speciallevel.name : maplumpinfo->name;
+            break;
+        }
     }
 }
 
@@ -545,13 +498,13 @@ static int hu_widescreendelta;
 void HU_Start(void)
 {
 
-    int		i;
+    int i;
     const char *s;
     // [crispy] string buffers for map title and WAD file name
-    char	buf[8], *ptr;
+    char buf[8], *ptr;
 
     if (headsupactive)
-	HU_Stop();
+        HU_Stop();
 
     plr = &players[displayplayer];
     message_on = false;
@@ -565,104 +518,69 @@ void HU_Start(void)
     hu_widescreendelta = WIDESCREENDELTA;
 
     // create the message widget
-    HUlib_initSText(&w_message,
-		    HU_MSGX, HU_MSGY, HU_MSGHEIGHT,
-		    hu_font,
-		    HU_FONTSTART, &message_on);
+    HUlib_initSText(&w_message, HU_MSGX, HU_MSGY, HU_MSGHEIGHT, hu_font, HU_FONTSTART, &message_on);
 
     // [crispy] create the secret message widget
-    HUlib_initSText(&w_secret,
-		    88, 86, HU_MSGHEIGHT,
-		    hu_font,
-		    HU_FONTSTART, &secret_on);
+    HUlib_initSText(&w_secret, 88, 86, HU_MSGHEIGHT, hu_font, HU_FONTSTART, &secret_on);
 
     // create the map title widget
-    HUlib_initTextLine(&w_title,
-		       HU_TITLEX, HU_TITLEY,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_title, HU_TITLEX, HU_TITLEY, hu_font, HU_FONTSTART);
 
     // [crispy] create the generic map title, kills, items, secrets and level time widgets
-    HUlib_initTextLine(&w_map,
-		       HU_TITLEX, HU_TITLEY - SHORT(hu_font[0]->height + 1),
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(
+        &w_map, HU_TITLEX, HU_TITLEY - SHORT(hu_font[0]->height + 1), hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_kills,
-		       HU_TITLEX, HU_MSGY + 1 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_kills, HU_TITLEX, HU_MSGY + 1 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_items,
-		       HU_TITLEX, HU_MSGY + 2 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_items, HU_TITLEX, HU_MSGY + 2 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_scrts,
-		       HU_TITLEX, HU_MSGY + 3 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_scrts, HU_TITLEX, HU_MSGY + 3 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_ltime,
-		       HU_TITLEX, HU_MSGY + 4 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_ltime, HU_TITLEX, HU_MSGY + 4 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_coordx,
-		       HU_COORDX, HU_MSGY + 1 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_coordx, HU_COORDX, HU_MSGY + 1 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_coordy,
-		       HU_COORDX, HU_MSGY + 2 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_coordy, HU_COORDX, HU_MSGY + 2 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_coorda,
-		       HU_COORDX, HU_MSGY + 3 * 8,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_coorda, HU_COORDX, HU_MSGY + 3 * 8, hu_font, HU_FONTSTART);
 
-    HUlib_initTextLine(&w_fps,
-		       HU_COORDX, HU_MSGY,
-		       hu_font,
-		       HU_FONTSTART);
+    HUlib_initTextLine(&w_fps, HU_COORDX, HU_MSGY, hu_font, HU_FONTSTART);
 
 
-    switch ( logical_gamemission )
+    switch (logical_gamemission)
     {
-      case doom:
-	s = HU_TITLE;
-	break;
-      case doom2:
-	 s = HU_TITLE2;
-         // Pre-Final Doom compatibility: map33-map35 names don't spill over
-         if (gameversion <= exe_doom_1_9 && gamemap >= 33 && false) // [crispy] disable
-         {
-             s = "";
-         }
-	 break;
-      case pack_plut:
-	s = HU_TITLEP;
-	break;
-      case pack_tnt:
-	s = HU_TITLET;
-	break;
-      case pack_nerve:
-	if (gamemap <= 9)
-	  s = HU_TITLEN;
-	else
-	  s = HU_TITLE2;
-	break;
-      case pack_master:
-	if (gamemap <= 21)
-	  s = HU_TITLEM;
-	else
-	  s = HU_TITLE2;
-	break;
-      default:
-         s = "Unknown level";
-         break;
+        case doom:
+            s = HU_TITLE;
+            break;
+        case doom2:
+            s = HU_TITLE2;
+            // Pre-Final Doom compatibility: map33-map35 names don't spill over
+            if (gameversion <= exe_doom_1_9 && gamemap >= 33 && false) // [crispy] disable
+            {
+                s = "";
+            }
+            break;
+        case pack_plut:
+            s = HU_TITLEP;
+            break;
+        case pack_tnt:
+            s = HU_TITLET;
+            break;
+        case pack_nerve:
+            if (gamemap <= 9)
+                s = HU_TITLEN;
+            else
+                s = HU_TITLE2;
+            break;
+        case pack_master:
+            if (gamemap <= 21)
+                s = HU_TITLEM;
+            else
+                s = HU_TITLE2;
+            break;
+        default:
+            s = "Unknown level";
+            break;
     }
 
     if (logical_gamemission == doom && gameversion == exe_chex)
@@ -679,38 +597,34 @@ void HU_Start(void)
     s = ptr;
 
     while (*s)
-	HUlib_addCharToTextLine(&w_title, *(s++));
+        HUlib_addCharToTextLine(&w_title, *(s++));
 
     free(ptr);
 
     // create the chat widget
-    HUlib_initIText(&w_chat,
-		    HU_INPUTX, HU_INPUTY,
-		    hu_font,
-		    HU_FONTSTART, &chat_on);
+    HUlib_initIText(&w_chat, HU_INPUTX, HU_INPUTY, hu_font, HU_FONTSTART, &chat_on);
 
     // create the inputbuffer widgets
-    for (i=0 ; i<MAXPLAYERS ; i++)
-	HUlib_initIText(&w_inputbuffer[i], 0, 0, 0, 0, &always_off);
+    for (i = 0; i < MAXPLAYERS; i++)
+        HUlib_initIText(&w_inputbuffer[i], 0, 0, 0, 0, &always_off);
 
     headsupactive = true;
-
 }
 
 // [crispy] print a bar indicating demo progress at the bottom of the screen
-void HU_DemoProgressBar (void)
+void HU_DemoProgressBar(void)
 {
     const int i = SCREENWIDTH * defdemotics / deftotaldemotics;
 
 #ifndef CRISPY_TRUECOLOR
-//  V_DrawHorizLine(0, SCREENHEIGHT - 3, i, 4); // [crispy] white
+    //  V_DrawHorizLine(0, SCREENHEIGHT - 3, i, 4); // [crispy] white
     V_DrawHorizLine(0, SCREENHEIGHT - 2, i, 0); // [crispy] black
     V_DrawHorizLine(0, SCREENHEIGHT - 1, i, 4); // [crispy] white
 
 //  V_DrawHorizLine(0, SCREENHEIGHT - 2, 1, 4); // [crispy] white start
 //  V_DrawHorizLine(i - 1, SCREENHEIGHT - 2, 1, 4); // [crispy] white end
 #else
-//  V_DrawHorizLine(0, SCREENHEIGHT - 3, i, colormaps[4]); // [crispy] white
+    //  V_DrawHorizLine(0, SCREENHEIGHT - 3, i, colormaps[4]); // [crispy] white
     V_DrawHorizLine(0, SCREENHEIGHT - 2, i, colormaps[0]); // [crispy] black
     V_DrawHorizLine(0, SCREENHEIGHT - 1, i, colormaps[4]); // [crispy] white
 
@@ -720,36 +634,33 @@ void HU_DemoProgressBar (void)
 }
 
 // [crispy] static, non-projected crosshair
-static void HU_DrawCrosshair (void)
+static void HU_DrawCrosshair(void)
 {
-    static int		lump;
-    static patch_t*	patch;
-    extern byte *R_LaserspotColor (void);
+    static int lump;
+    static patch_t *patch;
+    extern byte *R_LaserspotColor(void);
 
-    if (weaponinfo[plr->readyweapon].ammo == am_noammo ||
-        plr->playerstate != PST_LIVE ||
-        (automapactive && !crispy->automapoverlay) ||
-        menuactive ||
-        paused ||
-        secret_on)
-	return;
+    if (weaponinfo[plr->readyweapon].ammo == am_noammo || plr->playerstate != PST_LIVE ||
+        (automapactive && !crispy->automapoverlay) || menuactive || paused || secret_on)
+        return;
 
     if (lump != laserpatch[crispy->crosshairtype].l)
     {
-	lump = laserpatch[crispy->crosshairtype].l;
-	patch = W_CacheLumpNum(lump, PU_STATIC);
+        lump = laserpatch[crispy->crosshairtype].l;
+        patch = W_CacheLumpNum(lump, PU_STATIC);
     }
 
     dp_translucent = true;
     dp_translation = R_LaserspotColor();
 
-    V_DrawPatch(ORIGWIDTH/2 -
-                laserpatch[crispy->crosshairtype].w,
-                ((screenblocks <= 10) ? (ORIGHEIGHT-ST_HEIGHT)/2 : ORIGHEIGHT/2) -
-                laserpatch[crispy->crosshairtype].h,
-                patch);
+    V_DrawPatch(
+        ORIGWIDTH / 2 - laserpatch[crispy->crosshairtype].w,
+        ((screenblocks <= 10) ? (ORIGHEIGHT - ST_HEIGHT) / 2 : ORIGHEIGHT / 2) -
+            laserpatch[crispy->crosshairtype].h,
+        patch);
 
-//  V_DrawHorizLine(0, (screenblocks <= 10) ? (SCREENHEIGHT/2-ST_HEIGHT) : (SCREENHEIGHT/2), SCREENWIDTH, 128);
+    //  V_DrawHorizLine(0, (screenblocks <= 10) ? (SCREENHEIGHT/2-ST_HEIGHT) : (SCREENHEIGHT/2),
+    //  SCREENWIDTH, 128);
 }
 
 void HU_Drawer(void)
@@ -757,8 +668,8 @@ void HU_Drawer(void)
 
     if (crispy->cleanscreenshot)
     {
-	HU_Erase();
-	return;
+        HU_Erase();
+        return;
     }
 
     // [crispy] re-calculate widget coordinates on demand
@@ -768,66 +679,70 @@ void HU_Drawer(void)
     }
 
     // [crispy] translucent messages for translucent HUD
-    if (screenblocks >= CRISPY_HUD && (screenblocks % 3 == 2) && (!automapactive || crispy->automapoverlay))
-	dp_translucent = true;
+    if (screenblocks >= CRISPY_HUD && (screenblocks % 3 == 2) &&
+        (!automapactive || crispy->automapoverlay))
+        dp_translucent = true;
 
     if (secret_on && !menuactive)
     {
-	dp_translation = cr[CR_GOLD];
-	HUlib_drawSText(&w_secret);
+        dp_translation = cr[CR_GOLD];
+        HUlib_drawSText(&w_secret);
     }
 
     dp_translation = NULL;
     if (crispy->screenshotmsg == 4)
-	HUlib_eraseSText(&w_message);
+        HUlib_eraseSText(&w_message);
     else
-    HUlib_drawSText(&w_message);
+        HUlib_drawSText(&w_message);
     HUlib_drawIText(&w_chat);
 
     if (crispy->coloredhud & COLOREDHUD_TEXT)
-	dp_translation = cr[CR_GOLD];
+        dp_translation = cr[CR_GOLD];
 
     if (automapactive)
     {
-	HUlib_drawTextLine(&w_title, false);
+        HUlib_drawTextLine(&w_title, false);
     }
 
     if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
     {
-	HUlib_drawTextLine(&w_kills, false);
+        HUlib_drawTextLine(&w_kills, false);
     }
-    else
-    if ((crispy->automapstats & WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    else if (
+        (crispy->automapstats & WIDGETS_ALWAYS) ||
+        (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
-	// [crispy] move obtrusive line out of player view
-	if (automapactive && (!crispy->automapoverlay || screenblocks < CRISPY_HUD - 1))
-	    HUlib_drawTextLine(&w_map, false);
+        // [crispy] move obtrusive line out of player view
+        if (automapactive && (!crispy->automapoverlay || screenblocks < CRISPY_HUD - 1))
+            HUlib_drawTextLine(&w_map, false);
 
-	HUlib_drawTextLine(&w_kills, false);
-	HUlib_drawTextLine(&w_items, false);
-	HUlib_drawTextLine(&w_scrts, false);
+        HUlib_drawTextLine(&w_kills, false);
+        HUlib_drawTextLine(&w_items, false);
+        HUlib_drawTextLine(&w_scrts, false);
     }
 
-    if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP) ||
+    if (crispy->leveltime == WIDGETS_ALWAYS ||
+        (automapactive && crispy->leveltime == WIDGETS_AUTOMAP) ||
         (crispy->btusetimer && plr->btuse_tics))
     {
-	HUlib_drawTextLine(&w_ltime, false);
+        HUlib_drawTextLine(&w_ltime, false);
     }
 
-    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
+    if (crispy->playercoords == WIDGETS_ALWAYS ||
+        (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
-	HUlib_drawTextLine(&w_coordx, false);
-	HUlib_drawTextLine(&w_coordy, false);
-	HUlib_drawTextLine(&w_coorda, false);
+        HUlib_drawTextLine(&w_coordx, false);
+        HUlib_drawTextLine(&w_coordy, false);
+        HUlib_drawTextLine(&w_coorda, false);
     }
 
     if (plr->powers[pw_showfps])
     {
-	HUlib_drawTextLine(&w_fps, false);
+        HUlib_drawTextLine(&w_fps, false);
     }
 
     if (crispy->crosshair == CROSSHAIR_STATIC)
-	HU_DrawCrosshair();
+        HU_DrawCrosshair();
 
     dp_translation = NULL;
     dp_translucent = false;
@@ -835,18 +750,17 @@ void HU_Drawer(void)
     // [crispy] demo timer widget
     if (demoplayback && (crispy->demotimer & DEMOTIMER_PLAYBACK))
     {
-	ST_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
+        ST_DrawDemoTimer(crispy->demotimerdir ? (deftotaldemotics - defdemotics) : defdemotics);
     }
-    else
-    if (demorecording && (crispy->demotimer & DEMOTIMER_RECORD))
+    else if (demorecording && (crispy->demotimer & DEMOTIMER_RECORD))
     {
-	ST_DrawDemoTimer(leveltime);
+        ST_DrawDemoTimer(leveltime);
     }
 
     // [crispy] demo progress bar
     if (demoplayback && crispy->demobar)
     {
-	HU_DemoProgressBar();
+        HU_DemoProgressBar();
     }
 }
 
@@ -865,45 +779,52 @@ void HU_Erase(void)
     HUlib_eraseTextLine(&w_coordy);
     HUlib_eraseTextLine(&w_coorda);
     HUlib_eraseTextLine(&w_fps);
-
 }
 
-static void Crispy_Statsline_Ratio (char *str, int str_size, const char *prefix, int count, int total, int extra)
+static void
+Crispy_Statsline_Ratio(char *str, int str_size, const char *prefix, int count, int total, int extra)
 {
-	if (extra)
-	    M_snprintf(str, str_size, "%s%s%s%d/%d+%d ", cr_stat, prefix, crstr[CR_GRAY],
-	               count, total, extra);
-	else
-	    M_snprintf(str, str_size, "%s%s%s%d/%d ", cr_stat, prefix, crstr[CR_GRAY],
-	               count, total);
+    if (extra)
+        M_snprintf(
+            str, str_size, "%s%s%s%d/%d+%d ", cr_stat, prefix, crstr[CR_GRAY], count, total, extra);
+    else
+        M_snprintf(str, str_size, "%s%s%s%d/%d ", cr_stat, prefix, crstr[CR_GRAY], count, total);
 }
 
-static void Crispy_Statsline_Remaining (char *str, int str_size, const char *prefix, int count, int total, int extra)
+static void Crispy_Statsline_Remaining(
+    char *str, int str_size, const char *prefix, int count, int total, int extra)
 {
-	M_snprintf(str, str_size, "%s%s%s%d ", cr_stat, prefix, crstr[CR_GRAY],
-		   MAX(0, total - count));
+    M_snprintf(str, str_size, "%s%s%s%d ", cr_stat, prefix, crstr[CR_GRAY], MAX(0, total - count));
 }
 
-static void Crispy_Statsline_Percent (char *str, int str_size, const char *prefix, int count, int total, int extra)
+static void Crispy_Statsline_Percent(
+    char *str, int str_size, const char *prefix, int count, int total, int extra)
 {
-	M_snprintf(str, str_size, "%s%s%s%d%% ", cr_stat, prefix, crstr[CR_GRAY],
-		   count * 100 / (total ? total : 1));
+    M_snprintf(
+        str,
+        str_size,
+        "%s%s%s%d%% ",
+        cr_stat,
+        prefix,
+        crstr[CR_GRAY],
+        count * 100 / (total ? total : 1));
 }
 
-static void Crispy_Statsline_Boolean (char *str, int str_size, const char *prefix, int count, int total, int extra)
+static void Crispy_Statsline_Boolean(
+    char *str, int str_size, const char *prefix, int count, int total, int extra)
 {
-	M_snprintf(str, str_size, "%s%s%s%s ", cr_stat, prefix, crstr[CR_GRAY],
-		   count >= total ? "Yes" : "No");
+    M_snprintf(
+        str, str_size, "%s%s%s%s ", cr_stat, prefix, crstr[CR_GRAY], count >= total ? "Yes" : "No");
 }
 
-typedef void (*crispy_statsline_func_t)(char *str, int str_size, const char *prefix, int count, int total, int extra);
+typedef void (*crispy_statsline_func_t)(
+    char *str, int str_size, const char *prefix, int count, int total, int extra);
 
-static const crispy_statsline_func_t crispy_statslines[NUM_STATSFORMATS] =
-{
-	Crispy_Statsline_Ratio,
-	Crispy_Statsline_Remaining,
-	Crispy_Statsline_Percent,
-	Crispy_Statsline_Boolean,
+static const crispy_statsline_func_t crispy_statslines[NUM_STATSFORMATS] = {
+    Crispy_Statsline_Ratio,
+    Crispy_Statsline_Remaining,
+    Crispy_Statsline_Percent,
+    Crispy_Statsline_Boolean,
 };
 
 void HU_Ticker(void)
@@ -916,43 +837,43 @@ void HU_Ticker(void)
     // tick down message counter if message is up
     if (message_counter && !--message_counter)
     {
-	message_on = false;
-	message_nottobefuckedwith = false;
-	crispy->screenshotmsg >>= 1;
+        message_on = false;
+        message_nottobefuckedwith = false;
+        crispy->screenshotmsg >>= 1;
     }
 
     if (secret_counter && !--secret_counter)
     {
-	secret_on = false;
+        secret_on = false;
     }
 
     if (showMessages || message_dontfuckwithme)
     {
 
-	// [crispy] display centered message
-	if (plr->centermessage)
-	{
-	    extern int M_StringWidth(const char *string);
-	    w_secret.l[0].x = ORIGWIDTH/2 - M_StringWidth(plr->centermessage)/2;
+        // [crispy] display centered message
+        if (plr->centermessage)
+        {
+            extern int M_StringWidth(const char *string);
+            w_secret.l[0].x = ORIGWIDTH / 2 - M_StringWidth(plr->centermessage) / 2;
 
-	    HUlib_addMessageToSText(&w_secret, 0, plr->centermessage);
-	    plr->centermessage = 0;
-	    secret_on = true;
-	    secret_counter = 5*TICRATE/2; // [crispy] 2.5 seconds
-	}
+            HUlib_addMessageToSText(&w_secret, 0, plr->centermessage);
+            plr->centermessage = 0;
+            secret_on = true;
+            secret_counter = 5 * TICRATE / 2; // [crispy] 2.5 seconds
+        }
 
-	// display message if necessary
-	if ((plr->message && !message_nottobefuckedwith)
-	    || (plr->message && message_dontfuckwithme))
-	{
-	    HUlib_addMessageToSText(&w_message, 0, plr->message);
-	    plr->message = 0;
-	    message_on = true;
-	    message_counter = HU_MSGTIMEOUT;
-	    message_nottobefuckedwith = message_dontfuckwithme;
-	    message_dontfuckwithme = 0;
-	    crispy->screenshotmsg >>= 1;
-	}
+        // display message if necessary
+        if ((plr->message && !message_nottobefuckedwith) ||
+            (plr->message && message_dontfuckwithme))
+        {
+            HUlib_addMessageToSText(&w_message, 0, plr->message);
+            plr->message = 0;
+            message_on = true;
+            message_counter = HU_MSGTIMEOUT;
+            message_nottobefuckedwith = message_dontfuckwithme;
+            message_dontfuckwithme = 0;
+            crispy->screenshotmsg >>= 1;
+        }
 
     } // else message_on = false;
 
@@ -961,200 +882,206 @@ void HU_Ticker(void)
     // check for incoming chat characters
     if (netgame)
     {
-	for (i=0 ; i<MAXPLAYERS; i++)
-	{
-	    if (!playeringame[i])
-		continue;
-	    if (i != consoleplayer
-		&& (c = players[i].cmd.chatchar))
-	    {
-		if (c <= HU_BROADCAST)
-		    chat_dest[i] = c;
-		else
-		{
-		    rc = HUlib_keyInIText(&w_inputbuffer[i], c);
-		    if (rc && c == KEY_ENTER)
-		    {
-			if (w_inputbuffer[i].l.len
-			    && (chat_dest[i] == consoleplayer+1
-				|| chat_dest[i] == HU_BROADCAST))
-			{
-			    HUlib_addMessageToSText(&w_message,
-						    player_names[i],
-						    w_inputbuffer[i].l.l);
+        for (i = 0; i < MAXPLAYERS; i++)
+        {
+            if (!playeringame[i])
+                continue;
+            if (i != consoleplayer && (c = players[i].cmd.chatchar))
+            {
+                if (c <= HU_BROADCAST)
+                    chat_dest[i] = c;
+                else
+                {
+                    rc = HUlib_keyInIText(&w_inputbuffer[i], c);
+                    if (rc && c == KEY_ENTER)
+                    {
+                        if (w_inputbuffer[i].l.len &&
+                            (chat_dest[i] == consoleplayer + 1 || chat_dest[i] == HU_BROADCAST))
+                        {
+                            HUlib_addMessageToSText(
+                                &w_message, player_names[i], w_inputbuffer[i].l.l);
 
-			    message_nottobefuckedwith = true;
-			    message_on = true;
-			    message_counter = HU_MSGTIMEOUT;
-			    if ( gamemode == commercial )
-			      S_StartSound(0, sfx_radio);
-			    else if (gameversion > exe_doom_1_2)
-			      S_StartSound(0, sfx_tink);
-			}
-			HUlib_resetIText(&w_inputbuffer[i]);
-		    }
-		}
-		players[i].cmd.chatchar = 0;
-	    }
-	}
-    // [crispy] shift widgets one line down so chat typing line may appear
-    if (crispy->automapstats != WIDGETS_STBAR)
-    {
-        const int chat_line = chat_on ? 8 : 0;
+                            message_nottobefuckedwith = true;
+                            message_on = true;
+                            message_counter = HU_MSGTIMEOUT;
+                            if (gamemode == commercial)
+                                S_StartSound(0, sfx_radio);
+                            else if (gameversion > exe_doom_1_2)
+                                S_StartSound(0, sfx_tink);
+                        }
+                        HUlib_resetIText(&w_inputbuffer[i]);
+                    }
+                }
+                players[i].cmd.chatchar = 0;
+            }
+        }
+        // [crispy] shift widgets one line down so chat typing line may appear
+        if (crispy->automapstats != WIDGETS_STBAR)
+        {
+            const int chat_line = chat_on ? 8 : 0;
 
-        w_kills.y = HU_MSGY + 1 * 8 + chat_line;
-        w_items.y = HU_MSGY + 2 * 8 + chat_line;
-        w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
-        // [crispy] do not shift level time widget if no stats widget is used
-        w_ltime.y = HU_MSGY + 4 * 8 + (crispy->automapstats ? chat_line : 0);
-        w_coordx.y = HU_MSGY + 1 * 8 + chat_line;
-        w_coordy.y = HU_MSGY + 2 * 8 + chat_line;
-        w_coorda.y = HU_MSGY + 3 * 8 + chat_line;
-    }
+            w_kills.y = HU_MSGY + 1 * 8 + chat_line;
+            w_items.y = HU_MSGY + 2 * 8 + chat_line;
+            w_scrts.y = HU_MSGY + 3 * 8 + chat_line;
+            // [crispy] do not shift level time widget if no stats widget is used
+            w_ltime.y = HU_MSGY + 4 * 8 + (crispy->automapstats ? chat_line : 0);
+            w_coordx.y = HU_MSGY + 1 * 8 + chat_line;
+            w_coordy.y = HU_MSGY + 2 * 8 + chat_line;
+            w_coorda.y = HU_MSGY + 3 * 8 + chat_line;
+        }
     }
 
     if (automapactive)
     {
-	// [crispy] move map title to the bottom
-	if (crispy->automapoverlay && screenblocks >= CRISPY_HUD - 1)
-	    w_title.y = HU_TITLEY + ST_HEIGHT;
-	else
-	    w_title.y = HU_TITLEY;
+        // [crispy] move map title to the bottom
+        if (crispy->automapoverlay && screenblocks >= CRISPY_HUD - 1)
+            w_title.y = HU_TITLEY + ST_HEIGHT;
+        else
+            w_title.y = HU_TITLEY;
     }
 
     if (crispy->automapstats == WIDGETS_STBAR && (!automapactive || w_title.y != HU_TITLEY))
     {
-	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
+        crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
 
-	w_kills.x = - ST_WIDESCREENDELTA;
+        w_kills.x = -ST_WIDESCREENDELTA;
 
-	w_kills.y = HU_TITLEY;
+        w_kills.y = HU_TITLEY;
 
-	crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills);
-	HUlib_clearTextLine(&w_kills);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
+        crispy_statsline(str, sizeof(str), "K ", plr->killcount, totalkills, extrakills);
+        HUlib_clearTextLine(&w_kills);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_kills, *(s++));
 
-	crispy_statsline(str, sizeof(str), "I ", plr->itemcount, totalitems, 0);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
+        crispy_statsline(str, sizeof(str), "I ", plr->itemcount, totalitems, 0);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_kills, *(s++));
 
-	crispy_statsline(str, sizeof(str), "S ", plr->secretcount, totalsecret, 0);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
+        crispy_statsline(str, sizeof(str), "S ", plr->secretcount, totalsecret, 0);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_kills, *(s++));
     }
-    else
-    if ((crispy->automapstats & WIDGETS_ALWAYS) || (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
+    else if (
+        (crispy->automapstats & WIDGETS_ALWAYS) ||
+        (automapactive && crispy->automapstats == WIDGETS_AUTOMAP))
     {
 
-	crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
+        crispy_statsline_func_t crispy_statsline = crispy_statslines[crispy->statsformat];
 
-	w_kills.x = HU_TITLEX; // to handle switching from Status bar to Always and Automap kills line options
+        w_kills.x = HU_TITLEX; // to handle switching from Status bar to Always and Automap kills
+                               // line options
 
-	crispy_statsline(str, sizeof(str), kills, plr->killcount, totalkills, extrakills);
-	HUlib_clearTextLine(&w_kills);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_kills, *(s++));
+        crispy_statsline(str, sizeof(str), kills, plr->killcount, totalkills, extrakills);
+        HUlib_clearTextLine(&w_kills);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_kills, *(s++));
 
-	crispy_statsline(str, sizeof(str), "I\t", plr->itemcount, totalitems, 0);
-	HUlib_clearTextLine(&w_items);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_items, *(s++));
+        crispy_statsline(str, sizeof(str), "I\t", plr->itemcount, totalitems, 0);
+        HUlib_clearTextLine(&w_items);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_items, *(s++));
 
-	crispy_statsline(str, sizeof(str), "S\t", plr->secretcount, totalsecret, 0);
-	HUlib_clearTextLine(&w_scrts);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_scrts, *(s++));
+        crispy_statsline(str, sizeof(str), "S\t", plr->secretcount, totalsecret, 0);
+        HUlib_clearTextLine(&w_scrts);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_scrts, *(s++));
     }
 
-    if (crispy->leveltime == WIDGETS_ALWAYS || (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))
+    if (crispy->leveltime == WIDGETS_ALWAYS ||
+        (automapactive && crispy->leveltime == WIDGETS_AUTOMAP))
     {
-	const int time = leveltime / TICRATE;
+        const int time = leveltime / TICRATE;
 
-	if (time >= 3600)
-	    M_snprintf(str, sizeof(str), "%s%02d:%02d:%02d", crstr[CR_GRAY],
-	            time/3600, (time%3600)/60, time%60);
-	else
-	    M_snprintf(str, sizeof(str), "%s%02d:%02d", crstr[CR_GRAY],
-	            time/60, time%60);
-	HUlib_clearTextLine(&w_ltime);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_ltime, *(s++));
+        if (time >= 3600)
+            M_snprintf(
+                str,
+                sizeof(str),
+                "%s%02d:%02d:%02d",
+                crstr[CR_GRAY],
+                time / 3600,
+                (time % 3600) / 60,
+                time % 60);
+        else
+            M_snprintf(str, sizeof(str), "%s%02d:%02d", crstr[CR_GRAY], time / 60, time % 60);
+        HUlib_clearTextLine(&w_ltime);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_ltime, *(s++));
     }
 
     // [crispy] "use" button timer overrides the level time widget
     if (crispy->btusetimer && plr->btuse_tics)
     {
-	const int mins = plr->btuse / (60 * TICRATE);
-	const float secs = (float)(plr->btuse % (60 * TICRATE)) / TICRATE;
+        const int mins = plr->btuse / (60 * TICRATE);
+        const float secs = (float) (plr->btuse % (60 * TICRATE)) / TICRATE;
 
-	plr->btuse_tics--;
+        plr->btuse_tics--;
 
-	M_snprintf(str, sizeof(str), "%sU\t%02i:%05.02f", crstr[CR_GRAY], mins, secs);
-	HUlib_clearTextLine(&w_ltime);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_ltime, *(s++));
+        M_snprintf(str, sizeof(str), "%sU\t%02i:%05.02f", crstr[CR_GRAY], mins, secs);
+        HUlib_clearTextLine(&w_ltime);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_ltime, *(s++));
     }
 
-    if (crispy->playercoords == WIDGETS_ALWAYS || (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
+    if (crispy->playercoords == WIDGETS_ALWAYS ||
+        (automapactive && crispy->playercoords == WIDGETS_AUTOMAP))
     {
-	M_snprintf(str, sizeof(str), "%sX\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->x)>>FRACBITS);
-	HUlib_clearTextLine(&w_coordx);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coordx, *(s++));
+        M_snprintf(
+            str, sizeof(str), "%sX\t%s%-5d", cr_stat2, crstr[CR_GRAY], (plr->mo->x) >> FRACBITS);
+        HUlib_clearTextLine(&w_coordx);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_coordx, *(s++));
 
-	M_snprintf(str, sizeof(str), "%sY\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->y)>>FRACBITS);
-	HUlib_clearTextLine(&w_coordy);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coordy, *(s++));
+        M_snprintf(
+            str, sizeof(str), "%sY\t%s%-5d", cr_stat2, crstr[CR_GRAY], (plr->mo->y) >> FRACBITS);
+        HUlib_clearTextLine(&w_coordy);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_coordy, *(s++));
 
-	M_snprintf(str, sizeof(str), "%sA\t%s%-5d", cr_stat2, crstr[CR_GRAY],
-	        (plr->mo->angle)/ANG1);
-	HUlib_clearTextLine(&w_coorda);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_coorda, *(s++));
+        M_snprintf(
+            str, sizeof(str), "%sA\t%s%-5d", cr_stat2, crstr[CR_GRAY], (plr->mo->angle) / ANG1);
+        HUlib_clearTextLine(&w_coorda);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_coorda, *(s++));
     }
 
     if (plr->powers[pw_showfps])
     {
-	M_snprintf(str, sizeof(str), "%s%-4d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
-	HUlib_clearTextLine(&w_fps);
-	s = str;
-	while (*s)
-	    HUlib_addCharToTextLine(&w_fps, *(s++));
+        M_snprintf(str, sizeof(str), "%s%-4d %sFPS", crstr[CR_GRAY], crispy->fps, cr_stat2);
+        HUlib_clearTextLine(&w_fps);
+        s = str;
+        while (*s)
+            HUlib_addCharToTextLine(&w_fps, *(s++));
     }
 }
 
-#define QUEUESIZE		128
+#define QUEUESIZE 128
 
-static char	chatchars[QUEUESIZE];
-static int	head = 0;
-static int	tail = 0;
+static char chatchars[QUEUESIZE];
+static int head = 0;
+static int tail = 0;
 
 
 void HU_queueChatChar(char c)
 {
-    if (((head + 1) & (QUEUESIZE-1)) == tail)
+    if (((head + 1) & (QUEUESIZE - 1)) == tail)
     {
-	plr->message = HUSTR_MSGU;
+        plr->message = HUSTR_MSGU;
     }
     else
     {
-	chatchars[head] = c;
-	head = (head + 1) & (QUEUESIZE-1);
+        chatchars[head] = c;
+        head = (head + 1) & (QUEUESIZE - 1);
     }
 }
 
@@ -1164,12 +1091,12 @@ char HU_dequeueChatChar(void)
 
     if (head != tail)
     {
-	c = chatchars[tail];
-	tail = (tail + 1) & (QUEUESIZE-1);
+        c = chatchars[tail];
+        tail = (tail + 1) & (QUEUESIZE - 1);
     }
     else
     {
-	c = 0;
+        c = 0;
     }
 
     return c;
@@ -1193,128 +1120,128 @@ static void StopChatInput(void)
 boolean HU_Responder(event_t *ev)
 {
 
-    static char		lastmessage[HU_MAXLINELENGTH+1];
-    const char		*macromessage;
-    boolean		eatkey = false;
-    static boolean	altdown = false;
-    unsigned char 	c;
-    int			i;
-    int			numplayers;
+    static char lastmessage[HU_MAXLINELENGTH + 1];
+    const char *macromessage;
+    boolean eatkey = false;
+    static boolean altdown = false;
+    unsigned char c;
+    int i;
+    int numplayers;
 
-    static int		num_nobrainers = 0;
+    static int num_nobrainers = 0;
 
     numplayers = 0;
-    for (i=0 ; i<MAXPLAYERS ; i++)
-	numplayers += playeringame[i];
+    for (i = 0; i < MAXPLAYERS; i++)
+        numplayers += playeringame[i];
 
     if (ev->data1 == KEY_RSHIFT)
     {
-	return false;
+        return false;
     }
     else if (ev->data1 == KEY_RALT || ev->data1 == KEY_LALT)
     {
-	altdown = ev->type == ev_keydown;
-	return false;
+        altdown = ev->type == ev_keydown;
+        return false;
     }
 
     if (ev->type != ev_keydown)
-	return false;
+        return false;
 
     if (!chat_on)
     {
-	if (ev->data1 == key_message_refresh)
-	{
-	    message_on = true;
-	    message_counter = HU_MSGTIMEOUT;
-	    eatkey = true;
-	}
-	else if (netgame && !demoplayback && ev->data2 == key_multi_msg)
-	{
-	    eatkey = true;
+        if (ev->data1 == key_message_refresh)
+        {
+            message_on = true;
+            message_counter = HU_MSGTIMEOUT;
+            eatkey = true;
+        }
+        else if (netgame && !demoplayback && ev->data2 == key_multi_msg)
+        {
+            eatkey = true;
             StartChatInput(HU_BROADCAST);
-	}
-	else if (netgame && !demoplayback && numplayers > 2)
-	{
-	    for (i=0; i<MAXPLAYERS ; i++)
-	    {
-		if (ev->data2 == key_multi_msgplayer[i])
-		{
-		    if (playeringame[i] && i!=consoleplayer)
-		    {
-			eatkey = true;
+        }
+        else if (netgame && !demoplayback && numplayers > 2)
+        {
+            for (i = 0; i < MAXPLAYERS; i++)
+            {
+                if (ev->data2 == key_multi_msgplayer[i])
+                {
+                    if (playeringame[i] && i != consoleplayer)
+                    {
+                        eatkey = true;
                         StartChatInput(i + 1);
-			break;
-		    }
-		    else if (i == consoleplayer)
-		    {
-			num_nobrainers++;
-			if (num_nobrainers < 3)
-			    plr->message = HUSTR_TALKTOSELF1;
-			else if (num_nobrainers < 6)
-			    plr->message = HUSTR_TALKTOSELF2;
-			else if (num_nobrainers < 9)
-			    plr->message = HUSTR_TALKTOSELF3;
-			else if (num_nobrainers < 32)
-			    plr->message = HUSTR_TALKTOSELF4;
-			else
-			    plr->message = HUSTR_TALKTOSELF5;
-		    }
-		}
-	    }
-	}
+                        break;
+                    }
+                    else if (i == consoleplayer)
+                    {
+                        num_nobrainers++;
+                        if (num_nobrainers < 3)
+                            plr->message = HUSTR_TALKTOSELF1;
+                        else if (num_nobrainers < 6)
+                            plr->message = HUSTR_TALKTOSELF2;
+                        else if (num_nobrainers < 9)
+                            plr->message = HUSTR_TALKTOSELF3;
+                        else if (num_nobrainers < 32)
+                            plr->message = HUSTR_TALKTOSELF4;
+                        else
+                            plr->message = HUSTR_TALKTOSELF5;
+                    }
+                }
+            }
+        }
     }
     else
     {
-	// send a macro
-	if (altdown)
-	{
-	    c = ev->data1 - '0';
-	    if (c > 9)
-		return false;
-	    // fprintf(stderr, "got here\n");
-	    macromessage = chat_macros[c];
+        // send a macro
+        if (altdown)
+        {
+            c = ev->data1 - '0';
+            if (c > 9)
+                return false;
+            // fprintf(stderr, "got here\n");
+            macromessage = chat_macros[c];
 
-	    // kill last message with a '\n'
-	    HU_queueChatChar(KEY_ENTER); // DEBUG!!!
+            // kill last message with a '\n'
+            HU_queueChatChar(KEY_ENTER); // DEBUG!!!
 
-	    // send the macro message
-	    while (*macromessage)
-		HU_queueChatChar(*macromessage++);
-	    HU_queueChatChar(KEY_ENTER);
+            // send the macro message
+            while (*macromessage)
+                HU_queueChatChar(*macromessage++);
+            HU_queueChatChar(KEY_ENTER);
 
             // leave chat mode and notify that it was sent
             StopChatInput();
             M_StringCopy(lastmessage, chat_macros[c], sizeof(lastmessage));
             plr->message = lastmessage;
             eatkey = true;
-	}
-	else
-	{
+        }
+        else
+        {
             c = ev->data3;
 
-	    eatkey = HUlib_keyInIText(&w_chat, c);
-	    if (eatkey)
-	    {
-		// static unsigned char buf[20]; // DEBUG
-		HU_queueChatChar(c);
+            eatkey = HUlib_keyInIText(&w_chat, c);
+            if (eatkey)
+            {
+                // static unsigned char buf[20]; // DEBUG
+                HU_queueChatChar(c);
 
-		// M_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
-		//        plr->message = buf;
-	    }
-	    if (c == KEY_ENTER)
-	    {
-		StopChatInput();
+                // M_snprintf(buf, sizeof(buf), "KEY: %d => %d", ev->data1, c);
+                //        plr->message = buf;
+            }
+            if (c == KEY_ENTER)
+            {
+                StopChatInput();
                 if (w_chat.l.len)
                 {
                     M_StringCopy(lastmessage, w_chat.l.l, sizeof(lastmessage));
                     plr->message = lastmessage;
                 }
-	    }
-	    else if (c == KEY_ESCAPE)
-	    {
+            }
+            else if (c == KEY_ESCAPE)
+            {
                 StopChatInput();
             }
-	}
+        }
     }
 
     return eatkey;

@@ -30,20 +30,18 @@
 // TYPES
 //
 
-typedef PACKED_STRUCT (
-{
+typedef PACKED_STRUCT({
     // Should be "IWAD" or "PWAD".
-    char        identification[4];
-    int         numlumps;
-    int         infotableofs;
+    char identification[4];
+    int numlumps;
+    int infotableofs;
 }) wadinfo_t;
 
 
-typedef PACKED_STRUCT (
-{
-    int         filepos;
-    int         size;
-    char        name[8];
+typedef PACKED_STRUCT({
+    int filepos;
+    int size;
+    char name[8];
 }) filelump_t;
 
 //
@@ -55,11 +53,11 @@ typedef int lumpindex_t;
 
 struct lumpinfo_s
 {
-    char	name[8];
+    char name[8];
     wad_file_t *wad_file;
-    int		position;
-    int		size;
-    void       *cache;
+    int position;
+    int size;
+    void *cache;
 
     // Used for hash table lookups
     lumpindex_t next;

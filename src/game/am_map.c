@@ -51,74 +51,74 @@ extern boolean inhelpscreens; // [crispy]
 
 
 // For use if I do walls with outsides/insides
-#define REDS		(256-5*16)
-#define REDRANGE	16
-#define BLUES		(256-4*16+8)
-#define BLUERANGE	8
-#define GREENS		(7*16)
-#define GREENRANGE	16
-#define GRAYS		(6*16)
-#define GRAYSRANGE	16
-#define BROWNS		(4*16)
-#define BROWNRANGE	16
-#define YELLOWS		(256-32+7)
-#define YELLOWRANGE	1
-#define BLACK		0
-#define WHITE		(256-47)
+#define REDS        (256 - 5 * 16)
+#define REDRANGE    16
+#define BLUES       (256 - 4 * 16 + 8)
+#define BLUERANGE   8
+#define GREENS      (7 * 16)
+#define GREENRANGE  16
+#define GRAYS       (6 * 16)
+#define GRAYSRANGE  16
+#define BROWNS      (4 * 16)
+#define BROWNRANGE  16
+#define YELLOWS     (256 - 32 + 7)
+#define YELLOWRANGE 1
+#define BLACK       0
+#define WHITE       (256 - 47)
 
 // Automap colors
-#define BACKGROUND	BLACK
-#define YOURCOLORS	WHITE
-#define YOURRANGE	0
-#define WALLCOLORS	(crispy->extautomap ? REDS+4 : REDS) // [crispy] slightly darker red
-#define WALLRANGE	REDRANGE
-#define TSWALLCOLORS	GRAYS
-#define TSWALLRANGE	GRAYSRANGE
-#define FDWALLCOLORS	(crispy->extautomap ? BROWNS+6 : BROWNS) // [crispy] darker brown
-#define FDWALLRANGE	BROWNRANGE
-#define CDWALLCOLORS	(crispy->extautomap ? 163 : YELLOWS) // [crispy] golden yellow
-#define CDWALLRANGE	YELLOWRANGE
-#define THINGCOLORS	GREENS
-#define THINGRANGE	GREENRANGE
+#define BACKGROUND       BLACK
+#define YOURCOLORS       WHITE
+#define YOURRANGE        0
+#define WALLCOLORS       (crispy->extautomap ? REDS + 4 : REDS) // [crispy] slightly darker red
+#define WALLRANGE        REDRANGE
+#define TSWALLCOLORS     GRAYS
+#define TSWALLRANGE      GRAYSRANGE
+#define FDWALLCOLORS     (crispy->extautomap ? BROWNS + 6 : BROWNS) // [crispy] darker brown
+#define FDWALLRANGE      BROWNRANGE
+#define CDWALLCOLORS     (crispy->extautomap ? 163 : YELLOWS) // [crispy] golden yellow
+#define CDWALLRANGE      YELLOWRANGE
+#define THINGCOLORS      GREENS
+#define THINGRANGE       GREENRANGE
 #define SECRETWALLCOLORS WALLCOLORS
 #define CRISPY_HIGHLIGHT_REVEALED_SECRETS
 #define SECRETWALLRANGE WALLRANGE
-#define GRIDCOLORS	(GRAYS + GRAYSRANGE/2)
-#define GRIDRANGE	0
-#define XHAIRCOLORS	GRAYS
+#define GRIDCOLORS      (GRAYS + GRAYSRANGE / 2)
+#define GRIDRANGE       0
+#define XHAIRCOLORS     GRAYS
 
 // [crispy] FRACTOMAPBITS: overflow-safe coordinate system.
 // Written by Andrey Budko (entryway), adapted from prboom-plus/src/am_map.*
-#define MAPBITS 12
-#define MAPUNIT (1<<MAPBITS)
-#define FRACTOMAPBITS (FRACBITS-MAPBITS)
+#define MAPBITS       12
+#define MAPUNIT       (1 << MAPBITS)
+#define FRACTOMAPBITS (FRACBITS - MAPBITS)
 
 // [crispy] New radius to use with FRACTOMAPBITS, since orginal
 // PLAYERRADIUS macro can't be used in this implementation.
-#define MAPPLAYERRADIUS (16*(1<<MAPBITS))
+#define MAPPLAYERRADIUS (16 * (1 << MAPBITS))
 
 // drawing stuff
 
 #define AM_NUMMARKPOINTS 10
 
 // scale on entry
-#define INITSCALEMTOF (.2*FRACUNIT)
+#define INITSCALEMTOF (.2 * FRACUNIT)
 // how much the automap moves window per tic in frame-buffer coordinates
 // moves 140 pixels in 1 second
-#define F_PANINC	4
+#define F_PANINC 4
 // [crispy] pan faster by holding run button
-#define F2_PANINC	12
+#define F2_PANINC 12
 // how much zoom-in per tic
 // goes to 2x in 1 second
-#define M_ZOOMIN        ((int) (1.02*FRACUNIT))
+#define M_ZOOMIN ((int) (1.02 * FRACUNIT))
 // how much zoom-out per tic
 // pulls out to 0.5x in 1 second
-#define M_ZOOMOUT       ((int) (FRACUNIT/1.02))
+#define M_ZOOMOUT ((int) (FRACUNIT / 1.02))
 // [crispy] zoom faster with the mouse wheel
-#define M2_ZOOMIN       ((int) (1.08*FRACUNIT))
-#define M2_ZOOMOUT      ((int) (FRACUNIT/1.08))
-#define M2_ZOOMINFAST   ((int) (1.5*FRACUNIT))
-#define M2_ZOOMOUTFAST  ((int) (FRACUNIT/1.5))
+#define M2_ZOOMIN      ((int) (1.08 * FRACUNIT))
+#define M2_ZOOMOUT     ((int) (FRACUNIT / 1.08))
+#define M2_ZOOMINFAST  ((int) (1.5 * FRACUNIT))
+#define M2_ZOOMOUTFAST ((int) (FRACUNIT / 1.5))
 // [crispy] toggleable pan/zoom speed
 static int f_paninc;
 static int m_zoomin_kbd;
@@ -133,11 +133,11 @@ static int revealedsecretwallcolors = -1;
 
 // translates between frame-buffer and map distances
 // [crispy] fix int overflow that causes map and grid lines to disappear
-#define FTOM(x) (((int64_t)((x)<<FRACBITS) * scale_ftom) >> FRACBITS)
-#define MTOF(x) ((((int64_t)(x) * scale_mtof) >> FRACBITS)>>FRACBITS)
+#define FTOM(x) (((int64_t)((x) << FRACBITS) * scale_ftom) >> FRACBITS)
+#define MTOF(x) ((((int64_t)(x) *scale_mtof) >> FRACBITS) >> FRACBITS)
 // translates between frame-buffer and map coordinates
-#define CXMTOF(x)  (f_x + MTOF((x)-m_x))
-#define CYMTOF(y)  (f_y + (f_h - MTOF((y)-m_y)))
+#define CXMTOF(x) (f_x + MTOF((x) -m_x))
+#define CYMTOF(y) (f_y + (f_h - MTOF((y) -m_y)))
 
 // the following is crap
 #define LINE_NEVERSEE ML_DONTDRAW
@@ -154,7 +154,7 @@ typedef struct
 
 typedef struct
 {
-    int64_t		x,y;
+    int64_t x, y;
 } mpoint_t;
 
 typedef struct
@@ -181,138 +181,132 @@ typedef enum
 //  A line drawing of the player pointing right,
 //   starting from the middle.
 //
-#define R ((8*MAPPLAYERRADIUS)/7)
+#define R ((8 * MAPPLAYERRADIUS) / 7)
 mline_t player_arrow[] = {
-    { { -R+R/8, 0 }, { R, 0 } }, // -----
-    { { R, 0 }, { R-R/2, R/4 } },  // ----->
-    { { R, 0 }, { R-R/2, -R/4 } },
-    { { -R+R/8, 0 }, { -R-R/8, R/4 } }, // >---->
-    { { -R+R/8, 0 }, { -R-R/8, -R/4 } },
-    { { -R+3*R/8, 0 }, { -R+R/8, R/4 } }, // >>--->
-    { { -R+3*R/8, 0 }, { -R+R/8, -R/4 } }
-};
+    {{-R + R / 8, 0}, {R, 0}},    // -----
+    {{R, 0}, {R - R / 2, R / 4}}, // ----->
+    {{R, 0}, {R - R / 2, -R / 4}},
+    {{-R + R / 8, 0}, {-R - R / 8, R / 4}}, // >---->
+    {{-R + R / 8, 0}, {-R - R / 8, -R / 4}},
+    {{-R + 3 * R / 8, 0}, {-R + R / 8, R / 4}}, // >>--->
+    {{-R + 3 * R / 8, 0}, {-R + R / 8, -R / 4}}};
 #undef R
 
-#define R ((8*MAPPLAYERRADIUS)/7)
+#define R ((8 * MAPPLAYERRADIUS) / 7)
 mline_t cheat_player_arrow[] = {
-    { { -R+R/8, 0 }, { R, 0 } }, // -----
-    { { R, 0 }, { R-R/2, R/6 } },  // ----->
-    { { R, 0 }, { R-R/2, -R/6 } },
-    { { -R+R/8, 0 }, { -R-R/8, R/6 } }, // >----->
-    { { -R+R/8, 0 }, { -R-R/8, -R/6 } },
-    { { -R+3*R/8, 0 }, { -R+R/8, R/6 } }, // >>----->
-    { { -R+3*R/8, 0 }, { -R+R/8, -R/6 } },
-    { { -R/2, 0 }, { -R/2, -R/6 } }, // >>-d--->
-    { { -R/2, -R/6 }, { -R/2+R/6, -R/6 } },
-    { { -R/2+R/6, -R/6 }, { -R/2+R/6, R/4 } },
-    { { -R/6, 0 }, { -R/6, -R/6 } }, // >>-dd-->
-    { { -R/6, -R/6 }, { 0, -R/6 } },
-    { { 0, -R/6 }, { 0, R/4 } },
-    { { R/6, R/4 }, { R/6, -R/7 } }, // >>-ddt->
-    { { R/6, -R/7 }, { R/6+R/32, -R/7-R/32 } },
-    { { R/6+R/32, -R/7-R/32 }, { R/6+R/10, -R/7 } }
-};
+    {{-R + R / 8, 0}, {R, 0}},    // -----
+    {{R, 0}, {R - R / 2, R / 6}}, // ----->
+    {{R, 0}, {R - R / 2, -R / 6}},
+    {{-R + R / 8, 0}, {-R - R / 8, R / 6}}, // >----->
+    {{-R + R / 8, 0}, {-R - R / 8, -R / 6}},
+    {{-R + 3 * R / 8, 0}, {-R + R / 8, R / 6}}, // >>----->
+    {{-R + 3 * R / 8, 0}, {-R + R / 8, -R / 6}},
+    {{-R / 2, 0}, {-R / 2, -R / 6}}, // >>-d--->
+    {{-R / 2, -R / 6}, {-R / 2 + R / 6, -R / 6}},
+    {{-R / 2 + R / 6, -R / 6}, {-R / 2 + R / 6, R / 4}},
+    {{-R / 6, 0}, {-R / 6, -R / 6}}, // >>-dd-->
+    {{-R / 6, -R / 6}, {0, -R / 6}},
+    {{0, -R / 6}, {0, R / 4}},
+    {{R / 6, R / 4}, {R / 6, -R / 7}}, // >>-ddt->
+    {{R / 6, -R / 7}, {R / 6 + R / 32, -R / 7 - R / 32}},
+    {{R / 6 + R / 32, -R / 7 - R / 32}, {R / 6 + R / 10, -R / 7}}};
 #undef R
 
 #define R (FRACUNIT)
 mline_t triangle_guy[] = {
-    { { (fixed_t)(-.867*R), (fixed_t)(-.5*R) }, { (fixed_t)(.867*R ), (fixed_t)(-.5*R) } },
-    { { (fixed_t)(.867*R ), (fixed_t)(-.5*R) }, { (fixed_t)(0      ), (fixed_t)(R    ) } },
-    { { (fixed_t)(0      ), (fixed_t)(R    ) }, { (fixed_t)(-.867*R), (fixed_t)(-.5*R) } }
-};
+    {{(fixed_t)(-.867 * R), (fixed_t)(-.5 * R)}, {(fixed_t)(.867 * R), (fixed_t)(-.5 * R)}},
+    {{(fixed_t)(.867 * R), (fixed_t)(-.5 * R)}, {(fixed_t)(0), (fixed_t)(R)}},
+    {{(fixed_t)(0), (fixed_t)(R)}, {(fixed_t)(-.867 * R), (fixed_t)(-.5 * R)}}};
 #undef R
 
 #define R (FRACUNIT)
 mline_t thintriangle_guy[] = {
-    { { (fixed_t)(-.5*R), (fixed_t)(-.7*R) }, { (fixed_t)(R    ), (fixed_t)(0    ) } },
-    { { (fixed_t)(R    ), (fixed_t)(0    ) }, { (fixed_t)(-.5*R), (fixed_t)(.7*R ) } },
-    { { (fixed_t)(-.5*R), (fixed_t)(.7*R ) }, { (fixed_t)(-.5*R), (fixed_t)(-.7*R) } }
-};
+    {{(fixed_t)(-.5 * R), (fixed_t)(-.7 * R)}, {(fixed_t)(R), (fixed_t)(0)}},
+    {{(fixed_t)(R), (fixed_t)(0)}, {(fixed_t)(-.5 * R), (fixed_t)(.7 * R)}},
+    {{(fixed_t)(-.5 * R), (fixed_t)(.7 * R)}, {(fixed_t)(-.5 * R), (fixed_t)(-.7 * R)}}};
 // [crispy] print keys as crosses
 static mline_t cross_mark[] = {
-    { { -R, 0 }, { R, 0 } },
-    { { 0, -R }, { 0, R } },
+    {{-R, 0}, {R, 0}},
+    {{0, -R}, {0, R}},
 };
 static mline_t square_mark[] = {
-    { { -R,  0 }, {  0,  R } },
-    { {  0,  R }, {  R,  0 } },
-    { {  R,  0 }, {  0, -R } },
-    { {  0, -R }, { -R,  0 } },
+    {{-R, 0}, {0, R}},
+    {{0, R}, {R, 0}},
+    {{R, 0}, {0, -R}},
+    {{0, -R}, {-R, 0}},
 };
 #undef R
 
 
+static int cheating = 0;
+static int grid = 0;
 
+static int leveljuststarted = 1; // kluge until AM_LevelInit() is called
 
-static int 	cheating = 0;
-static int 	grid = 0;
-
-static int 	leveljuststarted = 1; 	// kluge until AM_LevelInit() is called
-
-boolean    	automapactive = false;
-//static int 	finit_width = SCREENWIDTH;
-//static int 	finit_height = SCREENHEIGHT - (ST_HEIGHT << crispy->hires);
+boolean automapactive = false;
+// static int 	finit_width = SCREENWIDTH;
+// static int 	finit_height = SCREENHEIGHT - (ST_HEIGHT << crispy->hires);
 
 // location of window on screen
-static int 	f_x;
-static int	f_y;
+static int f_x;
+static int f_y;
 
 // size of window on screen
-static int 	f_w;
-static int	f_h;
+static int f_w;
+static int f_h;
 
-static int 	lightlev; 		// used for funky strobing effect
+static int lightlev;     // used for funky strobing effect
 #define fb I_VideoBuffer // [crispy] simplify
-//static pixel_t*	fb; 			// pseudo-frame buffer
-static int 	amclock;
+// static pixel_t*	fb; 			// pseudo-frame buffer
+static int amclock;
 
 static mpoint_t m_paninc, m_paninc2; // how far the window pans each tic (map coords)
-static mpoint_t m_paninc_target; // [crispy] for interpolation
-static fixed_t 	mtof_zoommul; // how far the window zooms in each tic (map coords)
-static fixed_t 	ftom_zoommul; // how far the window zooms in each tic (fb coords)
+static mpoint_t m_paninc_target;     // [crispy] for interpolation
+static fixed_t mtof_zoommul;         // how far the window zooms in each tic (map coords)
+static fixed_t ftom_zoommul;         // how far the window zooms in each tic (fb coords)
 
-static int64_t 	m_x, m_y;   // LL x,y where the window is on the map (map coords)
-static int64_t 	m_x2, m_y2; // UR x,y where the window is on the map (map coords)
-static int64_t 	prev_m_x, prev_m_y; // [crispy] for interpolation
-static int64_t 	next_m_x, next_m_y; // [crispy] for interpolation
+static int64_t m_x, m_y;           // LL x,y where the window is on the map (map coords)
+static int64_t m_x2, m_y2;         // UR x,y where the window is on the map (map coords)
+static int64_t prev_m_x, prev_m_y; // [crispy] for interpolation
+static int64_t next_m_x, next_m_y; // [crispy] for interpolation
 
 //
 // width/height of window on map (map coords)
 //
-static int64_t 	m_w;
-static int64_t 	m_h;
+static int64_t m_w;
+static int64_t m_h;
 
 // based on level size
-static fixed_t 	min_x;
-static fixed_t	min_y;
-static fixed_t 	max_x;
-static fixed_t  max_y;
+static fixed_t min_x;
+static fixed_t min_y;
+static fixed_t max_x;
+static fixed_t max_y;
 
-static fixed_t 	max_w; // max_x-min_x,
-static fixed_t  max_h; // max_y-min_y
+static fixed_t max_w; // max_x-min_x,
+static fixed_t max_h; // max_y-min_y
 
 // based on player size
-static fixed_t 	min_w;
-static fixed_t  min_h;
+static fixed_t min_w;
+static fixed_t min_h;
 
 
-static fixed_t 	min_scale_mtof; // used to tell when to stop zooming out
-static fixed_t 	max_scale_mtof; // used to tell when to stop zooming in
+static fixed_t min_scale_mtof; // used to tell when to stop zooming out
+static fixed_t max_scale_mtof; // used to tell when to stop zooming in
 
 // old stuff for recovery later
 static int64_t old_m_w, old_m_h;
 static int64_t old_m_x, old_m_y;
 
 // used by MTOF to scale from map-to-frame-buffer coords
-static fixed_t scale_mtof = (fixed_t)INITSCALEMTOF;
+static fixed_t scale_mtof = (fixed_t) INITSCALEMTOF;
 // used by FTOM to scale from frame-buffer-to-map coords (=1/scale_mtof)
 static fixed_t scale_ftom;
 
 static player_t *plr; // the player represented by an arrow
 
-static patch_t *marknums[10]; // numbers used for marking by the automap
+static patch_t *marknums[10];                 // numbers used for marking by the automap
 static mpoint_t markpoints[AM_NUMMARKPOINTS]; // where the points are
-static int markpointnum = 0; // next point to be assigned
+static int markpointnum = 0;                  // next point to be assigned
 
 static int followplayer = 1; // specifies whether to follow the player around
 
@@ -321,19 +315,19 @@ cheatseq_t cheat_amap = CHEAT("iddt", 0);
 static boolean stopped = true;
 
 // [crispy] Antialiased lines from Heretic with more colors
-#define NUMSHADES 8
+#define NUMSHADES      8
 #define NUMSHADES_BITS 3 // log2(NUMSHADES)
 static pixel_t color_shades[NUMSHADES * 256];
 
 // Forward declare for AM_LevelInit
-static void AM_drawFline_Vanilla(fline_t* fl, int color);
-static void AM_drawFline_Smooth(fline_t* fl, int color);
+static void AM_drawFline_Vanilla(fline_t *fl, int color);
+static void AM_drawFline_Smooth(fline_t *fl, int color);
 // Indirect through this to avoid having to test crispy->smoothmap for every line
-void (*AM_drawFline)(fline_t*, int) = AM_drawFline_Vanilla;
+void (*AM_drawFline)(fline_t *, int) = AM_drawFline_Vanilla;
 
 // [crispy] automap rotate mode needs these early on
-void AM_rotate (int64_t *x, int64_t *y, angle_t a);
-static void AM_rotatePoint (mpoint_t *pt);
+void AM_rotate(int64_t *x, int64_t *y, angle_t a);
+static void AM_rotatePoint(mpoint_t *pt);
 static mpoint_t mapcenter;
 static angle_t mapangle;
 
@@ -343,20 +337,20 @@ static void AM_drawCrosshair(int color, boolean force);
 // segment in map coordinates (with the upright y-axis n' all) so
 // that it can be used with the brain-dead drawing stuff.
 
-void
-AM_getIslope
-( mline_t*	ml,
-  islope_t*	is )
+void AM_getIslope(mline_t *ml, islope_t *is)
 {
     int dx, dy;
 
     dy = ml->a.y - ml->b.y;
     dx = ml->b.x - ml->a.x;
-    if (!dy) is->islp = (dx<0?-INT_MAX:INT_MAX);
-    else is->islp = FixedDiv(dx, dy);
-    if (!dx) is->slp = (dy<0?-INT_MAX:INT_MAX);
-    else is->slp = FixedDiv(dy, dx);
-
+    if (!dy)
+        is->islp = (dx < 0 ? -INT_MAX : INT_MAX);
+    else
+        is->islp = FixedDiv(dx, dy);
+    if (!dx)
+        is->slp = (dy < 0 ? -INT_MAX : INT_MAX);
+    else
+        is->slp = FixedDiv(dy, dx);
 }
 
 //
@@ -364,12 +358,12 @@ AM_getIslope
 //
 void AM_activateNewScale(void)
 {
-    m_x += m_w/2;
-    m_y += m_h/2;
+    m_x += m_w / 2;
+    m_y += m_h / 2;
     m_w = FTOM(f_w);
     m_h = FTOM(f_h);
-    m_x -= m_w/2;
-    m_y -= m_h/2;
+    m_x -= m_w / 2;
+    m_y -= m_h / 2;
     m_x2 = m_x + m_w;
     m_y2 = m_y + m_h;
     next_m_x = m_x; // [crispy]
@@ -397,11 +391,13 @@ void AM_restoreScaleAndLoc(void)
     m_h = old_m_h;
     if (!followplayer)
     {
-	m_x = old_m_x;
-	m_y = old_m_y;
-    } else {
-	m_x = (plr->mo->x >> FRACTOMAPBITS) - m_w/2;
-	m_y = (plr->mo->y >> FRACTOMAPBITS) - m_h/2;
+        m_x = old_m_x;
+        m_y = old_m_y;
+    }
+    else
+    {
+        m_x = (plr->mo->x >> FRACTOMAPBITS) - m_w / 2;
+        m_y = (plr->mo->y >> FRACTOMAPBITS) - m_h / 2;
     }
     m_x2 = m_x + m_w;
     m_y2 = m_y + m_h;
@@ -409,7 +405,7 @@ void AM_restoreScaleAndLoc(void)
     next_m_y = m_y; // [crispy]
 
     // Change the scaling multipliers
-    scale_mtof = FixedDiv(f_w<<FRACBITS, m_w);
+    scale_mtof = FixedDiv(f_w << FRACBITS, m_w);
     scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 }
 
@@ -422,16 +418,15 @@ void AM_addMark(void)
     // if not following the player
     if (!(!followplayer && crispy->automapoverlay))
     {
-    markpoints[markpointnum].x = m_x + m_w/2;
-    markpoints[markpointnum].y = m_y + m_h/2;
+        markpoints[markpointnum].x = m_x + m_w / 2;
+        markpoints[markpointnum].y = m_y + m_h / 2;
     }
     else
     {
-	markpoints[markpointnum].x = plr->mo->x >> FRACTOMAPBITS;
-	markpoints[markpointnum].y = plr->mo->y >> FRACTOMAPBITS;
+        markpoints[markpointnum].x = plr->mo->x >> FRACTOMAPBITS;
+        markpoints[markpointnum].y = plr->mo->y >> FRACTOMAPBITS;
     }
     markpointnum = (markpointnum + 1) % AM_NUMMARKPOINTS;
-
 }
 
 //
@@ -444,35 +439,34 @@ void AM_findMinMaxBoundaries(void)
     fixed_t a;
     fixed_t b;
 
-    min_x = min_y =  INT_MAX;
+    min_x = min_y = INT_MAX;
     max_x = max_y = -INT_MAX;
 
-    for (i=0;i<numvertexes;i++)
+    for (i = 0; i < numvertexes; i++)
     {
-	if (vertexes[i].x < min_x)
-	    min_x = vertexes[i].x;
-	else if (vertexes[i].x > max_x)
-	    max_x = vertexes[i].x;
+        if (vertexes[i].x < min_x)
+            min_x = vertexes[i].x;
+        else if (vertexes[i].x > max_x)
+            max_x = vertexes[i].x;
 
-	if (vertexes[i].y < min_y)
-	    min_y = vertexes[i].y;
-	else if (vertexes[i].y > max_y)
-	    max_y = vertexes[i].y;
+        if (vertexes[i].y < min_y)
+            min_y = vertexes[i].y;
+        else if (vertexes[i].y > max_y)
+            max_y = vertexes[i].y;
     }
 
     // [crispy] cope with huge level dimensions which span the entire INT range
     max_w = (max_x >>= FRACTOMAPBITS) - (min_x >>= FRACTOMAPBITS);
     max_h = (max_y >>= FRACTOMAPBITS) - (min_y >>= FRACTOMAPBITS);
 
-    min_w = 2*MAPPLAYERRADIUS; // const? never changed?
-    min_h = 2*MAPPLAYERRADIUS;
+    min_w = 2 * MAPPLAYERRADIUS; // const? never changed?
+    min_h = 2 * MAPPLAYERRADIUS;
 
-    a = FixedDiv(f_w<<FRACBITS, max_w);
-    b = FixedDiv(f_h<<FRACBITS, max_h);
+    a = FixedDiv(f_w << FRACBITS, max_w);
+    b = FixedDiv(f_h << FRACBITS, max_h);
 
     min_scale_mtof = a < b ? a : b;
-    max_scale_mtof = FixedDiv(f_h<<FRACBITS, 2*MAPPLAYERRADIUS);
-
+    max_scale_mtof = FixedDiv(f_h << FRACBITS, 2 * MAPPLAYERRADIUS);
 }
 
 // [crispy] Function called by AM_Ticker for stable panning interpolation
@@ -519,20 +513,20 @@ void AM_changeWindowLoc(void)
     }
     if (crispy->automaprotate)
     {
-	AM_rotate(&incx, &incy, -mapangle);
+        AM_rotate(&incx, &incy, -mapangle);
     }
     m_x = prev_m_x + incx;
     m_y = prev_m_y + incy;
 
-    if (m_x + m_w/2 > max_x)
-	next_m_x = m_x = max_x - m_w/2;
-    else if (m_x + m_w/2 < min_x)
-	next_m_x = m_x = min_x - m_w/2;
+    if (m_x + m_w / 2 > max_x)
+        next_m_x = m_x = max_x - m_w / 2;
+    else if (m_x + m_w / 2 < min_x)
+        next_m_x = m_x = min_x - m_w / 2;
 
-    if (m_y + m_h/2 > max_y)
-	next_m_y = m_y = max_y - m_h/2;
-    else if (m_y + m_h/2 < min_y)
-	next_m_y = m_y = min_y - m_h/2;
+    if (m_y + m_h / 2 > max_y)
+        next_m_y = m_y = max_y - m_h / 2;
+    else if (m_y + m_h / 2 < min_y)
+        next_m_y = m_y = min_y - m_h / 2;
 
     m_x2 = m_x + m_w;
     m_y2 = m_y + m_h;
@@ -544,10 +538,10 @@ void AM_changeWindowLoc(void)
 //
 void AM_initVariables(void)
 {
-    static event_t st_notify = { ev_keyup, AM_MSGENTERED, 0, 0 };
+    static event_t st_notify = {ev_keyup, AM_MSGENTERED, 0, 0};
 
     automapactive = true;
-//  fb = I_VideoBuffer; // [crispy] simplify
+    //  fb = I_VideoBuffer; // [crispy] simplify
 
     amclock = 0;
     lightlev = 0;
@@ -563,8 +557,8 @@ void AM_initVariables(void)
     // [crispy] find player to center
     plr = &players[displayplayer];
 
-    next_m_x = (plr->mo->x >> FRACTOMAPBITS) - m_w/2;
-    next_m_y = (plr->mo->y >> FRACTOMAPBITS) - m_h/2;
+    next_m_x = (plr->mo->x >> FRACTOMAPBITS) - m_w / 2;
+    next_m_y = (plr->mo->y >> FRACTOMAPBITS) - m_h / 2;
 
     AM_Ticker(); // [crispy] initialize variables for interpolation
     AM_changeWindowLoc();
@@ -577,7 +571,6 @@ void AM_initVariables(void)
 
     // inform the status bar of the change
     ST_Responder(&st_notify);
-
 }
 
 //
@@ -588,12 +581,11 @@ void AM_loadPics(void)
     int i;
     char namebuf[9];
 
-    for (i=0;i<10;i++)
+    for (i = 0; i < 10; i++)
     {
-	M_snprintf(namebuf, 9, "AMMNUM%d", i);
-	marknums[i] = W_CacheLumpName(namebuf, PU_STATIC);
+        M_snprintf(namebuf, 9, "AMMNUM%d", i);
+        marknums[i] = W_CacheLumpName(namebuf, PU_STATIC);
     }
-
 }
 
 void AM_unloadPics(void)
@@ -601,10 +593,10 @@ void AM_unloadPics(void)
     int i;
     char namebuf[9];
 
-    for (i=0;i<10;i++)
+    for (i = 0; i < 10; i++)
     {
-	M_snprintf(namebuf, 9, "AMMNUM%d", i);
-	W_ReleaseLumpName(namebuf);
+        M_snprintf(namebuf, 9, "AMMNUM%d", i);
+        W_ReleaseLumpName(namebuf);
     }
 }
 
@@ -612,8 +604,8 @@ void AM_clearMarks(void)
 {
     int i;
 
-    for (i=0;i<AM_NUMMARKPOINTS;i++)
-	markpoints[i].x = -1; // means empty
+    for (i = 0; i < AM_NUMMARKPOINTS; i++)
+        markpoints[i].x = -1; // means empty
     markpointnum = 0;
 }
 
@@ -637,25 +629,25 @@ void AM_LevelInit(boolean reinit)
     AM_drawFline = crispy->smoothmap ? AM_drawFline_Smooth : AM_drawFline_Vanilla;
 
     if (!reinit)
-    AM_clearMarks();
+        AM_clearMarks();
 
     AM_findMinMaxBoundaries();
     // [crispy] preserve map scale when re-initializing
     if (reinit && f_h_old)
     {
-	scale_mtof = scale_mtof * f_h / f_h_old;
-	AM_drawCrosshair(XHAIRCOLORS, true);
+        scale_mtof = scale_mtof * f_h / f_h_old;
+        AM_drawCrosshair(XHAIRCOLORS, true);
     }
     else
     {
-    // [crispy] initialize zoomlevel on all maps so that a 4096 units
-    // square map would just fit in (MAP01 is 3376x3648 units)
-    a = FixedDiv(f_w, (max_w>>MAPBITS < 2048) ? 2*(max_w>>MAPBITS) : 4096);
-    b = FixedDiv(f_h, (max_h>>MAPBITS < 2048) ? 2*(max_h>>MAPBITS) : 4096);
-    scale_mtof = FixedDiv(a < b ? a : b, (int) (0.7*MAPUNIT));
+        // [crispy] initialize zoomlevel on all maps so that a 4096 units
+        // square map would just fit in (MAP01 is 3376x3648 units)
+        a = FixedDiv(f_w, (max_w >> MAPBITS < 2048) ? 2 * (max_w >> MAPBITS) : 4096);
+        b = FixedDiv(f_h, (max_h >> MAPBITS < 2048) ? 2 * (max_h >> MAPBITS) : 4096);
+        scale_mtof = FixedDiv(a < b ? a : b, (int) (0.7 * MAPUNIT));
     }
     if (scale_mtof > max_scale_mtof)
-	scale_mtof = min_scale_mtof;
+        scale_mtof = min_scale_mtof;
     scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 
     f_h_old = f_h;
@@ -670,9 +662,15 @@ void AM_LevelInit(boolean reinit)
         {
 #define REINDEX(I) (color + I * 256)
             // Pick a range of shades for a steep gradient to keep lines thin
-            int shade_index[NUMSHADES] =
-            {
-                REINDEX(0), REINDEX(1), REINDEX(2), REINDEX(3), REINDEX(7), REINDEX(15), REINDEX(23), REINDEX(31),
+            int shade_index[NUMSHADES] = {
+                REINDEX(0),
+                REINDEX(1),
+                REINDEX(2),
+                REINDEX(3),
+                REINDEX(7),
+                REINDEX(15),
+                REINDEX(23),
+                REINDEX(31),
             };
 #undef REINDEX
             for (int shade = 0; shade < NUMSHADES; ++shade)
@@ -690,14 +688,12 @@ void AM_LevelInit(boolean reinit)
 }
 
 
-
-
 //
 //
 //
-void AM_Stop (void)
+void AM_Stop(void)
 {
-    static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED, 0 };
+    static event_t st_notify = {0, ev_keyup, AM_MSGEXITED, 0};
 
     AM_unloadPics();
     automapactive = false;
@@ -710,24 +706,25 @@ void AM_Stop (void)
 //
 // [crispy] moved here for extended savegames
 static int lastlevel = -1, lastepisode = -1;
-void AM_Start (void)
+void AM_Start(void)
 {
-    if (!stopped) AM_Stop();
+    if (!stopped)
+        AM_Stop();
     stopped = false;
     if (lastlevel != gamemap || lastepisode != gameepisode)
     {
-	AM_LevelInit(false);
-	lastlevel = gamemap;
-	lastepisode = gameepisode;
+        AM_LevelInit(false);
+        lastlevel = gamemap;
+        lastepisode = gameepisode;
     }
     AM_initVariables();
     AM_loadPics();
 }
 
 // [crispy] reset IDDT cheat when re-starting map during demo recording
-void AM_ResetIDDTcheat (void)
+void AM_ResetIDDTcheat(void)
 {
-	cheating = 0;
+    cheating = 0;
 }
 
 //
@@ -754,16 +751,14 @@ void AM_maxOutWindowScale(void)
 //
 // Handle events (user inputs) in automap mode
 //
-boolean
-AM_Responder
-( event_t*	ev )
+boolean AM_Responder(event_t *ev)
 {
 
     int rc;
-    static int bigstate=0;
+    static int bigstate = 0;
     static char buffer[20];
     int key;
-    extern boolean speedkeydown (void);
+    extern boolean speedkeydown(void);
 
     // [crispy] toggleable pan/zoom speed
     if (speedkeydown())
@@ -785,21 +780,20 @@ AM_Responder
 
     rc = false;
 
-    if (ev->type == ev_joystick && joybautomap >= 0
-        && (ev->data1 & (1 << joybautomap)) != 0)
+    if (ev->type == ev_joystick && joybautomap >= 0 && (ev->data1 & (1 << joybautomap)) != 0)
     {
         joywait = I_GetTime() + 5;
 
         if (!automapactive)
         {
-            AM_Start ();
+            AM_Start();
             viewactive = false;
         }
         else
         {
             bigstate = 0;
             viewactive = true;
-            AM_Stop ();
+            AM_Stop();
         }
 
         return true;
@@ -807,99 +801,100 @@ AM_Responder
 
     if (!automapactive)
     {
-	if (ev->type == ev_keydown && ev->data1 == key_map_toggle)
-	{
-	    AM_Start ();
-	    viewactive = false;
-	    rc = true;
-	}
+        if (ev->type == ev_keydown && ev->data1 == key_map_toggle)
+        {
+            AM_Start();
+            viewactive = false;
+            rc = true;
+        }
     }
     // [crispy] zoom and move Automap with the mouse (wheel)
     else if (ev->type == ev_mouse && !crispy->automapoverlay && !menuactive && !inhelpscreens)
     {
-	if (mousebmapzoomout >= 0 && ev->data1 & (1 << mousebmapzoomout))
-	{
-		mtof_zoommul = m_zoomout_mouse;
-		ftom_zoommul = m_zoomin_mouse;
-		mousewheelzoom = true;
-		rc = true;
-	}
-	else
-	if (mousebmapzoomin >= 0 && ev->data1 & (1 << mousebmapzoomin))
-	{
-		mtof_zoommul = m_zoomin_mouse;
-		ftom_zoommul = m_zoomout_mouse;
-		mousewheelzoom = true;
-		rc = true;
-	}
-	else
-	if (mousebmapmaxzoom >= 0 && ev->data1 & (1 << mousebmapmaxzoom))
-	{
-		bigstate = !bigstate;
-		if (bigstate)
-		{
-			AM_saveScaleAndLoc();
-			AM_minOutWindowScale();
-		}
-		else AM_restoreScaleAndLoc();
-	}
-	else
-	if (mousebmapfollow >= 0 && ev->data1 & (1 << mousebmapfollow))
-	{
-		followplayer = !followplayer;
-		if (followplayer)
-			plr->message = AMSTR_FOLLOWON;
-		else
-			plr->message = AMSTR_FOLLOWOFF;
-	}
-	else
-	if (!followplayer && (ev->data2 || ev->data3))
-	{
-		// [crispy] mouse sensitivity for strafe
-		m_paninc2.x = FTOM(ev->data2*(mouseSensitivity_x2+5)/(160 >> crispy->hires));
-		m_paninc2.y = FTOM(ev->data3*(mouseSensitivity_x2+5)/(160 >> crispy->hires));
-		rc = true;
-	}
+        if (mousebmapzoomout >= 0 && ev->data1 & (1 << mousebmapzoomout))
+        {
+            mtof_zoommul = m_zoomout_mouse;
+            ftom_zoommul = m_zoomin_mouse;
+            mousewheelzoom = true;
+            rc = true;
+        }
+        else if (mousebmapzoomin >= 0 && ev->data1 & (1 << mousebmapzoomin))
+        {
+            mtof_zoommul = m_zoomin_mouse;
+            ftom_zoommul = m_zoomout_mouse;
+            mousewheelzoom = true;
+            rc = true;
+        }
+        else if (mousebmapmaxzoom >= 0 && ev->data1 & (1 << mousebmapmaxzoom))
+        {
+            bigstate = !bigstate;
+            if (bigstate)
+            {
+                AM_saveScaleAndLoc();
+                AM_minOutWindowScale();
+            }
+            else
+                AM_restoreScaleAndLoc();
+        }
+        else if (mousebmapfollow >= 0 && ev->data1 & (1 << mousebmapfollow))
+        {
+            followplayer = !followplayer;
+            if (followplayer)
+                plr->message = AMSTR_FOLLOWON;
+            else
+                plr->message = AMSTR_FOLLOWOFF;
+        }
+        else if (!followplayer && (ev->data2 || ev->data3))
+        {
+            // [crispy] mouse sensitivity for strafe
+            m_paninc2.x = FTOM(ev->data2 * (mouseSensitivity_x2 + 5) / (160 >> crispy->hires));
+            m_paninc2.y = FTOM(ev->data3 * (mouseSensitivity_x2 + 5) / (160 >> crispy->hires));
+            rc = true;
+        }
     }
     else if (ev->type == ev_keydown)
     {
-	rc = true;
+        rc = true;
         key = ev->data1;
 
-        if (key == key_map_east)          // pan right
+        if (key == key_map_east) // pan right
         {
             // [crispy] keep the map static in overlay mode
             // if not following the player
             if (!followplayer)
-                m_paninc.x = crispy->fliplevels ?
-                    -FTOM(f_paninc << crispy->hires) : FTOM(f_paninc << crispy->hires);
-            else rc = false;
+                m_paninc.x = crispy->fliplevels ? -FTOM(f_paninc << crispy->hires)
+                                                : FTOM(f_paninc << crispy->hires);
+            else
+                rc = false;
         }
-        else if (key == key_map_west)     // pan left
+        else if (key == key_map_west) // pan left
         {
             if (!followplayer)
-                m_paninc.x = crispy->fliplevels ?
-                    FTOM(f_paninc << crispy->hires) : -FTOM(f_paninc << crispy->hires);
-            else rc = false;
+                m_paninc.x = crispy->fliplevels ? FTOM(f_paninc << crispy->hires)
+                                                : -FTOM(f_paninc << crispy->hires);
+            else
+                rc = false;
         }
-        else if (key == key_map_north)    // pan up
+        else if (key == key_map_north) // pan up
         {
             if (!followplayer)
                 m_paninc.y = FTOM(f_paninc << crispy->hires);
-            else rc = false;
+            else
+                rc = false;
         }
-        else if (key == key_map_south)    // pan down
+        else if (key == key_map_south) // pan down
         {
             if (!followplayer)
                 m_paninc.y = -FTOM(f_paninc << crispy->hires);
-            else rc = false;
+            else
+                rc = false;
         }
-        else if (key == key_map_zoomout)  // zoom out
+        else if (key == key_map_zoomout) // zoom out
         {
             mtof_zoommul = m_zoomout_kbd;
             ftom_zoommul = m_zoomin_kbd;
         }
-        else if (key == key_map_zoomin)   // zoom in
+        else if (key == key_map_zoomin) // zoom in
         {
             mtof_zoommul = m_zoomin_kbd;
             ftom_zoommul = m_zoomout_kbd;
@@ -908,7 +903,7 @@ AM_Responder
         {
             bigstate = 0;
             viewactive = true;
-            AM_Stop ();
+            AM_Stop();
         }
         else if (key == key_map_maxzoom)
         {
@@ -918,7 +913,8 @@ AM_Responder
                 AM_saveScaleAndLoc();
                 AM_minOutWindowScale();
             }
-            else AM_restoreScaleAndLoc();
+            else
+                AM_restoreScaleAndLoc();
         }
         else if (key == key_map_follow)
         {
@@ -938,8 +934,7 @@ AM_Responder
         }
         else if (key == key_map_mark)
         {
-            M_snprintf(buffer, sizeof(buffer), "%s %d",
-                       AMSTR_MARKEDSPOT, markpointnum);
+            M_snprintf(buffer, sizeof(buffer), "%s %d", AMSTR_MARKEDSPOT, markpointnum);
             plr->message = buffer;
             AM_addMark();
         }
@@ -972,8 +967,7 @@ AM_Responder
             rc = false;
         }
 
-        if ((!deathmatch || gameversion <= exe_doom_1_8)
-         && cht_CheckCheat(&cheat_amap, ev->data2))
+        if ((!deathmatch || gameversion <= exe_doom_1_8) && cht_CheckCheat(&cheat_amap, ev->data2))
         {
             rc = false;
             cheating = (cheating + 1) % 3;
@@ -986,19 +980,23 @@ AM_Responder
 
         if (key == key_map_east)
         {
-            if (!followplayer) m_paninc.x = 0;
+            if (!followplayer)
+                m_paninc.x = 0;
         }
         else if (key == key_map_west)
         {
-            if (!followplayer) m_paninc.x = 0;
+            if (!followplayer)
+                m_paninc.x = 0;
         }
         else if (key == key_map_north)
         {
-            if (!followplayer) m_paninc.y = 0;
+            if (!followplayer)
+                m_paninc.y = 0;
         }
         else if (key == key_map_south)
         {
-            if (!followplayer) m_paninc.y = 0;
+            if (!followplayer)
+                m_paninc.y = 0;
         }
         else if (key == key_map_zoomout || key == key_map_zoomin)
         {
@@ -1008,7 +1006,6 @@ AM_Responder
     }
 
     return rc;
-
 }
 
 
@@ -1025,17 +1022,17 @@ void AM_changeWindowScale(void)
     // [crispy] reset after zooming with the mouse wheel
     if (mousewheelzoom)
     {
-	mtof_zoommul = FRACUNIT;
-	ftom_zoommul = FRACUNIT;
-	mousewheelzoom = false;
+        mtof_zoommul = FRACUNIT;
+        ftom_zoommul = FRACUNIT;
+        mousewheelzoom = false;
     }
 
     if (scale_mtof < min_scale_mtof)
-	AM_minOutWindowScale();
+        AM_minOutWindowScale();
     else if (scale_mtof > max_scale_mtof)
-	AM_maxOutWindowScale();
+        AM_maxOutWindowScale();
     else
-	AM_activateNewScale();
+        AM_activateNewScale();
 }
 
 
@@ -1047,25 +1044,23 @@ void AM_doFollowPlayer(void)
     // [crispy] FTOM(MTOF()) is needed to fix map line jitter in follow mode.
     if (crispy->hires)
     {
-        m_x = (viewx >> FRACTOMAPBITS) - m_w/2;
-        m_y = (viewy >> FRACTOMAPBITS) - m_h/2;
+        m_x = (viewx >> FRACTOMAPBITS) - m_w / 2;
+        m_y = (viewy >> FRACTOMAPBITS) - m_h / 2;
     }
     else
     {
-        m_x = FTOM(MTOF(viewx >> FRACTOMAPBITS)) - m_w/2;
-        m_y = FTOM(MTOF(viewy >> FRACTOMAPBITS)) - m_h/2;
+        m_x = FTOM(MTOF(viewx >> FRACTOMAPBITS)) - m_w / 2;
+        m_y = FTOM(MTOF(viewy >> FRACTOMAPBITS)) - m_h / 2;
     }
-        next_m_x = m_x;
-        next_m_y = m_y;
-	m_x2 = m_x + m_w;
-	m_y2 = m_y + m_h;
+    next_m_x = m_x;
+    next_m_y = m_y;
+    m_x2 = m_x + m_w;
+    m_y2 = m_y + m_h;
 
-	//  m_x = FTOM(MTOF(plr->mo->x - m_w/2));
-	//  m_y = FTOM(MTOF(plr->mo->y - m_h/2));
-	//  m_x = plr->mo->x - m_w/2;
-	//  m_y = plr->mo->y - m_h/2;
-
-
+    //  m_x = FTOM(MTOF(plr->mo->x - m_w/2));
+    //  m_y = FTOM(MTOF(plr->mo->y - m_h/2));
+    //  m_x = plr->mo->x - m_w/2;
+    //  m_y = plr->mo->y - m_h/2;
 }
 
 //
@@ -1074,29 +1069,29 @@ void AM_doFollowPlayer(void)
 void AM_updateLightLev(void)
 {
     static int nexttic = 0;
-    //static int litelevels[] = { 0, 3, 5, 6, 6, 7, 7, 7 };
-    static int litelevels[] = { 0, 4, 7, 10, 12, 14, 15, 15 };
+    // static int litelevels[] = { 0, 3, 5, 6, 6, 7, 7, 7 };
+    static int litelevels[] = {0, 4, 7, 10, 12, 14, 15, 15};
     static int litelevelscnt = 0;
 
     // Change light level
-    if (amclock>nexttic)
+    if (amclock > nexttic)
     {
-	lightlev = litelevels[litelevelscnt++];
-	if (litelevelscnt == arrlen(litelevels)) litelevelscnt = 0;
-	nexttic = amclock + 6 - (amclock % 6);
+        lightlev = litelevels[litelevelscnt++];
+        if (litelevelscnt == arrlen(litelevels))
+            litelevelscnt = 0;
+        nexttic = amclock + 6 - (amclock % 6);
     }
-
 }
 
 
 //
 // Updates on Game Tick
 //
-void AM_Ticker (void)
+void AM_Ticker(void)
 {
 
     if (!automapactive)
-	return;
+        return;
 
     amclock++;
 
@@ -1111,18 +1106,17 @@ void AM_Ticker (void)
     m_paninc2.x = m_paninc2.y = 0;
 
     if (followplayer)
-	AM_doFollowPlayer();
+        AM_doFollowPlayer();
 
     // Change the zoom if necessary
     if (ftom_zoommul != FRACUNIT)
-	AM_changeWindowScale();
+        AM_changeWindowScale();
 
     if (m_paninc_target.x || m_paninc_target.y)
         AM_changeWindowLocTick();
 
     // Update light level
     // AM_updateLightLev();
-
 }
 
 
@@ -1131,7 +1125,7 @@ void AM_Ticker (void)
 //
 void AM_clearFB(int color)
 {
-    memset(fb, color, f_w*f_h*sizeof(*fb));
+    memset(fb, color, f_w * f_h * sizeof(*fb));
 }
 
 
@@ -1142,62 +1136,63 @@ void AM_clearFB(int color)
 // faster reject and precalculated slopes.  If the speed is needed,
 // use a hash algorithm to handle  the common cases.
 //
-boolean
-AM_clipMline
-( mline_t*	ml,
-  fline_t*	fl )
+boolean AM_clipMline(mline_t *ml, fline_t *fl)
 {
     enum
     {
-	LEFT	=1,
-	RIGHT	=2,
-	BOTTOM	=4,
-	TOP	=8
+        LEFT = 1,
+        RIGHT = 2,
+        BOTTOM = 4,
+        TOP = 8
     };
 
-    register int	outcode1 = 0;
-    register int	outcode2 = 0;
-    register int	outside;
+    register int outcode1 = 0;
+    register int outcode2 = 0;
+    register int outside;
 
-    fpoint_t	tmp;
-    int		dx;
-    int		dy;
+    fpoint_t tmp;
+    int dx;
+    int dy;
 
 
-#define DOOUTCODE(oc, mx, my) \
-    (oc) = 0; \
-    if ((my) < 0) (oc) |= TOP; \
-    else if ((my) >= f_h) (oc) |= BOTTOM; \
-    if ((mx) < 0) (oc) |= LEFT; \
-    else if ((mx) >= f_w) (oc) |= RIGHT;
+#define DOOUTCODE(oc, mx, my)                                                                      \
+    (oc) = 0;                                                                                      \
+    if ((my) < 0)                                                                                  \
+        (oc) |= TOP;                                                                               \
+    else if ((my) >= f_h)                                                                          \
+        (oc) |= BOTTOM;                                                                            \
+    if ((mx) < 0)                                                                                  \
+        (oc) |= LEFT;                                                                              \
+    else if ((mx) >= f_w)                                                                          \
+        (oc) |= RIGHT;
 
 
     // do trivial rejects and outcodes
     if (ml->a.y > m_y2)
-	outcode1 = TOP;
+        outcode1 = TOP;
     else if (ml->a.y < m_y)
-	outcode1 = BOTTOM;
+        outcode1 = BOTTOM;
 
     if (ml->b.y > m_y2)
-	outcode2 = TOP;
+        outcode2 = TOP;
     else if (ml->b.y < m_y)
-	outcode2 = BOTTOM;
+        outcode2 = BOTTOM;
 
     if (outcode1 & outcode2)
-	return false; // trivially outside
+        return false; // trivially outside
 
     if (ml->a.x < m_x)
-	outcode1 |= LEFT;
+        outcode1 |= LEFT;
     else if (ml->a.x > m_x2)
-	outcode1 |= RIGHT;
+        outcode1 |= RIGHT;
 
     if (ml->b.x < m_x)
-	outcode2 |= LEFT;
+        outcode2 |= LEFT;
     else if (ml->b.x > m_x2)
-	outcode2 |= RIGHT;
+        outcode2 |= RIGHT;
 
     if (outcode1 & outcode2)
-	return false; // trivially outside
+        return false; // trivially outside
 
     // transform to frame-buffer coordinates.
     fl->a.x = CXMTOF(ml->a.x);
@@ -1209,66 +1204,66 @@ AM_clipMline
     DOOUTCODE(outcode2, fl->b.x, fl->b.y);
 
     if (outcode1 & outcode2)
-	return false;
+        return false;
 
     while (outcode1 | outcode2)
     {
-	// may be partially inside box
-	// find an outside point
-	if (outcode1)
-	    outside = outcode1;
-	else
-	    outside = outcode2;
+        // may be partially inside box
+        // find an outside point
+        if (outcode1)
+            outside = outcode1;
+        else
+            outside = outcode2;
 
-	// clip to each side
-	if (outside & TOP)
-	{
-	    dy = fl->a.y - fl->b.y;
-	    dx = fl->b.x - fl->a.x;
-	    // [crispy] 'int64_t' math to avoid overflows on long lines.
-	    tmp.x = fl->a.x + (fixed_t)(((int64_t)dx*(fl->a.y-f_y))/dy);
-	    tmp.y = 0;
-	}
-	else if (outside & BOTTOM)
-	{
-	    dy = fl->a.y - fl->b.y;
-	    dx = fl->b.x - fl->a.x;
-	    tmp.x = fl->a.x + (fixed_t)(((int64_t)dx*(fl->a.y-(f_y+f_h)))/dy);
-	    tmp.y = f_h-1;
-	}
-	else if (outside & RIGHT)
-	{
-	    dy = fl->b.y - fl->a.y;
-	    dx = fl->b.x - fl->a.x;
-	    tmp.y = fl->a.y + (fixed_t)(((int64_t)dy*(f_x+f_w-1 - fl->a.x))/dx);
-	    tmp.x = f_w-1;
-	}
-	else if (outside & LEFT)
-	{
-	    dy = fl->b.y - fl->a.y;
-	    dx = fl->b.x - fl->a.x;
-	    tmp.y = fl->a.y + (fixed_t)(((int64_t)dy*(f_x-fl->a.x))/dx);
-	    tmp.x = 0;
-	}
+        // clip to each side
+        if (outside & TOP)
+        {
+            dy = fl->a.y - fl->b.y;
+            dx = fl->b.x - fl->a.x;
+            // [crispy] 'int64_t' math to avoid overflows on long lines.
+            tmp.x = fl->a.x + (fixed_t)(((int64_t) dx * (fl->a.y - f_y)) / dy);
+            tmp.y = 0;
+        }
+        else if (outside & BOTTOM)
+        {
+            dy = fl->a.y - fl->b.y;
+            dx = fl->b.x - fl->a.x;
+            tmp.x = fl->a.x + (fixed_t)(((int64_t) dx * (fl->a.y - (f_y + f_h))) / dy);
+            tmp.y = f_h - 1;
+        }
+        else if (outside & RIGHT)
+        {
+            dy = fl->b.y - fl->a.y;
+            dx = fl->b.x - fl->a.x;
+            tmp.y = fl->a.y + (fixed_t)(((int64_t) dy * (f_x + f_w - 1 - fl->a.x)) / dx);
+            tmp.x = f_w - 1;
+        }
+        else if (outside & LEFT)
+        {
+            dy = fl->b.y - fl->a.y;
+            dx = fl->b.x - fl->a.x;
+            tmp.y = fl->a.y + (fixed_t)(((int64_t) dy * (f_x - fl->a.x)) / dx);
+            tmp.x = 0;
+        }
         else
         {
             tmp.x = 0;
             tmp.y = 0;
         }
 
-	if (outside == outcode1)
-	{
-	    fl->a = tmp;
-	    DOOUTCODE(outcode1, fl->a.x, fl->a.y);
-	}
-	else
-	{
-	    fl->b = tmp;
-	    DOOUTCODE(outcode2, fl->b.x, fl->b.y);
-	}
+        if (outside == outcode1)
+        {
+            fl->a = tmp;
+            DOOUTCODE(outcode1, fl->a.x, fl->a.y);
+        }
+        else
+        {
+            fl->b = tmp;
+            DOOUTCODE(outcode2, fl->b.x, fl->b.y);
+        }
 
-	if (outcode1 & outcode2)
-	    return false; // trivially outside
+        if (outcode1 & outcode2)
+            return false; // trivially outside
     }
 
     return true;
@@ -1279,10 +1274,7 @@ AM_clipMline
 //
 // Classic Bresenham w/ whatever optimizations needed for speed
 //
-static void
-AM_drawFline_Vanilla
-( fline_t*	fl,
-  int		color )
+static void AM_drawFline_Vanilla(fline_t *fl, int color)
 {
     register int x;
     register int y;
@@ -1294,63 +1286,65 @@ AM_drawFline_Vanilla
     register int ay;
     register int d;
 
-#define PUTDOT_RAW(xx,yy,cc) fb[(yy)*f_w+(flipscreenwidth[xx])]=(cc)
+#define PUTDOT_RAW(xx, yy, cc) fb[(yy) *f_w + (flipscreenwidth[xx])] = (cc)
 #ifndef CRISPY_TRUECOLOR
-#define PUTDOT(xx,yy,cc) PUTDOT_RAW(xx,yy,cc)
+#define PUTDOT(xx, yy, cc) PUTDOT_RAW(xx, yy, cc)
 #else
-#define PUTDOT(xx,yy,cc) PUTDOT_RAW(xx,yy,(colormaps[(cc)]))
+#define PUTDOT(xx, yy, cc) PUTDOT_RAW(xx, yy, (colormaps[(cc)]))
 #endif
 
     dx = fl->b.x - fl->a.x;
-    ax = 2 * (dx<0 ? -dx : dx);
-    sx = dx<0 ? -1 : 1;
+    ax = 2 * (dx < 0 ? -dx : dx);
+    sx = dx < 0 ? -1 : 1;
 
     dy = fl->b.y - fl->a.y;
-    ay = 2 * (dy<0 ? -dy : dy);
-    sy = dy<0 ? -1 : 1;
+    ay = 2 * (dy < 0 ? -dy : dy);
+    sy = dy < 0 ? -1 : 1;
 
     x = fl->a.x;
     y = fl->a.y;
 
     if (ax > ay)
     {
-	d = ay - ax/2;
-	while (1)
-	{
-	    PUTDOT(x,y,color);
-	    if (x == fl->b.x) return;
-	    if (d>=0)
-	    {
-		y += sy;
-		d -= ax;
-	    }
-	    x += sx;
-	    d += ay;
-	}
+        d = ay - ax / 2;
+        while (1)
+        {
+            PUTDOT(x, y, color);
+            if (x == fl->b.x)
+                return;
+            if (d >= 0)
+            {
+                y += sy;
+                d -= ax;
+            }
+            x += sx;
+            d += ay;
+        }
     }
     else
     {
-	d = ax - ay/2;
-	while (1)
-	{
-	    PUTDOT(x, y, color);
-	    if (y == fl->b.y) return;
-	    if (d >= 0)
-	    {
-		x += sx;
-		d -= ay;
-	    }
-	    y += sy;
-	    d += ax;
-	}
+        d = ax - ay / 2;
+        while (1)
+        {
+            PUTDOT(x, y, color);
+            if (y == fl->b.y)
+                return;
+            if (d >= 0)
+            {
+                x += sx;
+                d -= ay;
+            }
+            y += sy;
+            d += ax;
+        }
     }
 }
 
 // [crispy] Adapted from Heretic's DrawWuLine
-static void AM_drawFline_Smooth(fline_t* fl, int color)
+static void AM_drawFline_Smooth(fline_t *fl, int color)
 {
     int X0 = fl->a.x, Y0 = fl->a.y, X1 = fl->b.x, Y1 = fl->b.y;
-    pixel_t* BaseColor = &color_shades[color * NUMSHADES];
+    pixel_t *BaseColor = &color_shades[color * NUMSHADES];
 
     unsigned short IntensityShift, ErrorAdj, ErrorAcc;
     unsigned short ErrorAccTemp, Weighting, WeightingComplementMask;
@@ -1380,7 +1374,7 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
     else
     {
         XDir = -1;
-        DeltaX = -DeltaX;       /* make DeltaX positive */
+        DeltaX = -DeltaX; /* make DeltaX positive */
     }
     /* Special-case horizontal, vertical, and diagonal lines, which
        require no weighting because they go right through the center of
@@ -1402,11 +1396,10 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
         {
             Y0++;
             PUTDOT_RAW(X0, Y0, BaseColor[0]);
-        }
-        while (--DeltaY != 0);
+        } while (--DeltaY != 0);
         return;
     }
-    //diagonal line.
+    // diagonal line.
     if (DeltaX == DeltaY)
     {
         do
@@ -1414,12 +1407,11 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
             X0 += XDir;
             Y0++;
             PUTDOT_RAW(X0, Y0, BaseColor[0]);
-        }
-        while (--DeltaY != 0);
+        } while (--DeltaY != 0);
         return;
     }
     /* Line is not horizontal, diagonal, or vertical */
-    ErrorAcc = 0;               /* initialize the line error accumulator to 0 */
+    ErrorAcc = 0; /* initialize the line error accumulator to 0 */
     /* # of bits by which to shift ErrorAcc to get intensity level */
     IntensityShift = 16 - NUMSHADES_BITS;
     /* Mask used to flip all bits in an intensity weighting, producing the
@@ -1435,14 +1427,14 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
         /* Draw all pixels other than the first and last */
         while (--DeltaY)
         {
-            ErrorAccTemp = ErrorAcc;    /* remember currrent accumulated error */
-            ErrorAcc += ErrorAdj;       /* calculate error for next pixel */
+            ErrorAccTemp = ErrorAcc; /* remember currrent accumulated error */
+            ErrorAcc += ErrorAdj;    /* calculate error for next pixel */
             if (ErrorAcc <= ErrorAccTemp)
             {
                 /* The error accumulator turned over, so advance the X coord */
                 X0 += XDir;
             }
-            Y0++;               /* Y-major, so always advance Y */
+            Y0++; /* Y-major, so always advance Y */
             /* The IntensityBits most significant bits of ErrorAcc give us the
                intensity weighting for this pixel, and the complement of the
                weighting for the paired pixel */
@@ -1462,21 +1454,20 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
     /* Draw all pixels other than the first and last */
     while (--DeltaX)
     {
-        ErrorAccTemp = ErrorAcc;        /* remember currrent accumulated error */
-        ErrorAcc += ErrorAdj;   /* calculate error for next pixel */
+        ErrorAccTemp = ErrorAcc; /* remember currrent accumulated error */
+        ErrorAcc += ErrorAdj;    /* calculate error for next pixel */
         if (ErrorAcc <= ErrorAccTemp)
         {
             /* The error accumulator turned over, so advance the Y coord */
             Y0++;
         }
-        X0 += XDir;             /* X-major, so always advance X */
+        X0 += XDir; /* X-major, so always advance X */
         /* The IntensityBits most significant bits of ErrorAcc give us the
            intensity weighting for this pixel, and the complement of the
            weighting for the paired pixel */
         Weighting = ErrorAcc >> IntensityShift;
         PUTDOT_RAW(X0, Y0, BaseColor[Weighting]);
         PUTDOT_RAW(X0, Y0 + 1, BaseColor[(Weighting ^ WeightingComplementMask)]);
-
     }
     /* Draw the final pixel, which is always exactly intersected by the line
        and so needs no weighting */
@@ -1486,17 +1477,13 @@ static void AM_drawFline_Smooth(fline_t* fl, int color)
 //
 // Clip lines, draw visible part sof lines.
 //
-void
-AM_drawMline
-( mline_t*	ml,
-  int		color )
+void AM_drawMline(mline_t *ml, int color)
 {
     static fline_t fl;
 
     if (AM_clipMline(ml, &fl))
-	AM_drawFline(&fl, color); // draws it on frame buffer using fb coords
+        AM_drawFline(&fl, color); // draws it on frame buffer using fb coords
 }
-
 
 
 //
@@ -1513,70 +1500,69 @@ void AM_drawGrid(int color)
     start = m_x;
     if (crispy->automaprotate)
     {
-	start -= m_h / 2;
+        start -= m_h / 2;
     }
     // [crispy] fix losing grid lines near the automap boundary
-    if ((start-(bmaporgx>>FRACTOMAPBITS))%gridsize)
-	start += // (MAPBLOCKUNITS<<FRACBITS)
-	    - ((start-(bmaporgx>>FRACTOMAPBITS))%gridsize);
+    if ((start - (bmaporgx >> FRACTOMAPBITS)) % gridsize)
+        start += // (MAPBLOCKUNITS<<FRACBITS)
+            -((start - (bmaporgx >> FRACTOMAPBITS)) % gridsize);
     end = m_x + m_w;
     if (crispy->automaprotate)
     {
-	end += m_h / 2;
+        end += m_h / 2;
     }
 
     // draw vertical gridlines
-    for (x=start; x<end; x+=gridsize)
+    for (x = start; x < end; x += gridsize)
     {
-	ml.a.x = x;
-	ml.b.x = x;
-	// [crispy] moved here
-	ml.a.y = m_y;
-	ml.b.y = m_y+m_h;
-	if (crispy->automaprotate)
-	{
-	    ml.a.y -= m_w / 2;
-	    ml.b.y += m_w / 2;
-	    AM_rotatePoint(&ml.a);
-	    AM_rotatePoint(&ml.b);
-	}
-	AM_drawMline(&ml, color);
+        ml.a.x = x;
+        ml.b.x = x;
+        // [crispy] moved here
+        ml.a.y = m_y;
+        ml.b.y = m_y + m_h;
+        if (crispy->automaprotate)
+        {
+            ml.a.y -= m_w / 2;
+            ml.b.y += m_w / 2;
+            AM_rotatePoint(&ml.a);
+            AM_rotatePoint(&ml.b);
+        }
+        AM_drawMline(&ml, color);
     }
 
     // Figure out start of horizontal gridlines
     start = m_y;
     if (crispy->automaprotate)
     {
-	start -= m_w / 2;
+        start -= m_w / 2;
     }
     // [crispy] fix losing grid lines near the automap boundary
-    if ((start-(bmaporgy>>FRACTOMAPBITS))%gridsize)
-	start += // (MAPBLOCKUNITS<<FRACBITS)
-	    - ((start-(bmaporgy>>FRACTOMAPBITS))%gridsize);
+    if ((start - (bmaporgy >> FRACTOMAPBITS)) % gridsize)
+        start += // (MAPBLOCKUNITS<<FRACBITS)
+            -((start - (bmaporgy >> FRACTOMAPBITS)) % gridsize);
     end = m_y + m_h;
     if (crispy->automaprotate)
     {
-	end += m_w / 2;
+        end += m_w / 2;
     }
 
     // draw horizontal gridlines
-    for (y=start; y<end; y+=gridsize)
+    for (y = start; y < end; y += gridsize)
     {
-	ml.a.y = y;
-	ml.b.y = y;
-	// [crispy] moved here
-	ml.a.x = m_x;
-	ml.b.x = m_x + m_w;
-	if (crispy->automaprotate)
-	{
-	    ml.a.x -= m_h / 2;
-	    ml.b.x += m_h / 2;
-	    AM_rotatePoint(&ml.a);
-	    AM_rotatePoint(&ml.b);
-	}
-	AM_drawMline(&ml, color);
+        ml.a.y = y;
+        ml.b.y = y;
+        // [crispy] moved here
+        ml.a.x = m_x;
+        ml.b.x = m_x + m_w;
+        if (crispy->automaprotate)
+        {
+            ml.a.x -= m_h / 2;
+            ml.b.x += m_h / 2;
+            AM_rotatePoint(&ml.a);
+            AM_rotatePoint(&ml.b);
+        }
+        AM_drawMline(&ml, color);
     }
-
 }
 
 //
@@ -1587,28 +1573,28 @@ void AM_drawGrid(int color)
 // [crispy] keyed linedefs (PR, P1, SR, S1)
 static keycolor_t AM_DoorColor(int type)
 {
-  if (crispy->extautomap)
-  {
-    switch (type)
+    if (crispy->extautomap)
     {
-	case 26:
-	case 32:
-	case 99:
-	case 133:
-	    return blue_key;
-	case 27:
-	case 34:
-	case 136:
-	case 137:
-	    return yellow_key;
-	case 28:
-	case 33:
-	case 134:
-	case 135:
-	    return red_key;
+        switch (type)
+        {
+            case 26:
+            case 32:
+            case 99:
+            case 133:
+                return blue_key;
+            case 27:
+            case 34:
+            case 136:
+            case 137:
+                return yellow_key;
+            case 28:
+            case 33:
+            case 134:
+            case 135:
+                return red_key;
+        }
     }
-  }
-  return no_key;
+    return no_key;
 }
 
 void AM_drawWalls(void)
@@ -1616,123 +1602,126 @@ void AM_drawWalls(void)
     int i;
     static mline_t l;
 
-    for (i=0;i<numlines;i++)
+    for (i = 0; i < numlines; i++)
     {
-	l.a.x = lines[i].v1->x >> FRACTOMAPBITS;
-	l.a.y = lines[i].v1->y >> FRACTOMAPBITS;
-	l.b.x = lines[i].v2->x >> FRACTOMAPBITS;
-	l.b.y = lines[i].v2->y >> FRACTOMAPBITS;
-	if (crispy->automaprotate)
-	{
-	    AM_rotatePoint(&l.a);
-	    AM_rotatePoint(&l.b);
-	}
-	if (cheating || (lines[i].flags & ML_MAPPED))
-	{
-	    if ((lines[i].flags & LINE_NEVERSEE) && !cheating)
-		continue;
-	    {
-		// [crispy] draw keyed doors in their respective colors
-		// (no Boom multiple keys)
-		// make keyed doors flash for easier visibility
-		keycolor_t amd;
-		if (!(lines[i].flags & ML_SECRET) &&
-		    (amd = AM_DoorColor(lines[i].special)) > no_key)
-		{
-		    switch (amd)
-		    {
-			case blue_key:
-			    AM_drawMline(&l, ((leveltime & 16) ? BLUES : GRIDCOLORS));
-			    continue;
-			case yellow_key:
-			    AM_drawMline(&l, ((leveltime & 16) ? (YELLOWS-2) : GRIDCOLORS));
-			    continue;
-			case red_key:
-			    AM_drawMline(&l, ((leveltime & 16) ? (REDS-2) : GRIDCOLORS));
-			    continue;
-			default:
-			    // [crispy] it should be impossible to reach here
-			    break;
-		    }
-		}
-	    }
-	    // [crispy] draw exit lines in white (no Boom exit lines 197, 198)
-	    // NB: Choco does not have this at all, Boom/PrBoom+ have this disabled by default
-	    if (crispy->extautomap && (
-	        lines[i].special == 11 ||
-	        lines[i].special == 51 ||
-	        lines[i].special == 52 ||
-	        lines[i].special == 124))
-	    {
-		AM_drawMline(&l, WHITE);
-		continue;
-	    }
-	    if (!lines[i].backsector)
-	    {
-		// [crispy] draw 1S secret sector boundaries in purple
-		if (crispy->extautomap &&
-		    cheating && (lines[i].frontsector->special == 9))
-		    AM_drawMline(&l, secretwallcolors);
+        l.a.x = lines[i].v1->x >> FRACTOMAPBITS;
+        l.a.y = lines[i].v1->y >> FRACTOMAPBITS;
+        l.b.x = lines[i].v2->x >> FRACTOMAPBITS;
+        l.b.y = lines[i].v2->y >> FRACTOMAPBITS;
+        if (crispy->automaprotate)
+        {
+            AM_rotatePoint(&l.a);
+            AM_rotatePoint(&l.b);
+        }
+        if (cheating || (lines[i].flags & ML_MAPPED))
+        {
+            if ((lines[i].flags & LINE_NEVERSEE) && !cheating)
+                continue;
+            {
+                // [crispy] draw keyed doors in their respective colors
+                // (no Boom multiple keys)
+                // make keyed doors flash for easier visibility
+                keycolor_t amd;
+                if (!(lines[i].flags & ML_SECRET) &&
+                    (amd = AM_DoorColor(lines[i].special)) > no_key)
+                {
+                    switch (amd)
+                    {
+                        case blue_key:
+                            AM_drawMline(&l, ((leveltime & 16) ? BLUES : GRIDCOLORS));
+                            continue;
+                        case yellow_key:
+                            AM_drawMline(&l, ((leveltime & 16) ? (YELLOWS - 2) : GRIDCOLORS));
+                            continue;
+                        case red_key:
+                            AM_drawMline(&l, ((leveltime & 16) ? (REDS - 2) : GRIDCOLORS));
+                            continue;
+                        default:
+                            // [crispy] it should be impossible to reach here
+                            break;
+                    }
+                }
+            }
+            // [crispy] draw exit lines in white (no Boom exit lines 197, 198)
+            // NB: Choco does not have this at all, Boom/PrBoom+ have this disabled by default
+            if (crispy->extautomap && (lines[i].special == 11 || lines[i].special == 51 ||
+                                       lines[i].special == 52 || lines[i].special == 124))
+            {
+                AM_drawMline(&l, WHITE);
+                continue;
+            }
+            if (!lines[i].backsector)
+            {
+                // [crispy] draw 1S secret sector boundaries in purple
+                if (crispy->extautomap && cheating && (lines[i].frontsector->special == 9))
+                    AM_drawMline(&l, secretwallcolors);
 #if defined CRISPY_HIGHLIGHT_REVEALED_SECRETS
-		// [crispy] draw revealed secret sector boundaries in green
-		else
-		if (crispy->extautomap &&
-		    crispy->secretmessage && (lines[i].frontsector->oldspecial == 9))
-		    AM_drawMline(&l, revealedsecretwallcolors);
+                // [crispy] draw revealed secret sector boundaries in green
+                else if (
+                    crispy->extautomap && crispy->secretmessage &&
+                    (lines[i].frontsector->oldspecial == 9))
+                    AM_drawMline(&l, revealedsecretwallcolors);
 #endif
-		else
-		AM_drawMline(&l, WALLCOLORS+lightlev);
-	    }
-	    else
-	    {
-		// [crispy] draw teleporters in green
-		// and also WR teleporters 97 if they are not secret
-		// (no monsters-only teleporters 125, 126; no Boom teleporters)
-		if (lines[i].special == 39 ||
-		    (crispy->extautomap && !(lines[i].flags & ML_SECRET) && lines[i].special == 97))
-		{ // teleporters
-		    AM_drawMline(&l, crispy->extautomap ? (GREENS+GREENRANGE/2) : (WALLCOLORS+WALLRANGE/2));
-		}
-		else if (lines[i].flags & ML_SECRET) // secret door
-		{
-		    // [crispy] NB: Choco has this check, but (SECRETWALLCOLORS == WALLCOLORS)
-		    // Boom/PrBoom+ does not have this check at all
-		    if (false && cheating) AM_drawMline(&l, secretwallcolors + lightlev);
-		    else AM_drawMline(&l, WALLCOLORS+lightlev);
-		}
+                else
+                    AM_drawMline(&l, WALLCOLORS + lightlev);
+            }
+            else
+            {
+                // [crispy] draw teleporters in green
+                // and also WR teleporters 97 if they are not secret
+                // (no monsters-only teleporters 125, 126; no Boom teleporters)
+                if (lines[i].special == 39 ||
+                    (crispy->extautomap && !(lines[i].flags & ML_SECRET) && lines[i].special == 97))
+                { // teleporters
+                    AM_drawMline(
+                        &l,
+                        crispy->extautomap ? (GREENS + GREENRANGE / 2)
+                                           : (WALLCOLORS + WALLRANGE / 2));
+                }
+                else if (lines[i].flags & ML_SECRET) // secret door
+                {
+                    // [crispy] NB: Choco has this check, but (SECRETWALLCOLORS == WALLCOLORS)
+                    // Boom/PrBoom+ does not have this check at all
+                    if (false && cheating)
+                        AM_drawMline(&l, secretwallcolors + lightlev);
+                    else
+                        AM_drawMline(&l, WALLCOLORS + lightlev);
+                }
 #if defined CRISPY_HIGHLIGHT_REVEALED_SECRETS
-		// [crispy] draw revealed secret sector boundaries in green
-		else if (crispy->extautomap && crispy->secretmessage &&
-		    (lines[i].backsector->oldspecial == 9 ||
-		    lines[i].frontsector->oldspecial == 9))
-		{
-		    AM_drawMline(&l, revealedsecretwallcolors);
-		}
+                // [crispy] draw revealed secret sector boundaries in green
+                else if (
+                    crispy->extautomap && crispy->secretmessage &&
+                    (lines[i].backsector->oldspecial == 9 || lines[i].frontsector->oldspecial == 9))
+                {
+                    AM_drawMline(&l, revealedsecretwallcolors);
+                }
 #endif
-		// [crispy] draw 2S secret sector boundaries in purple
-		else if (crispy->extautomap && cheating &&
-		    (lines[i].backsector->special == 9 ||
-		    lines[i].frontsector->special == 9))
-		{
-		    AM_drawMline(&l, secretwallcolors);
-		}
-		else if (lines[i].backsector->floorheight
-			   != lines[i].frontsector->floorheight) {
-		    AM_drawMline(&l, FDWALLCOLORS + lightlev); // floor level change
-		}
-		else if (lines[i].backsector->ceilingheight
-			   != lines[i].frontsector->ceilingheight) {
-		    AM_drawMline(&l, CDWALLCOLORS+lightlev); // ceiling level change
-		}
-		else if (cheating) {
-		    AM_drawMline(&l, TSWALLCOLORS+lightlev);
-		}
-	    }
-	}
-	else if (plr->powers[pw_allmap])
-	{
-	    if (!(lines[i].flags & LINE_NEVERSEE)) AM_drawMline(&l, GRAYS+3);
-	}
+                // [crispy] draw 2S secret sector boundaries in purple
+                else if (
+                    crispy->extautomap && cheating &&
+                    (lines[i].backsector->special == 9 || lines[i].frontsector->special == 9))
+                {
+                    AM_drawMline(&l, secretwallcolors);
+                }
+                else if (lines[i].backsector->floorheight != lines[i].frontsector->floorheight)
+                {
+                    AM_drawMline(&l, FDWALLCOLORS + lightlev); // floor level change
+                }
+                else if (lines[i].backsector->ceilingheight != lines[i].frontsector->ceilingheight)
+                {
+                    AM_drawMline(&l, CDWALLCOLORS + lightlev); // ceiling level change
+                }
+                else if (cheating)
+                {
+                    AM_drawMline(&l, TSWALLCOLORS + lightlev);
+                }
+            }
+        }
+        else if (plr->powers[pw_allmap])
+        {
+            if (!(lines[i].flags & LINE_NEVERSEE))
+                AM_drawMline(&l, GRAYS + 3);
+        }
     }
 }
 
@@ -1741,28 +1730,22 @@ void AM_drawWalls(void)
 // Rotation in 2D.
 // Used to rotate player arrow line character.
 //
-void
-AM_rotate
-( int64_t*	x,
-  int64_t*	y,
-  angle_t	a )
+void AM_rotate(int64_t *x, int64_t *y, angle_t a)
 {
     int64_t tmpx;
 
-    tmpx =
-	FixedMul(*x,finecosine[a>>ANGLETOFINESHIFT])
-	- FixedMul(*y,finesine[a>>ANGLETOFINESHIFT]);
+    tmpx = FixedMul(*x, finecosine[a >> ANGLETOFINESHIFT]) -
+           FixedMul(*y, finesine[a >> ANGLETOFINESHIFT]);
 
-    *y   =
-	FixedMul(*x,finesine[a>>ANGLETOFINESHIFT])
-	+ FixedMul(*y,finecosine[a>>ANGLETOFINESHIFT]);
+    *y = FixedMul(*x, finesine[a >> ANGLETOFINESHIFT]) +
+         FixedMul(*y, finecosine[a >> ANGLETOFINESHIFT]);
 
     *x = tmpx;
 }
 
 // [crispy] rotate point around map center
 // adapted from prboom-plus/src/am_map.c:898-920
-static void AM_rotatePoint (mpoint_t *pt)
+static void AM_rotatePoint(mpoint_t *pt)
 {
     int64_t tmpx;
     // [crispy] smooth automap rotation
@@ -1771,270 +1754,279 @@ static void AM_rotatePoint (mpoint_t *pt)
     pt->x -= mapcenter.x;
     pt->y -= mapcenter.y;
 
-    tmpx = (int64_t)FixedMul(pt->x, finecosine[smoothangle>>ANGLETOFINESHIFT])
-         - (int64_t)FixedMul(pt->y, finesine[smoothangle>>ANGLETOFINESHIFT])
-         + mapcenter.x;
+    tmpx = (int64_t) FixedMul(pt->x, finecosine[smoothangle >> ANGLETOFINESHIFT]) -
+           (int64_t) FixedMul(pt->y, finesine[smoothangle >> ANGLETOFINESHIFT]) + mapcenter.x;
 
-    pt->y = (int64_t)FixedMul(pt->x, finesine[smoothangle>>ANGLETOFINESHIFT])
-          + (int64_t)FixedMul(pt->y, finecosine[smoothangle>>ANGLETOFINESHIFT])
-          + mapcenter.y;
+    pt->y = (int64_t) FixedMul(pt->x, finesine[smoothangle >> ANGLETOFINESHIFT]) +
+            (int64_t) FixedMul(pt->y, finecosine[smoothangle >> ANGLETOFINESHIFT]) + mapcenter.y;
 
     pt->x = tmpx;
 }
 
-void
-AM_drawLineCharacter
-( mline_t*	lineguy,
-  int		lineguylines,
-  fixed_t	scale,
-  angle_t	angle,
-  int		color,
-  fixed_t	x,
-  fixed_t	y )
+void AM_drawLineCharacter(
+    mline_t *lineguy,
+    int lineguylines,
+    fixed_t scale,
+    angle_t angle,
+    int color,
+    fixed_t x,
+    fixed_t y)
 {
-    int		i;
-    mline_t	l;
+    int i;
+    mline_t l;
 
     if (crispy->automaprotate)
     {
-	angle += mapangle;
+        angle += mapangle;
     }
 
-    for (i=0;i<lineguylines;i++)
+    for (i = 0; i < lineguylines; i++)
     {
-	l.a.x = lineguy[i].a.x;
-	l.a.y = lineguy[i].a.y;
+        l.a.x = lineguy[i].a.x;
+        l.a.y = lineguy[i].a.y;
 
-	if (scale)
-	{
-	    l.a.x = FixedMul(scale, l.a.x);
-	    l.a.y = FixedMul(scale, l.a.y);
-	}
+        if (scale)
+        {
+            l.a.x = FixedMul(scale, l.a.x);
+            l.a.y = FixedMul(scale, l.a.y);
+        }
 
-	if (angle)
-	    AM_rotate(&l.a.x, &l.a.y, angle);
+        if (angle)
+            AM_rotate(&l.a.x, &l.a.y, angle);
 
-	l.a.x += x;
-	l.a.y += y;
+        l.a.x += x;
+        l.a.y += y;
 
-	l.b.x = lineguy[i].b.x;
-	l.b.y = lineguy[i].b.y;
+        l.b.x = lineguy[i].b.x;
+        l.b.y = lineguy[i].b.y;
 
-	if (scale)
-	{
-	    l.b.x = FixedMul(scale, l.b.x);
-	    l.b.y = FixedMul(scale, l.b.y);
-	}
+        if (scale)
+        {
+            l.b.x = FixedMul(scale, l.b.x);
+            l.b.y = FixedMul(scale, l.b.y);
+        }
 
-	if (angle)
-	    AM_rotate(&l.b.x, &l.b.y, angle);
+        if (angle)
+            AM_rotate(&l.b.x, &l.b.y, angle);
 
-	l.b.x += x;
-	l.b.y += y;
+        l.b.x += x;
+        l.b.y += y;
 
-	AM_drawMline(&l, color);
+        AM_drawMline(&l, color);
     }
 }
 
 void AM_drawPlayers(void)
 {
-    int		i;
-    player_t*	p;
-    static int 	their_colors[] = { GREENS, GRAYS, BROWNS, REDS };
-    int		their_color = -1;
-    int		color;
-    mpoint_t	pt;
+    int i;
+    player_t *p;
+    static int their_colors[] = {GREENS, GRAYS, BROWNS, REDS};
+    int their_color = -1;
+    int color;
+    mpoint_t pt;
 
     if (!netgame)
     {
-	// [crispy] smooth player arrow rotation
-	const angle_t smoothangle = crispy->automaprotate ? plr->mo->angle : viewangle;
+        // [crispy] smooth player arrow rotation
+        const angle_t smoothangle = crispy->automaprotate ? plr->mo->angle : viewangle;
 
-	// [crispy] interpolate player arrow
-	if (crispy->uncapped && leveltime > oldleveltime)
-	{
-	pt.x = viewx >> FRACTOMAPBITS;
-	pt.y = viewy >> FRACTOMAPBITS;
-	}
-	else
-	{
-	pt.x = plr->mo->x >> FRACTOMAPBITS;
-	pt.y = plr->mo->y >> FRACTOMAPBITS;
-	}
-	if (crispy->automaprotate)
-	{
-	    AM_rotatePoint(&pt);
-	}
+        // [crispy] interpolate player arrow
+        if (crispy->uncapped && leveltime > oldleveltime)
+        {
+            pt.x = viewx >> FRACTOMAPBITS;
+            pt.y = viewy >> FRACTOMAPBITS;
+        }
+        else
+        {
+            pt.x = plr->mo->x >> FRACTOMAPBITS;
+            pt.y = plr->mo->y >> FRACTOMAPBITS;
+        }
+        if (crispy->automaprotate)
+        {
+            AM_rotatePoint(&pt);
+        }
 
-	if (cheating)
-	    AM_drawLineCharacter
-		(cheat_player_arrow, arrlen(cheat_player_arrow), 0,
-		 smoothangle, WHITE, pt.x, pt.y);
-	else
-	    AM_drawLineCharacter
-		(player_arrow, arrlen(player_arrow), 0, smoothangle,
-		 WHITE, pt.x, pt.y);
-	return;
+        if (cheating)
+            AM_drawLineCharacter(
+                cheat_player_arrow, arrlen(cheat_player_arrow), 0, smoothangle, WHITE, pt.x, pt.y);
+        else
+            AM_drawLineCharacter(
+                player_arrow, arrlen(player_arrow), 0, smoothangle, WHITE, pt.x, pt.y);
+        return;
     }
 
-    for (i=0;i<MAXPLAYERS;i++)
+    for (i = 0; i < MAXPLAYERS; i++)
     {
-	// [crispy] interpolate other player arrows angle
-	angle_t theirangle;
+        // [crispy] interpolate other player arrows angle
+        angle_t theirangle;
 
-	their_color++;
-	p = &players[i];
+        their_color++;
+        p = &players[i];
 
-	if ( (deathmatch && !singledemo) && p != plr)
-	    continue;
+        if ((deathmatch && !singledemo) && p != plr)
+            continue;
 
-	if (!playeringame[i])
-	    continue;
+        if (!playeringame[i])
+            continue;
 
-	if (p->powers[pw_invisibility])
-	    color = 246; // *close* to black
-	else
-	    color = their_colors[their_color];
+        if (p->powers[pw_invisibility])
+            color = 246; // *close* to black
+        else
+            color = their_colors[their_color];
 
-	// [crispy] interpolate other player arrows
-	if (crispy->uncapped && leveltime > oldleveltime)
-	{
-	    pt.x = (p->mo->oldx + FixedMul(p->mo->x - p->mo->oldx, fractionaltic)) >> FRACTOMAPBITS;
-	    pt.y = (p->mo->oldy + FixedMul(p->mo->y - p->mo->oldy, fractionaltic)) >> FRACTOMAPBITS;
-	}
-	else
-	{
-	    pt.x = p->mo->x >> FRACTOMAPBITS;
-	    pt.y = p->mo->y >> FRACTOMAPBITS;
-	}
+        // [crispy] interpolate other player arrows
+        if (crispy->uncapped && leveltime > oldleveltime)
+        {
+            pt.x = (p->mo->oldx + FixedMul(p->mo->x - p->mo->oldx, fractionaltic)) >> FRACTOMAPBITS;
+            pt.y = (p->mo->oldy + FixedMul(p->mo->y - p->mo->oldy, fractionaltic)) >> FRACTOMAPBITS;
+        }
+        else
+        {
+            pt.x = p->mo->x >> FRACTOMAPBITS;
+            pt.y = p->mo->y >> FRACTOMAPBITS;
+        }
 
-	if (crispy->automaprotate)
-	{
-	    AM_rotatePoint(&pt);
-	    theirangle = p->mo->angle;
-	}
-	else
-	{
-        theirangle = R_InterpolateAngle(p->mo->oldangle, p->mo->angle, fractionaltic);
-	}
+        if (crispy->automaprotate)
+        {
+            AM_rotatePoint(&pt);
+            theirangle = p->mo->angle;
+        }
+        else
+        {
+            theirangle = R_InterpolateAngle(p->mo->oldangle, p->mo->angle, fractionaltic);
+        }
 
-	AM_drawLineCharacter
-	    (player_arrow, arrlen(player_arrow), 0, theirangle,
-	     color, pt.x, pt.y);
+        AM_drawLineCharacter(player_arrow, arrlen(player_arrow), 0, theirangle, color, pt.x, pt.y);
     }
-
 }
 
-void
-AM_drawThings
-( int	colors,
-  int 	colorrange)
+void AM_drawThings(int colors, int colorrange)
 {
-    int		i;
-    mobj_t*	t;
-    keycolor_t	key;
-    mpoint_t	pt;
+    int i;
+    mobj_t *t;
+    keycolor_t key;
+    mpoint_t pt;
 
-    for (i=0;i<numsectors;i++)
+    for (i = 0; i < numsectors; i++)
     {
-	t = sectors[i].thinglist;
-	while (t)
-	{
-	    // [crispy] do not draw an extra triangle for the player
-	    if (t == plr->mo)
-	    {
-		t = t->snext;
-		continue;
-	    }
+        t = sectors[i].thinglist;
+        while (t)
+        {
+            // [crispy] do not draw an extra triangle for the player
+            if (t == plr->mo)
+            {
+                t = t->snext;
+                continue;
+            }
 
-	    // [crispy] interpolate thing triangles movement
-	    if (leveltime > oldleveltime)
-	    {
-	    pt.x = (t->oldx + FixedMul(t->x - t->oldx, fractionaltic)) >> FRACTOMAPBITS;
-	    pt.y = (t->oldy + FixedMul(t->y - t->oldy, fractionaltic)) >> FRACTOMAPBITS;
-	    }
-	    else
-	    {
-	    pt.x = t->x >> FRACTOMAPBITS;
-	    pt.y = t->y >> FRACTOMAPBITS;
-	    }
-	    if (crispy->automaprotate)
-	    {
-		AM_rotatePoint(&pt);
-	    }
+            // [crispy] interpolate thing triangles movement
+            if (leveltime > oldleveltime)
+            {
+                pt.x = (t->oldx + FixedMul(t->x - t->oldx, fractionaltic)) >> FRACTOMAPBITS;
+                pt.y = (t->oldy + FixedMul(t->y - t->oldy, fractionaltic)) >> FRACTOMAPBITS;
+            }
+            else
+            {
+                pt.x = t->x >> FRACTOMAPBITS;
+                pt.y = t->y >> FRACTOMAPBITS;
+            }
+            if (crispy->automaprotate)
+            {
+                AM_rotatePoint(&pt);
+            }
 
-	  if (crispy->extautomap)
-	  {
-	    // [crispy] skull keys and key cards
-	    switch (t->info->doomednum)
-	    {
-		case 38:
-		case 13:
-		    key = red_key;
-		    break;
-		case 39:
-		case 6:
-		    key = yellow_key;
-		    break;
-		case 40:
-		case 5:
-		    key = blue_key;
-		    break;
-		default:
-		    key = no_key;
-		    break;
-	    }
+            if (crispy->extautomap)
+            {
+                // [crispy] skull keys and key cards
+                switch (t->info->doomednum)
+                {
+                    case 38:
+                    case 13:
+                        key = red_key;
+                        break;
+                    case 39:
+                    case 6:
+                        key = yellow_key;
+                        break;
+                    case 40:
+                    case 5:
+                        key = blue_key;
+                        break;
+                    default:
+                        key = no_key;
+                        break;
+                }
 
-	    // [crispy] draw keys as crosses in their respective colors
-	    if (key > no_key)
-	    {
-	    AM_drawLineCharacter
-		(cross_mark, arrlen(cross_mark),
-		 16<<MAPBITS, t->angle,
-		 (key == red_key) ? REDS :
-		 (key == yellow_key) ? YELLOWS :
-		 (key == blue_key) ? BLUES :
-		 colors+lightlev,
-		 pt.x, pt.y);
-	    }
-	    else
-	    // [crispy] draw blood splats and puffs as small squares
-	    if (t->type == MT_BLOOD || t->type == MT_PUFF)
-	    {
-	    AM_drawLineCharacter
-		(square_mark, arrlen(square_mark),
-		 (t->radius >> 2) >> FRACTOMAPBITS, t->angle,
-		 (t->type == MT_BLOOD) ? REDS : GRAYS,
-		 pt.x, pt.y);
-	    }
-	    else
-	    {
-	    AM_drawLineCharacter
-		(thintriangle_guy, arrlen(thintriangle_guy),
-		// [crispy] triangle size represents actual thing size
-		 t->radius >> FRACTOMAPBITS, t->angle,
-		// [crispy] show countable kills in red ...
-		 ((t->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL) ? REDS :
-		// [crispy] ... show Lost Souls and missiles in orange ...
-                (t->flags & (MF_FLOAT | MF_MISSILE)) ? 216 :
-		// [crispy] ... show other shootable items in dark gold ...
-		 (t->flags & MF_SHOOTABLE) ? 164 :
-		// [crispy] ... corpses in gray ...
-		 (t->flags & MF_CORPSE) ? GRAYS :
-		// [crispy] ... and countable items in yellow
-		 (t->flags & MF_COUNTITEM) ? YELLOWS :
-		 colors+lightlev,
-		 pt.x, pt.y);
-	    }
-	  }
-	  else
-	  {
-	    AM_drawLineCharacter
-		(thintriangle_guy, arrlen(thintriangle_guy),
-		 16<<MAPBITS, t->angle, colors+lightlev, pt.x, pt.y);
-	  }
-	    t = t->snext;
-	}
+                // [crispy] draw keys as crosses in their respective colors
+                if (key > no_key)
+                {
+                    AM_drawLineCharacter(
+                        cross_mark,
+                        arrlen(cross_mark),
+                        16 << MAPBITS,
+                        t->angle,
+                        (key == red_key)      ? REDS
+                        : (key == yellow_key) ? YELLOWS
+                        : (key == blue_key)   ? BLUES
+                                              : colors + lightlev,
+                        pt.x,
+                        pt.y);
+                }
+                else
+                    // [crispy] draw blood splats and puffs as small squares
+                    if (t->type == MT_BLOOD || t->type == MT_PUFF)
+                {
+                    AM_drawLineCharacter(
+                        square_mark,
+                        arrlen(square_mark),
+                        (t->radius >> 2) >> FRACTOMAPBITS,
+                        t->angle,
+                        (t->type == MT_BLOOD) ? REDS : GRAYS,
+                        pt.x,
+                        pt.y);
+                }
+                else
+                {
+                    AM_drawLineCharacter(
+                        thintriangle_guy,
+                        arrlen(thintriangle_guy),
+                        // [crispy] triangle size represents actual thing size
+                        t->radius >> FRACTOMAPBITS,
+                        t->angle,
+                        // [crispy] show countable kills in red ...
+                        ((t->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL)
+                            ? REDS
+                            :
+                            // [crispy] ... show Lost Souls and missiles in orange ...
+                            (t->flags & (MF_FLOAT | MF_MISSILE))
+                            ? 216
+                            :
+                            // [crispy] ... show other shootable items in dark gold ...
+                            (t->flags & MF_SHOOTABLE) ? 164
+                                                      :
+                                                      // [crispy] ... corpses in gray ...
+                            (t->flags & MF_CORPSE) ? GRAYS
+                                                   :
+                                                   // [crispy] ... and countable items in yellow
+                            (t->flags & MF_COUNTITEM) ? YELLOWS
+                                                      : colors + lightlev,
+                        pt.x,
+                        pt.y);
+                }
+            }
+            else
+            {
+                AM_drawLineCharacter(
+                    thintriangle_guy,
+                    arrlen(thintriangle_guy),
+                    16 << MAPBITS,
+                    t->angle,
+                    colors + lightlev,
+                    pt.x,
+                    pt.y);
+            }
+            t = t->snext;
+        }
     }
 }
 
@@ -2043,28 +2035,28 @@ void AM_drawMarks(void)
     int i, fx, fy, w, h;
     mpoint_t pt;
 
-    for (i=0;i<AM_NUMMARKPOINTS;i++)
+    for (i = 0; i < AM_NUMMARKPOINTS; i++)
     {
-	if (markpoints[i].x != -1)
-	{
-	    //      w = SHORT(marknums[i]->width);
-	    //      h = SHORT(marknums[i]->height);
-	    w = 5; // because something's wrong with the wad, i guess
-	    h = 6; // because something's wrong with the wad, i guess
-	    // [crispy] center marks around player
-	    pt.x = markpoints[i].x;
-	    pt.y = markpoints[i].y;
-	    if (crispy->automaprotate)
-	    {
-		AM_rotatePoint(&pt);
-	    }
-	    fx = (flipscreenwidth[CXMTOF(pt.x)] >> crispy->hires) - 1 - WIDESCREENDELTA;
-	    fy = (CYMTOF(pt.y) >> crispy->hires) - 2;
-	    if (fx >= f_x && fx <= (f_w >> crispy->hires) - w && fy >= f_y && fy <= (f_h >> crispy->hires) - h)
-		V_DrawPatch(fx, fy, marknums[i]);
-	}
+        if (markpoints[i].x != -1)
+        {
+            //      w = SHORT(marknums[i]->width);
+            //      h = SHORT(marknums[i]->height);
+            w = 5; // because something's wrong with the wad, i guess
+            h = 6; // because something's wrong with the wad, i guess
+            // [crispy] center marks around player
+            pt.x = markpoints[i].x;
+            pt.y = markpoints[i].y;
+            if (crispy->automaprotate)
+            {
+                AM_rotatePoint(&pt);
+            }
+            fx = (flipscreenwidth[CXMTOF(pt.x)] >> crispy->hires) - 1 - WIDESCREENDELTA;
+            fy = (CYMTOF(pt.y) >> crispy->hires) - 2;
+            if (fx >= f_x && fx <= (f_w >> crispy->hires) - w && fy >= f_y &&
+                fy <= (f_h >> crispy->hires) - h)
+                V_DrawPatch(fx, fy, marknums[i]);
+        }
     }
-
 }
 
 static void AM_drawCrosshair(int color, boolean force)
@@ -2072,34 +2064,36 @@ static void AM_drawCrosshair(int color, boolean force)
     // [crispy] draw an actual crosshair
     if (!followplayer || force)
     {
-	static fline_t h, v;
+        static fline_t h, v;
 
-	if (!h.a.x || force)
-	{
-	    h.a.x = h.b.x = v.a.x = v.b.x = f_x + f_w / 2;
-	    h.a.y = h.b.y = v.a.y = v.b.y = f_y + f_h / 2;
-	    h.a.x -= 2; h.b.x += 2;
-	    v.a.y -= 2; v.b.y += 2;
-	}
+        if (!h.a.x || force)
+        {
+            h.a.x = h.b.x = v.a.x = v.b.x = f_x + f_w / 2;
+            h.a.y = h.b.y = v.a.y = v.b.y = f_y + f_h / 2;
+            h.a.x -= 2;
+            h.b.x += 2;
+            v.a.y -= 2;
+            v.b.y += 2;
+        }
 
-	AM_drawFline(&h, color);
-	AM_drawFline(&v, color);
+        AM_drawFline(&h, color);
+        AM_drawFline(&v, color);
     }
-// [crispy] do not draw the useless dot on the player arrow
-/*
-    else
-#ifndef CRISPY_TRUECOLOR
-    fb[(f_w*(f_h+1))/2] = color; // single point for now
-#else
-    fb[(f_w*(f_h+1))/2] = colormaps[color]; // single point for now
-#endif
-*/
-
+    // [crispy] do not draw the useless dot on the player arrow
+    /*
+        else
+    #ifndef CRISPY_TRUECOLOR
+        fb[(f_w*(f_h+1))/2] = color; // single point for now
+    #else
+        fb[(f_w*(f_h+1))/2] = colormaps[color]; // single point for now
+    #endif
+    */
 }
 
-void AM_Drawer (void)
+void AM_Drawer(void)
 {
-    if (!automapactive) return;
+    if (!automapactive)
+        return;
 
     // [crispy] move AM_doFollowPlayer and AM_changeWindowLoc
     // from AM_Ticker for interpolation
@@ -2118,12 +2112,12 @@ void AM_Drawer (void)
     // [crispy] required for AM_rotatePoint()
     if (crispy->automaprotate)
     {
-	mapcenter.x = m_x + m_w / 2;
-	mapcenter.y = m_y + m_h / 2;
-	// [crispy] keep the map static in overlay mode
-	// if not following the player
-	if (!(!followplayer && crispy->automapoverlay))
-	mapangle = ANG90 - plr->mo->angle;
+        mapcenter.x = m_x + m_w / 2;
+        mapcenter.y = m_y + m_h / 2;
+        // [crispy] keep the map static in overlay mode
+        // if not following the player
+        if (!(!followplayer && crispy->automapoverlay))
+            mapangle = ANG90 - plr->mo->angle;
     }
 
     if (!crispy->automapoverlay)
@@ -2132,51 +2126,50 @@ void AM_Drawer (void)
         pspr_interp = false; // interpolate weapon bobbing
     }
     if (grid)
-	AM_drawGrid(GRIDCOLORS);
+        AM_drawGrid(GRIDCOLORS);
     AM_drawWalls();
     AM_drawPlayers();
-    if (cheating==2)
-	AM_drawThings(THINGCOLORS, THINGRANGE);
+    if (cheating == 2)
+        AM_drawThings(THINGCOLORS, THINGRANGE);
     AM_drawCrosshair(XHAIRCOLORS, false);
 
     AM_drawMarks();
 
     V_MarkRect(f_x, f_y, f_w, f_h);
-
 }
 
 // [crispy] extended savegames
-void AM_GetMarkPoints (int *n, long *p)
+void AM_GetMarkPoints(int *n, long *p)
 {
-	int i;
+    int i;
 
-	*n = markpointnum;
-	*p = -1L;
+    *n = markpointnum;
+    *p = -1L;
 
-	// [crispy] prevent saving markpoints from previous map
-	if (lastlevel == gamemap && lastepisode == gameepisode)
-	{
-		for (i = 0; i < AM_NUMMARKPOINTS; i++)
-		{
-			*p++ = (long)markpoints[i].x;
-			*p++ = (markpoints[i].x == -1) ? 0L : (long)markpoints[i].y;
-		}
-	}
+    // [crispy] prevent saving markpoints from previous map
+    if (lastlevel == gamemap && lastepisode == gameepisode)
+    {
+        for (i = 0; i < AM_NUMMARKPOINTS; i++)
+        {
+            *p++ = (long) markpoints[i].x;
+            *p++ = (markpoints[i].x == -1) ? 0L : (long) markpoints[i].y;
+        }
+    }
 }
 
-void AM_SetMarkPoints (int n, long *p)
+void AM_SetMarkPoints(int n, long *p)
 {
-	int i;
+    int i;
 
-	AM_LevelInit(false);
-	lastlevel = gamemap;
-	lastepisode = gameepisode;
+    AM_LevelInit(false);
+    lastlevel = gamemap;
+    lastepisode = gameepisode;
 
-	markpointnum = n;
+    markpointnum = n;
 
-	for (i = 0; i < AM_NUMMARKPOINTS; i++)
-	{
-		markpoints[i].x = (int64_t)*p++;
-		markpoints[i].y = (int64_t)*p++;
-	}
+    for (i = 0; i < AM_NUMMARKPOINTS; i++)
+    {
+        markpoints[i].x = (int64_t) *p++;
+        markpoints[i].y = (int64_t) *p++;
+    }
 }

@@ -77,8 +77,7 @@ static int snd_mport = 0;
 
 // Compiled-in sound modules:
 
-static const sound_module_t *sound_modules[] =
-{
+static const sound_module_t *sound_modules[] = {
 #ifndef DISABLE_SDL2MIXER
     &sound_sdl_module,
 #endif // DISABLE_SDL2MIXER
@@ -88,8 +87,7 @@ static const sound_module_t *sound_modules[] =
 
 // Compiled-in music modules:
 
-static const music_module_t *music_modules[] =
-{
+static const music_module_t *music_modules[] = {
 #ifdef _WIN32
     &music_win_module,
 #endif
@@ -105,12 +103,11 @@ static const music_module_t *music_modules[] =
 
 // Check if a sound device is in the given list of devices
 
-static boolean SndDeviceInList(snddevice_t device, const snddevice_t *list,
-                               int len)
+static boolean SndDeviceInList(snddevice_t device, const snddevice_t *list, int len)
 {
     int i;
 
-    for (i=0; i<len; ++i)
+    for (i = 0; i < len; ++i)
     {
         if (device == list[i])
         {
@@ -130,14 +127,15 @@ static void InitSfxModule(boolean use_sfx_prefix)
 
     sound_module = NULL;
 
-    for (i=0; sound_modules[i] != NULL; ++i)
+    for (i = 0; sound_modules[i] != NULL; ++i)
     {
         // Is the sfx device in the list of devices supported by
         // this module?
 
-        if (SndDeviceInList(snd_sfxdevice,
-                            sound_modules[i]->sound_devices,
-                            sound_modules[i]->num_sound_devices))
+        if (SndDeviceInList(
+                snd_sfxdevice,
+                sound_modules[i]->sound_devices,
+                sound_modules[i]->num_sound_devices))
         {
             // Initialize the module
 
@@ -157,24 +155,24 @@ static void InitMusicModule(void)
     int i;
     music_module = NULL;
 
-    for (i=0; music_modules[i] != NULL; ++i)
+    for (i = 0; music_modules[i] != NULL; ++i)
     {
         // Is the music device in the list of devices supported
         // by this module?
 
-        if (SndDeviceInList(snd_musicdevice,
-                            music_modules[i]->sound_devices,
-                            music_modules[i]->num_sound_devices))
+        if (SndDeviceInList(
+                snd_musicdevice,
+                music_modules[i]->sound_devices,
+                music_modules[i]->num_sound_devices))
         {
-        #ifdef _WIN32
+#ifdef _WIN32
             // Skip the native Windows MIDI module if using Timidity.
 
-            if (strcmp(timidity_cfg_path, "") &&
-                music_modules[i] == &music_win_module)
+            if (strcmp(timidity_cfg_path, "") && music_modules[i] == &music_win_module)
             {
                 continue;
             }
-        #endif
+#endif
 
             // Initialize the module
 
@@ -182,13 +180,13 @@ static void InitMusicModule(void)
             {
                 music_module = music_modules[i];
 
-            #ifndef DISABLE_SDL2MIXER
+#ifndef DISABLE_SDL2MIXER
                 // [crispy] Always initialize SDL music module.
                 if (music_module != &music_sdl_module)
                 {
                     music_sdl_module.Init();
                 }
-            #endif
+#endif
 
                 return;
             }
@@ -248,9 +246,7 @@ void I_InitSound(boolean use_sfx_prefix)
         // the TIMIDITY_CFG environment variable here before SDL_mixer
         // is opened.
 
-        if (!nomusic
-         && (snd_musicdevice == SNDDEVICE_GENMIDI
-          || snd_musicdevice == SNDDEVICE_GUS))
+        if (!nomusic && (snd_musicdevice == SNDDEVICE_GENMIDI || snd_musicdevice == SNDDEVICE_GUS))
         {
             I_InitTimidityConfig();
         }
@@ -274,9 +270,10 @@ void I_InitSound(boolean use_sfx_prefix)
     }
     // [crispy] print the SDL audio backend
     {
-	const char *driver_name = SDL_GetCurrentAudioDriver();
+        const char *driver_name = SDL_GetCurrentAudioDriver();
 
-	fprintf(stderr, "I_InitSound: SDL audio driver is %s\n", driver_name ? driver_name : "none");
+        fprintf(
+            stderr, "I_InitSound: SDL audio driver is %s\n", driver_name ? driver_name : "none");
     }
 }
 
@@ -409,7 +406,6 @@ void I_InitMusic(void)
 
 void I_ShutdownMusic(void)
 {
-
 }
 
 void I_SetMusicVolume(int volume)
@@ -534,48 +530,47 @@ boolean I_MusicIsPlaying(void)
 
 void I_BindSoundVariables(void)
 {
-    M_BindIntVariable("snd_musicdevice",         &snd_musicdevice);
-    M_BindIntVariable("snd_sfxdevice",           &snd_sfxdevice);
-    M_BindIntVariable("snd_sbport",              &snd_sbport);
-    M_BindIntVariable("snd_sbirq",               &snd_sbirq);
-    M_BindIntVariable("snd_sbdma",               &snd_sbdma);
-    M_BindIntVariable("snd_mport",               &snd_mport);
-    M_BindIntVariable("snd_maxslicetime_ms",     &snd_maxslicetime_ms);
-    M_BindStringVariable("snd_musiccmd",         &snd_musiccmd);
-    M_BindStringVariable("snd_dmxoption",        &snd_dmxoption);
-    M_BindIntVariable("snd_samplerate",          &snd_samplerate);
-    M_BindIntVariable("snd_cachesize",           &snd_cachesize);
-    M_BindIntVariable("opl_io_port",             &opl_io_port);
-    M_BindIntVariable("snd_pitchshift",          &snd_pitchshift);
+    M_BindIntVariable("snd_musicdevice", &snd_musicdevice);
+    M_BindIntVariable("snd_sfxdevice", &snd_sfxdevice);
+    M_BindIntVariable("snd_sbport", &snd_sbport);
+    M_BindIntVariable("snd_sbirq", &snd_sbirq);
+    M_BindIntVariable("snd_sbdma", &snd_sbdma);
+    M_BindIntVariable("snd_mport", &snd_mport);
+    M_BindIntVariable("snd_maxslicetime_ms", &snd_maxslicetime_ms);
+    M_BindStringVariable("snd_musiccmd", &snd_musiccmd);
+    M_BindStringVariable("snd_dmxoption", &snd_dmxoption);
+    M_BindIntVariable("snd_samplerate", &snd_samplerate);
+    M_BindIntVariable("snd_cachesize", &snd_cachesize);
+    M_BindIntVariable("opl_io_port", &opl_io_port);
+    M_BindIntVariable("snd_pitchshift", &snd_pitchshift);
 
-    M_BindStringVariable("music_pack_path",      &music_pack_path);
-    M_BindStringVariable("timidity_cfg_path",    &timidity_cfg_path);
-    M_BindStringVariable("gus_patch_path",       &gus_patch_path);
-    M_BindIntVariable("gus_ram_kb",              &gus_ram_kb);
+    M_BindStringVariable("music_pack_path", &music_pack_path);
+    M_BindStringVariable("timidity_cfg_path", &timidity_cfg_path);
+    M_BindStringVariable("gus_patch_path", &gus_patch_path);
+    M_BindIntVariable("gus_ram_kb", &gus_ram_kb);
 #ifdef _WIN32
-    M_BindStringVariable("winmm_midi_device",    &winmm_midi_device);
-    M_BindIntVariable("winmm_complevel",         &winmm_complevel);
-    M_BindIntVariable("winmm_reset_type",        &winmm_reset_type);
-    M_BindIntVariable("winmm_reset_delay",       &winmm_reset_delay);
+    M_BindStringVariable("winmm_midi_device", &winmm_midi_device);
+    M_BindIntVariable("winmm_complevel", &winmm_complevel);
+    M_BindIntVariable("winmm_reset_type", &winmm_reset_type);
+    M_BindIntVariable("winmm_reset_delay", &winmm_reset_delay);
 #endif
 
 #ifdef HAVE_FLUIDSYNTH
-    M_BindIntVariable("fsynth_chorus_active",       &fsynth_chorus_active);
-    M_BindFloatVariable("fsynth_chorus_depth",      &fsynth_chorus_depth);
-    M_BindFloatVariable("fsynth_chorus_level",      &fsynth_chorus_level);
-    M_BindIntVariable("fsynth_chorus_nr",           &fsynth_chorus_nr);
-    M_BindFloatVariable("fsynth_chorus_speed",      &fsynth_chorus_speed);
-    M_BindStringVariable("fsynth_midibankselect",   &fsynth_midibankselect);
-    M_BindIntVariable("fsynth_polyphony",           &fsynth_polyphony);
-    M_BindIntVariable("fsynth_reverb_active",       &fsynth_reverb_active);
-    M_BindFloatVariable("fsynth_reverb_damp",       &fsynth_reverb_damp);
-    M_BindFloatVariable("fsynth_reverb_level",      &fsynth_reverb_level);
-    M_BindFloatVariable("fsynth_reverb_roomsize",   &fsynth_reverb_roomsize);
-    M_BindFloatVariable("fsynth_reverb_width",      &fsynth_reverb_width);
-    M_BindStringVariable("fsynth_sf_path",          &fsynth_sf_path);
+    M_BindIntVariable("fsynth_chorus_active", &fsynth_chorus_active);
+    M_BindFloatVariable("fsynth_chorus_depth", &fsynth_chorus_depth);
+    M_BindFloatVariable("fsynth_chorus_level", &fsynth_chorus_level);
+    M_BindIntVariable("fsynth_chorus_nr", &fsynth_chorus_nr);
+    M_BindFloatVariable("fsynth_chorus_speed", &fsynth_chorus_speed);
+    M_BindStringVariable("fsynth_midibankselect", &fsynth_midibankselect);
+    M_BindIntVariable("fsynth_polyphony", &fsynth_polyphony);
+    M_BindIntVariable("fsynth_reverb_active", &fsynth_reverb_active);
+    M_BindFloatVariable("fsynth_reverb_damp", &fsynth_reverb_damp);
+    M_BindFloatVariable("fsynth_reverb_level", &fsynth_reverb_level);
+    M_BindFloatVariable("fsynth_reverb_roomsize", &fsynth_reverb_roomsize);
+    M_BindFloatVariable("fsynth_reverb_width", &fsynth_reverb_width);
+    M_BindStringVariable("fsynth_sf_path", &fsynth_sf_path);
 #endif // HAVE_FLUIDSYNTH
 
-    M_BindIntVariable("use_libsamplerate",       &use_libsamplerate);
-    M_BindFloatVariable("libsamplerate_scale",   &libsamplerate_scale);
+    M_BindIntVariable("use_libsamplerate", &use_libsamplerate);
+    M_BindFloatVariable("libsamplerate_scale", &libsamplerate_scale);
 }
-

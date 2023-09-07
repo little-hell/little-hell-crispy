@@ -32,7 +32,7 @@
 // _stricmp() and _strnicmp()
 // Outside Windows, we use strings.h for str[n]casecmp.
 #ifdef _WIN32
-#define strcasecmp _stricmp
+#define strcasecmp  _stricmp
 #define strncasecmp _strnicmp
 #endif
 
@@ -49,14 +49,14 @@
 #ifdef __GNUC__
 
 #if defined(_WIN32) && !defined(__clang__)
-#define PACKEDATTR __attribute__((packed,gcc_struct))
+#define PACKEDATTR __attribute__((packed, gcc_struct))
 #else
 #define PACKEDATTR __attribute__((packed))
 #endif
 
 #define PRINTF_ATTR(fmt, first) __attribute__((format(printf, fmt, first)))
-#define PRINTF_ARG_ATTR(x) __attribute__((format_arg(x)))
-#define NORETURN __attribute__((noreturn))
+#define PRINTF_ARG_ATTR(x)      __attribute__((format_arg(x)))
+#define NORETURN                __attribute__((noreturn))
 
 #else
 #if defined(_MSC_VER)
@@ -72,7 +72,7 @@
 #ifdef __WATCOMC__
 #define PACKEDPREFIX _Packed
 #elif defined(_MSC_VER)
-#define PACKEDPREFIX __pragma(pack(push,1))
+#define PACKEDPREFIX __pragma(pack(push, 1))
 #else
 #define PACKEDPREFIX
 #endif
@@ -118,19 +118,18 @@ typedef int64_t dpixel_t;
 
 #ifdef _WIN32
 
-#define DIR_SEPARATOR '\\'
+#define DIR_SEPARATOR   '\\'
 #define DIR_SEPARATOR_S "\\"
-#define PATH_SEPARATOR ';'
+#define PATH_SEPARATOR  ';'
 
 #else
 
-#define DIR_SEPARATOR '/'
+#define DIR_SEPARATOR   '/'
 #define DIR_SEPARATOR_S "/"
-#define PATH_SEPARATOR ':'
+#define PATH_SEPARATOR  ':'
 
 #endif
 
 #define arrlen(array) (sizeof(array) / sizeof(*array))
 
 #endif
-

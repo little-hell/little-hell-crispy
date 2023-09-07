@@ -26,10 +26,10 @@
 
 // Called by D_DoomLoop,
 // returns current time in tics.
-int I_GetTime (void);
+int I_GetTime(void);
 
 // returns current time in ms
-int I_GetTimeMS (void);
+int I_GetTimeMS(void);
 
 // returns current time in us
 uint64_t I_GetTimeUS(void); // [crispy]
@@ -46,4 +46,3 @@ void I_WaitVBL(int count);
 // [crispy]
 fixed_t I_GetFracRealTime(void);
 #endif
-

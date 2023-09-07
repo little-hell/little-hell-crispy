@@ -17,8 +17,6 @@
 //
 
 
-
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,9 +77,9 @@ unsigned int W_LumpNameHash(const char *s)
     unsigned int result = 5381;
     unsigned int i;
 
-    for (i=0; i < 8 && s[i] != '\0'; ++i)
+    for (i = 0; i < 8 && s[i] != '\0'; ++i)
     {
-        result = ((result << 5) ^ result ) ^ toupper(s[i]);
+        result = ((result << 5) ^ result) ^ toupper(s[i]);
     }
 
     return result;
@@ -100,7 +98,7 @@ unsigned int W_LumpNameHash(const char *s)
 // Other files are single lumps with the base filename
 //  for the lump name.
 
-wad_file_t *W_AddFile (const char *filename)
+wad_file_t *W_AddFile(const char *filename)
 {
     wadinfo_t header;
     lumpindex_t i;
@@ -136,65 +134,70 @@ wad_file_t *W_AddFile (const char *filename)
 
     if (wad_file == NULL)
     {
-	printf (" couldn't open %s\n", filename);
-	return NULL;
+        printf(" couldn't open %s\n", filename);
+        return NULL;
     }
 
-    if (strcasecmp(filename+strlen(filename)-3 , "wad" ) )
+    if (strcasecmp(filename + strlen(filename) - 3, "wad"))
     {
-	// single lump file
+        // single lump file
 
         // fraggle: Swap the filepos and size here.  The WAD directory
         // parsing code expects a little-endian directory, so will swap
         // them back.  Effectively we're constructing a "fake WAD directory"
         // here, as it would appear on disk.
 
-	fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
-	fileinfo->filepos = LONG(0);
-	fileinfo->size = LONG(wad_file->length);
+        fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
+        fileinfo->filepos = LONG(0);
+        fileinfo->size = LONG(wad_file->length);
 
         // Name the lump after the base of the filename (without the
         // extension).
 
-	M_ExtractFileBase (filename, fileinfo->name);
-	numfilelumps = 1;
+        M_ExtractFileBase(filename, fileinfo->name);
+        numfilelumps = 1;
     }
     else
     {
-	// WAD file
+        // WAD file
         W_Read(wad_file, 0, &header, sizeof(header));
 
-	if (strncmp(header.identification,"IWAD",4))
-	{
-	    // Homebrew levels?
-	    if (strncmp(header.identification,"PWAD",4))
-	    {
-		W_CloseFile(wad_file);
-		I_Error ("Wad file %s doesn't have IWAD "
-			 "or PWAD id\n", filename);
-	    }
+        if (strncmp(header.identification, "IWAD", 4))
+        {
+            // Homebrew levels?
+            if (strncmp(header.identification, "PWAD", 4))
+            {
+                W_CloseFile(wad_file);
+                I_Error(
+                    "Wad file %s doesn't have IWAD "
+                    "or PWAD id\n",
+                    filename);
+            }
 
-	    // ???modifiedgame = true;
-	}
+            // ???modifiedgame = true;
+        }
 
-	header.numlumps = LONG(header.numlumps);
+        header.numlumps = LONG(header.numlumps);
 
-         // Vanilla Doom doesn't like WADs with more than 4046 lumps
-         // https://www.doomworld.com/vb/post/1010985
-         // [crispy] disable PWAD lump number limit
-         if (!strncmp(header.identification,"PWAD",4) && header.numlumps > 4046 && false)
-         {
-                 W_CloseFile(wad_file);
-                 I_Error ("Error: Vanilla limit for lumps in a WAD is 4046, "
-                          "PWAD %s has %d", filename, header.numlumps);
-         }
+        // Vanilla Doom doesn't like WADs with more than 4046 lumps
+        // https://www.doomworld.com/vb/post/1010985
+        // [crispy] disable PWAD lump number limit
+        if (!strncmp(header.identification, "PWAD", 4) && header.numlumps > 4046 && false)
+        {
+            W_CloseFile(wad_file);
+            I_Error(
+                "Error: Vanilla limit for lumps in a WAD is 4046, "
+                "PWAD %s has %d",
+                filename,
+                header.numlumps);
+        }
 
-	header.infotableofs = LONG(header.infotableofs);
-	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
+        header.infotableofs = LONG(header.infotableofs);
+        length = header.numlumps * sizeof(filelump_t);
+        fileinfo = Z_Malloc(length, PU_STATIC, 0);
 
         W_Read(wad_file, header.infotableofs, fileinfo, length);
-	numfilelumps = header.numlumps;
+        numfilelumps = header.numlumps;
     }
 
     // Increase size of numlumps array to accomodate the new file.
@@ -245,15 +248,13 @@ wad_file_t *W_AddFile (const char *filename)
 }
 
 
-
 //
 // W_NumLumps
 //
-int W_NumLumps (void)
+int W_NumLumps(void)
 {
     return numlumps;
 }
-
 
 
 //
@@ -304,8 +305,6 @@ lumpindex_t W_CheckNumForName(const char *name)
 }
 
 
-
-
 //
 // W_GetNumForName
 // Calls W_CheckNumForName, but bombs out if not found.
@@ -314,13 +313,13 @@ lumpindex_t W_GetNumForName(const char *name)
 {
     lumpindex_t i;
 
-    i = W_CheckNumForName (name);
+    i = W_CheckNumForName(name);
 
     if (i < 0)
     {
-        I_Error ("W_GetNumForName: %s not found!", name);
+        I_Error("W_GetNumForName: %s not found!", name);
     }
- 
+
     return i;
 }
 
@@ -347,12 +346,11 @@ int W_LumpLength(lumpindex_t lump)
 {
     if (lump >= numlumps)
     {
-	I_Error ("W_LumpLength: %i >= numlumps", lump);
+        I_Error("W_LumpLength: %i >= numlumps", lump);
     }
 
     return lumpinfo[lump]->size;
 }
-
 
 
 //
@@ -367,7 +365,7 @@ void W_ReadLump(lumpindex_t lump, void *dest)
 
     if (lump >= numlumps)
     {
-        I_Error ("W_ReadLump: %i >= numlumps", lump);
+        I_Error("W_ReadLump: %i >= numlumps", lump);
     }
 
     l = lumpinfo[lump];
@@ -378,12 +376,9 @@ void W_ReadLump(lumpindex_t lump, void *dest)
 
     if (c < l->size)
     {
-        I_Error("W_ReadLump: only read %i of %i on lump %i",
-                c, l->size, lump);
+        I_Error("W_ReadLump: only read %i of %i on lump %i", c, l->size, lump);
     }
 }
-
-
 
 
 //
@@ -393,7 +388,7 @@ void W_ReadLump(lumpindex_t lump, void *dest)
 // the lump data.
 //
 // 'tag' is the type of zone memory buffer to allocate for the lump
-// (usually PU_STATIC or PU_CACHE).  If the lump is loaded as 
+// (usually PU_STATIC or PU_CACHE).  If the lump is loaded as
 // PU_STATIC, it should be released back using W_ReleaseLumpNum
 // when no longer needed (do not use Z_ChangeTag).
 //
@@ -403,9 +398,9 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     byte *result;
     lumpinfo_t *lump;
 
-    if ((unsigned)lumpnum >= numlumps)
+    if ((unsigned) lumpnum >= numlumps)
     {
-	I_Error ("W_CacheLumpNum: %i >= numlumps", lumpnum);
+        I_Error("W_CacheLumpNum: %i >= numlumps", lumpnum);
     }
 
     lump = lumpinfo[lumpnum];
@@ -433,13 +428,12 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
         // Not yet loaded, so load it now
 
         lump->cache = Z_Malloc(W_LumpLength(lumpnum), tag, &lump->cache);
-	W_ReadLump (lumpnum, lump->cache);
+        W_ReadLump(lumpnum, lump->cache);
         result = lump->cache;
     }
-	
+
     return result;
 }
-
 
 
 //
@@ -450,12 +444,12 @@ void *W_CacheLumpName(const char *name, int tag)
     return W_CacheLumpNum(W_GetNumForName(name), tag);
 }
 
-// 
-// Release a lump back to the cache, so that it can be reused later 
+//
+// Release a lump back to the cache, so that it can be reused later
 // without having to read from disk again, or alternatively, discarded
 // if we run out of memory.
 //
-// Back in Vanilla Doom, this was just done using Z_ChangeTag 
+// Back in Vanilla Doom, this was just done using Z_ChangeTag
 // directly, but now that we have WAD mmap, things are a bit more
 // complicated ...
 //
@@ -464,9 +458,9 @@ void W_ReleaseLumpNum(lumpindex_t lumpnum)
 {
     lumpinfo_t *lump;
 
-    if ((unsigned)lumpnum >= numlumps)
+    if ((unsigned) lumpnum >= numlumps)
     {
-	I_Error ("W_ReleaseLumpNum: %i >= numlumps", lumpnum);
+        I_Error("W_ReleaseLumpNum: %i >= numlumps", lumpnum);
     }
 
     lump = lumpinfo[lumpnum];
@@ -637,16 +631,16 @@ void W_Reload(void)
 
 const char *W_WadNameForLump(const lumpinfo_t *lump)
 {
-	return M_BaseName(lump->wad_file->path);
+    return M_BaseName(lump->wad_file->path);
 }
 
 boolean W_IsIWADLump(const lumpinfo_t *lump)
 {
-	return lump->wad_file == lumpinfo[0]->wad_file;
+    return lump->wad_file == lumpinfo[0]->wad_file;
 }
 
 // [crispy] dump lump data into a new LMP file
-int W_LumpDump (const char *lumpname)
+int W_LumpDump(const char *lumpname)
 {
     FILE *fp;
     char *filename, *lump_p;
@@ -656,7 +650,7 @@ int W_LumpDump (const char *lumpname)
 
     if (i < 0 || !lumpinfo[i]->size)
     {
-	return -1;
+        return -1;
     }
 
     // [crispy] open file for writing
@@ -665,7 +659,7 @@ int W_LumpDump (const char *lumpname)
     fp = fopen(filename, "wb");
     if (!fp)
     {
-	I_Error("W_LumpDump: Failed writing to file '%s'!", filename);
+        I_Error("W_LumpDump: Failed writing to file '%s'!", filename);
     }
     free(filename);
 

@@ -24,26 +24,20 @@
 #include "r_defs.h"
 #include "r_state.h"
 
-#define LOOKDIRMIN	110 // [crispy] -110, actually
-#define LOOKDIRMAX	90
-#define LOOKDIRS	(LOOKDIRMIN+1+LOOKDIRMAX) // [crispy] lookdir range: -110..0..90
+#define LOOKDIRMIN 110 // [crispy] -110, actually
+#define LOOKDIRMAX 90
+#define LOOKDIRS   (LOOKDIRMIN + 1 + LOOKDIRMAX) // [crispy] lookdir range: -110..0..90
 
 // Retrieve column data for span blitting.
-byte*
-R_GetColumn
-( int		tex,
-  int		col );
+byte *R_GetColumn(int tex, int col);
 
 // [crispy] wrapping column getter function for composited translucent mid-textures on 1S walls
-byte*
-R_GetColumnMod
-( int		tex,
-  int		col );
+byte *R_GetColumnMod(int tex, int col);
 
 
 // I/O, setting up the stuff.
-void R_InitData (void);
-void R_PrecacheLevel (void);
+void R_InitData(void);
+void R_PrecacheLevel(void);
 
 
 // Retrieval.

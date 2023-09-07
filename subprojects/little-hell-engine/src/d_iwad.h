@@ -21,12 +21,9 @@
 
 #include "d_mode.h"
 
-#define IWAD_MASK_DOOM    ((1 << doom)           \
-                         | (1 << doom2)          \
-                         | (1 << pack_tnt)       \
-                         | (1 << pack_plut)      \
-                         | (1 << pack_chex)      \
-                         | (1 << pack_hacx))
+#define IWAD_MASK_DOOM                                                                             \
+    ((1 << doom) | (1 << doom2) | (1 << pack_tnt) | (1 << pack_plut) | (1 << pack_chex) |          \
+     (1 << pack_hacx))
 #define IWAD_MASK_HERETIC (1 << heretic)
 #define IWAD_MASK_HEXEN   (1 << hexen)
 #define IWAD_MASK_STRIFE  (1 << strife)
@@ -50,4 +47,3 @@ const char *D_SuggestGameName(GameMission_t mission, GameMode_t mode);
 void D_CheckCorrectIWAD(GameMission_t mission);
 
 #endif
-

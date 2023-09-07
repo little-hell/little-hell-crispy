@@ -27,7 +27,7 @@
 
 #define FADE_TIME 2000
 
-#define HR_SCREENWIDTH 640
+#define HR_SCREENWIDTH  640
 #define HR_SCREENHEIGHT 480
 
 static SDL_Window *hr_screen = NULL;
@@ -47,9 +47,7 @@ boolean I_SetVideoModeHR(void)
 
     // Create screen surface at the native desktop pixel depth (bpp=0),
     // as we cannot trust true 8-bit to reliably work nowadays.
-    hr_screen = SDL_CreateWindow(window_title, x, y,
-        HR_SCREENWIDTH, HR_SCREENHEIGHT,
-        0);
+    hr_screen = SDL_CreateWindow(window_title, x, y, HR_SCREENWIDTH, HR_SCREENHEIGHT, 0);
 
     if (hr_screen == NULL)
     {
@@ -58,8 +56,7 @@ boolean I_SetVideoModeHR(void)
     }
 
     // We do all actual drawing into an intermediate surface.
-    hr_surface = SDL_CreateRGBSurface(0, HR_SCREENWIDTH, HR_SCREENHEIGHT,
-                                      8, 0, 0, 0, 0);
+    hr_surface = SDL_CreateRGBSurface(0, HR_SCREENWIDTH, HR_SCREENHEIGHT, 8, 0, 0, 0, 0);
 
     return true;
 }
@@ -82,7 +79,7 @@ void I_UnsetVideoModeHR(void)
 
 void I_ClearScreenHR(void)
 {
-    SDL_Rect area = { 0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT };
+    SDL_Rect area = {0, 0, HR_SCREENWIDTH, HR_SCREENHEIGHT};
 
     SDL_FillRect(hr_surface, &area, 0);
 }
@@ -97,10 +94,10 @@ void I_SlamBlockHR(int x, int y, int w, int h, const byte *src)
     int i;
     int bit;
 
-    // Set up source pointers to read from source buffer - each 4-bit 
+    // Set up source pointers to read from source buffer - each 4-bit
     // pixel has its bits split into four sub-buffers
 
-    for (i=0; i<4; ++i)
+    for (i = 0; i < 4; ++i)
     {
         srcptrs[i] = src + (i * w * h / 8);
     }
@@ -114,27 +111,24 @@ void I_SlamBlockHR(int x, int y, int w, int h, const byte *src)
 
     bit = 0;
 
-    for (y1=y; y1<y+h; ++y1)
+    for (y1 = y; y1 < y + h; ++y1)
     {
         dest = ((byte *) hr_surface->pixels) + y1 * hr_surface->pitch + x;
 
-        for (x1=x; x1<x+w; ++x1)
+        for (x1 = x; x1 < x + w; ++x1)
         {
             // Get the bits for this pixel
             // For each bit, find the byte containing it, shift down
             // and mask out the specific bit wanted.
 
-            for (i=0; i<4; ++i)
+            for (i = 0; i < 4; ++i)
             {
                 srcbits[i] = (srcptrs[i][bit / 8] >> (7 - (bit % 8))) & 0x1;
             }
 
             // Reassemble the pixel value
 
-            *dest = (srcbits[0] << 0) 
-                  | (srcbits[1] << 1)
-                  | (srcbits[2] << 2)
-                  | (srcbits[3] << 3);
+            *dest = (srcbits[0] << 0) | (srcbits[1] << 1) | (srcbits[2] << 2) | (srcbits[3] << 3);
 
             // Next pixel!
 
@@ -150,8 +144,7 @@ void I_SlamBlockHR(int x, int y, int w, int h, const byte *src)
     blit_rect.y = y;
     blit_rect.w = w;
     blit_rect.h = h;
-    SDL_BlitSurface(hr_surface, &blit_rect,
-                    SDL_GetWindowSurface(hr_screen), &blit_rect);
+    SDL_BlitSurface(hr_surface, &blit_rect, SDL_GetWindowSurface(hr_screen), &blit_rect);
     SDL_UpdateWindowSurfaceRects(hr_screen, &blit_rect, 1);
 }
 
@@ -171,7 +164,7 @@ void I_SetPaletteHR(const byte *palette)
     SDL_Color sdlpal[16];
     int i;
 
-    for (i=0; i<16; ++i)
+    for (i = 0; i < 16; ++i)
     {
         sdlpal[i].r = palette[i * 3 + 0] * 4;
         sdlpal[i].g = palette[i * 3 + 1] * 4;
@@ -180,8 +173,7 @@ void I_SetPaletteHR(const byte *palette)
 
     // After setting colors, update the screen.
     SDL_SetPaletteColors(hr_surface->format->palette, sdlpal, 0, 16);
-    SDL_BlitSurface(hr_surface, &screen_rect,
-                    SDL_GetWindowSurface(hr_screen), &screen_rect);
+    SDL_BlitSurface(hr_surface, &screen_rect, SDL_GetWindowSurface(hr_screen), &screen_rect);
     SDL_UpdateWindowSurfaceRects(hr_screen, &screen_rect, 1);
 }
 
@@ -205,7 +197,7 @@ void I_FadeToPaletteHR(const byte *palette)
 
         // Generate the fake palette
 
-        for (i=0; i<16 * 3; ++i) 
+        for (i = 0; i < 16 * 3; ++i)
         {
             tmppal[i] = (palette[i] * elapsed) / FADE_TIME;
         }
@@ -254,4 +246,3 @@ boolean I_CheckAbortHR(void)
 
     return result;
 }
-

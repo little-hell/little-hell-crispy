@@ -22,12 +22,12 @@
 
 #include "doomtype.h"
 
-extern void R_InitBrightmaps ();
+extern void R_InitBrightmaps();
 
-extern const byte *(*R_BrightmapForTexName) (const char *texname);
-extern const byte *(*R_BrightmapForSprite) (const int type);
-extern const byte *(*R_BrightmapForFlatNum) (const int num);
-extern const byte *(*R_BrightmapForState) (const int state);
+extern const byte *(*R_BrightmapForTexName)(const char *texname);
+extern const byte *(*R_BrightmapForSprite)(const int type);
+extern const byte *(*R_BrightmapForFlatNum)(const int num);
+extern const byte *(*R_BrightmapForState)(const int state);
 
 extern const byte **texturebrightmap;
 
