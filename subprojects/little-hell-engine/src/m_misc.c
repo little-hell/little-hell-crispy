@@ -37,8 +37,6 @@
 
 #include "doomtype.h"
 
-#include "deh_str.h"
-
 #include "i_swap.h"
 #include "i_system.h"
 #include "i_video.h"
@@ -282,6 +280,10 @@ int M_rename(const char *oldname, const char *newname)
 #endif
 }
 
+/**
+ * @todo Make a Windows stat() in platforms/windows.h and 
+ * call that function with the ifdef instead.
+ * */
 int M_stat(const char *path, struct stat *buf)
 {
 #ifdef _WIN32
@@ -406,7 +408,7 @@ boolean M_FileExists(const char *filename)
     }
     else
     {
-        // If we can't open because the file is a directory, the 
+        // If we can't open because the file is a directory, the
         // "file" exists at least!
 
         return errno == EISDIR;
@@ -487,13 +489,13 @@ char *M_FileCaseExists(const char *path)
 //
 
 long M_FileLength(FILE *handle)
-{ 
+{
     long savedpos;
     long length;
 
     // save the current position in the file
     savedpos = ftell(handle);
-    
+
     // jump to the end and find the length
     fseek(handle, 0, SEEK_END);
     length = ftell(handle);
@@ -512,7 +514,7 @@ boolean M_WriteFile(const char *name, const void *source, int length)
 {
     FILE *handle;
     int	count;
-	
+
     handle = M_fopen(name, "wb");
 
     if (handle == NULL)
@@ -520,10 +522,10 @@ boolean M_WriteFile(const char *name, const void *source, int length)
 
     count = fwrite(source, 1, length, handle);
     fclose(handle);
-	
+
     if (count < length)
 	return false;
-		
+
     return true;
 }
 
@@ -537,7 +539,7 @@ int M_ReadFile(const char *name, byte **buffer)
     FILE *handle;
     int	count, length;
     byte *buf;
-	
+
     handle = M_fopen(name, "rb");
     if (handle == NULL)
 	I_Error ("Couldn't read file %s", name);
@@ -546,14 +548,14 @@ int M_ReadFile(const char *name, byte **buffer)
     // reading the current position
 
     length = M_FileLength(handle);
-    
+
     buf = Z_Malloc (length + 1, PU_STATIC, NULL);
     count = fread(buf, 1, length, handle);
     fclose (handle);
-	
+
     if (count < length)
 	I_Error ("Couldn't read file %s", name);
-		
+
     buf[length] = '\0';
     *buffer = buf;
     return length;
@@ -1027,4 +1029,28 @@ void M_NormalizeSlashes(char *str)
             }
         }
     }
+}
+
+// Strip whitespace from the start and end of a string
+
+char *M_CleanString(char *s) // [crispy] un-static
+{
+    char *strending;
+
+    // Leading whitespace
+
+    while (*s && isspace(*s))
+        ++s;
+
+    // Trailing whitespace
+   
+    strending = s + strlen(s) - 1;
+
+    while (strlen(s) > 0 && isspace(*strending))
+    {
+        *strending = '\0';
+        --strending;
+    }
+
+    return s;
 }

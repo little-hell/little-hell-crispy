@@ -14,11 +14,15 @@ game_source_files = files(
     'hu_lib.c',
     'hu_stuff.c',
     'info.c',
+    'm_crispy.c',
     'm_menu.c',
     'm_random.c',
+    'p_bexptr.c',
+    'p_blockmap.c',
     'p_ceilng.c',
     'p_doors.c',
     'p_enemy.c',
+    'p_extsaveg.c',
     'p_floor.c',
     'p_inter.c',
     'p_lights.c',
@@ -26,6 +30,7 @@ game_source_files = files(
     'p_maputl.c',
     'p_mobj.c',
     'p_mobj.h',
+    'p_extnodes.c',
     'p_plats.c',
     'p_pspr.c',
     'p_saveg.c',
@@ -36,6 +41,7 @@ game_source_files = files(
     'p_telept.c',
     'p_tick.c',
     'p_user.c',
+    'r_bmaps.c',
     'r_bsp.c',
     'r_data.c',
     'r_draw.c',
@@ -43,9 +49,11 @@ game_source_files = files(
     'r_plane.c',
     'r_segs.c',
     'r_sky.c',
+    'r_swirl.c',
     'r_things.c',
     'sounds.c',
     's_sound.c',
+    's_musinfo.c',
     'statdump.c',
     'st_lib.c',
     'st_stuff.c',
@@ -53,16 +61,17 @@ game_source_files = files(
     'hu_stuff.c',
     #'hud' / 'widget.c',
     #'hud' / 'statusbar.c',
+    'v_snow.c',
     'wi_stuff.c'
 )
 
 # Build the game binary
-executable('my-little-hell-example-game', 
+executable('my-little-hell-example-game',
     sources: [
         game_source_files,
     ],
     # Provided by the little-hell-engine Meson subproject, and found by the top-level meson.build
-    dependencies: littlehell_dep 
+    dependencies: [littlehell_dep, config_dep]
 )
 
 #run_target('clang-tidy',

@@ -22,23 +22,21 @@
 
 #include "i_glob.h"
 #include "m_misc.h"
-#include "config.h"
 
+// If we're being built with Visual Studio on Windows,
+// we need to include the win_opendir header, which is a
+// library that implements POSIX.
 #if defined(_MSC_VER)
-// For Visual C++, we need to include the win_opendir module.
 #include <win_opendir.h>
 #define S_ISDIR(m)      (((m)& S_IFMT) == S_IFDIR)
-#elif defined(HAVE_DIRENT_H)
+
+// If we're being built on a POSIX-compatible platform
+// (i.e Linux, macOS, or Windows using Cygwin/MSYS2
+#else
 #include <dirent.h>
 #include <sys/stat.h>
-#elif defined(__WATCOMC__)
-// Watcom has the same API in a different header.
-#include <direct.h>
-#else
-#define NO_DIRENT_IMPLEMENTATION
-#endif
 
-#ifndef NO_DIRENT_IMPLEMENTATION
+#endif
 
 // Only the fields d_name and (as an XSI extension) d_ino are specified
 // in POSIX.1.  Other than Linux, the d_type field is available mainly
@@ -360,24 +358,3 @@ const char *I_NextGlob(glob_t *glob)
     ++glob->next_index;
     return result;
 }
-
-#else /* #ifdef NO_DIRENT_IMPLEMENTATION */
-
-#warning No native implementation of file globbing.
-
-glob_t *I_StartGlob(const char *directory, const char *glob, int flags)
-{
-    return NULL;
-}
-
-void I_EndGlob(glob_t *glob)
-{
-}
-
-const char *I_NextGlob(glob_t *glob)
-{
-    return "";
-}
-
-#endif /* #ifdef NO_DIRENT_IMPLEMENTATION */
-

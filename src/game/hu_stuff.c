@@ -24,7 +24,6 @@
 
 #include "z_zone.h"
 
-#include "deh_main.h"
 #include "i_input.h"
 #include "i_swap.h"
 #include "i_video.h"
@@ -261,7 +260,7 @@ const char *mapnames_commercial[] =
     HUSTR_9,
     HUSTR_10,
     HUSTR_11,
-	
+
     HUSTR_12,
     HUSTR_13,
     HUSTR_14,
@@ -271,7 +270,7 @@ const char *mapnames_commercial[] =
     HUSTR_18,
     HUSTR_19,
     HUSTR_20,
-	
+
     HUSTR_21,
     HUSTR_22,
     HUSTR_23,
@@ -298,7 +297,7 @@ const char *mapnames_commercial[] =
     PHUSTR_9,
     PHUSTR_10,
     PHUSTR_11,
-	
+
     PHUSTR_12,
     PHUSTR_13,
     PHUSTR_14,
@@ -308,7 +307,7 @@ const char *mapnames_commercial[] =
     PHUSTR_18,
     PHUSTR_19,
     PHUSTR_20,
-	
+
     PHUSTR_21,
     PHUSTR_22,
     PHUSTR_23,
@@ -321,7 +320,7 @@ const char *mapnames_commercial[] =
     PHUSTR_30,
     PHUSTR_31,
     PHUSTR_32,
-    
+
     // TNT WAD map names.
 
     THUSTR_1,
@@ -335,7 +334,7 @@ const char *mapnames_commercial[] =
     THUSTR_9,
     THUSTR_10,
     THUSTR_11,
-	
+
     THUSTR_12,
     THUSTR_13,
     THUSTR_14,
@@ -345,7 +344,7 @@ const char *mapnames_commercial[] =
     THUSTR_18,
     THUSTR_19,
     THUSTR_20,
-	
+
     THUSTR_21,
     THUSTR_22,
     THUSTR_23,
@@ -398,22 +397,6 @@ const char *mapnames_commercial[] =
     MHUSTR_21
 };
 
-static void CrispyReplaceColor (const char *str, const int cr, const char *col)
-{
-    char *str_replace, col_replace[16];
-
-    if (DEH_HasStringReplacement(str))
-    {
-	return;
-    }
-
-    M_snprintf(col_replace, sizeof(col_replace),
-               "%s%s%s", crstr[cr], col, crstr[CR_NONE]);
-    str_replace = M_StringReplace(str, col, col_replace);
-    DEH_AddStringReplacement(str, str_replace);
-    free(str_replace);
-}
-
 static const char *cr_stat, *cr_stat2, *kills;
 
 void HU_Init(void)
@@ -427,7 +410,7 @@ void HU_Init(void)
     j = HU_FONTSTART;
     for (i=0;i<HU_FONTSIZE;i++)
     {
-	DEH_snprintf(buffer, 9, "STCFN%.3d", j++);
+	M_snprintf(buffer, 9, "STCFN%.3d", j++);
 	hu_font[i] = (patch_t *) W_CacheLumpName(buffer, PU_STATIC);
     }
 
@@ -459,7 +442,7 @@ void HU_Init(void)
 	// [crispy] check for alternative crosshair patches from e.g. prboom-plus.wad first
 //	if ((laserpatch[i].l = W_CheckNumForName(laserpatch[i].a)) == -1)
 	{
-		DEH_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
+		M_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
 		laserpatch[i].l = W_GetNumForName(buffer);
 
 		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
@@ -483,28 +466,6 @@ void HU_Init(void)
 	laserpatch[i].h += SHORT(patch->height)/2;
     }
 
-    if (!M_ParmExists("-nodeh"))
-    {
-	// [crispy] colorize keycard and skull key messages
-	CrispyReplaceColor(GOTBLUECARD, CR_BLUE, " blue ");
-	CrispyReplaceColor(GOTBLUESKUL, CR_BLUE, " blue ");
-	CrispyReplaceColor(PD_BLUEO,    CR_BLUE, " blue ");
-	CrispyReplaceColor(PD_BLUEK,    CR_BLUE, " blue ");
-	CrispyReplaceColor(GOTREDCARD,  CR_RED,  " red ");
-	CrispyReplaceColor(GOTREDSKULL, CR_RED,  " red ");
-	CrispyReplaceColor(PD_REDO,     CR_RED,  " red ");
-	CrispyReplaceColor(PD_REDK,     CR_RED,  " red ");
-	CrispyReplaceColor(GOTYELWCARD, CR_GOLD, " yellow ");
-	CrispyReplaceColor(GOTYELWSKUL, CR_GOLD, " yellow ");
-	CrispyReplaceColor(PD_YELLOWO,  CR_GOLD, " yellow ");
-	CrispyReplaceColor(PD_YELLOWK,  CR_GOLD, " yellow ");
-
-	// [crispy] colorize multi-player messages
-	CrispyReplaceColor(HUSTR_PLRGREEN,  CR_GREEN, "Green: ");
-	CrispyReplaceColor(HUSTR_PLRINDIGO, CR_GRAY,  "Indigo: ");
-	CrispyReplaceColor(HUSTR_PLRBROWN,  CR_GOLD,  "Brown: ");
-	CrispyReplaceColor(HUSTR_PLRRED,    CR_RED,   "Red: ");
-    }
 }
 
 void HU_Stop(void)
@@ -667,7 +628,7 @@ void HU_Start(void)
 		       hu_font,
 		       HU_FONTSTART);
 
-    
+
     switch ( logical_gamemission )
     {
       case doom:
@@ -712,28 +673,6 @@ void HU_Start(void)
     // [crispy] display names of single special levels in Automap
     HU_SetSpecialLevelName(W_WadNameForLump(maplumpinfo), &s);
 
-    // [crispy] explicitely display (episode and) map if the
-    // map is from a PWAD or if the map title string has been dehacked
-    if (!W_IsIWADLump(maplumpinfo) &&
-        (DEH_HasStringReplacement(s) ||
-        (!(crispy->havenerve && gamemission == pack_nerve) &&
-        !(crispy->havemaster && gamemission == pack_master))))
-    {
-	char *m;
-
-	ptr = M_StringJoin(crstr[CR_GOLD], W_WadNameForLump(maplumpinfo), ": ", crstr[CR_GRAY], maplumpinfo->name, NULL);
-	m = ptr;
-
-	while (*m)
-	    HUlib_addCharToTextLine(&w_map, *(m++));
-
-	free(ptr);
-    }
-
-    // dehacked substitution to get modified level name
-
-    s = DEH_String(s);
-    
     // [crispy] print the map title in white from the first colon onward
     M_snprintf(buf, sizeof(buf), "%s%s", ":", crstr[CR_GRAY]);
     ptr = M_StringReplace(s, ":", buf);
@@ -1041,9 +980,9 @@ void HU_Ticker(void)
 				|| chat_dest[i] == HU_BROADCAST))
 			{
 			    HUlib_addMessageToSText(&w_message,
-						    DEH_String(player_names[i]),
+						    player_names[i],
 						    w_inputbuffer[i].l.l);
-			    
+
 			    message_nottobefuckedwith = true;
 			    message_on = true;
 			    message_counter = HU_MSGTIMEOUT;
@@ -1210,7 +1149,7 @@ void HU_queueChatChar(char c)
 {
     if (((head + 1) & (QUEUESIZE-1)) == tail)
     {
-	plr->message = DEH_String(HUSTR_MSGU);
+	plr->message = HUSTR_MSGU;
     }
     else
     {
@@ -1261,7 +1200,7 @@ boolean HU_Responder(event_t *ev)
     unsigned char 	c;
     int			i;
     int			numplayers;
-    
+
     static int		num_nobrainers = 0;
 
     numplayers = 0;
@@ -1310,15 +1249,15 @@ boolean HU_Responder(event_t *ev)
 		    {
 			num_nobrainers++;
 			if (num_nobrainers < 3)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF1);
+			    plr->message = HUSTR_TALKTOSELF1;
 			else if (num_nobrainers < 6)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF2);
+			    plr->message = HUSTR_TALKTOSELF2;
 			else if (num_nobrainers < 9)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF3);
+			    plr->message = HUSTR_TALKTOSELF3;
 			else if (num_nobrainers < 32)
-			    plr->message = DEH_String(HUSTR_TALKTOSELF4);
+			    plr->message = HUSTR_TALKTOSELF4;
 			else
-			    plr->message = DEH_String(HUSTR_TALKTOSELF5);
+			    plr->message = HUSTR_TALKTOSELF5;
 		    }
 		}
 	    }

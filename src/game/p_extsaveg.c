@@ -20,10 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "config.h"
 #include "doomstat.h"
 #include "doomtype.h"
-#include "deh_main.h"
 #include "m_misc.h"
 #include "p_extsaveg.h"
 #include "p_local.h"
@@ -35,6 +33,9 @@
 
 #define MAX_LINE_LEN 260
 #define MAX_STRING_LEN 80
+
+// TODO: FIX
+#define PACKAGE_VERSION "0.0.1"
 
 static char *line, *string;
 
@@ -66,7 +67,7 @@ static void P_ReadWadFileName (const char *key)
 		{
 			if (strlen(line) > strlen(key) + 1)
 			{
-				savewadfilename = strdup(CleanString(line + strlen(key) + 1));
+				savewadfilename = strdup(M_CleanString(line + strlen(key) + 1));
 			}
 		}
 	}

@@ -24,8 +24,6 @@
 #include "m_misc.h"
 #include "m_random.h"
 
-#include "deh_main.h"
-#include "deh_bexpars.h" // [crispy] bex_pars[]
 #include "i_swap.h"
 #include "i_system.h"
 
@@ -65,11 +63,11 @@
 
 
 // in tics
-//U #define PAUSELEN		(TICRATE*2) 
+//U #define PAUSELEN		(TICRATE*2)
 //U #define SCORESTEP		100
 //U #define ANIMPERIOD		32
 // pixel distance from "(YOU)" to "PLAYER N"
-//U #define STARDIST		10 
+//U #define STARDIST		10
 //U #define WK 1
 
 
@@ -120,7 +118,7 @@ typedef struct
 {
     int		x;
     int		y;
-    
+
 } point_t;
 
 
@@ -149,10 +147,10 @@ typedef struct
     // ALWAYS: n/a,
     // RANDOM: random base period,
     // LEVEL: n/a
-    int		data2; 
+    int		data2;
 
     // actual graphics for frames of animations
-    patch_t*	p[3]; 
+    patch_t*	p[3];
 
     // following must be initialized to zero before use!
 
@@ -164,9 +162,9 @@ typedef struct
 
     // next frame number to animate
     int		ctr;
-    
+
     // used by RANDOM and LEVEL when animating
-    int		state;  
+    int		state;
 
 } anim_t;
 
@@ -290,8 +288,8 @@ static anim_t *anims[NUMEPISODES] =
 #define SP_KILLS		0
 #define SP_ITEMS		2
 #define SP_SECRET		4
-#define SP_FRAGS		6 
-#define SP_TIME			8 
+#define SP_FRAGS		6
+#define SP_TIME			8
 #define SP_PAR			ST_TIME
 
 #define SP_PAUSE		1
@@ -316,13 +314,13 @@ static wbstartstruct_t*	wbs;
 static wbplayerstruct_t* plrs;  // wbs->plyr[]
 
 // used for general timing
-static int 		cnt;  
+static int 		cnt;
 
 // used for timing of background animation
 static int 		bcnt;
 
 // signals to refresh everything for one frame
-static int 		firstrefresh; 
+static int 		firstrefresh;
 
 static int		cnt_kills[MAXPLAYERS];
 static int		cnt_items[MAXPLAYERS];
@@ -340,7 +338,7 @@ static int		NUMCMAPS = 32;
 //
 
 // You Are Here graphic
-static patch_t*		yah[3] = { NULL, NULL, NULL }; 
+static patch_t*		yah[3] = { NULL, NULL, NULL };
 
 // splat
 static patch_t*		splat[2] = { NULL, NULL };
@@ -359,7 +357,7 @@ static patch_t*		wiminus;
 static patch_t*		finished;
 
 // "Entering" graphic
-static patch_t*		entering; 
+static patch_t*		entering;
 
 // "secret"
 static patch_t*		sp_secret;
@@ -377,7 +375,7 @@ static patch_t*		sucks;
 
 // "killers", "victims"
 static patch_t*		killers;
-static patch_t*		victims; 
+static patch_t*		victims;
 
 // "Total", your face, your dead face
 static patch_t*		total;
@@ -430,7 +428,7 @@ void WI_drawLF(void)
 
     if (gamemode != commercial || wbs->last < NUMCMAPS)
     {
-        // draw <LevelName> 
+        // draw <LevelName>
         V_DrawPatch((ORIGWIDTH - SHORT(lnames[wbs->last]->width))/2,
                     y, lnames[wbs->last]);
 
@@ -480,7 +478,7 @@ void WI_drawEL(void)
     y += (5*SHORT(lnames[wbs->next]->height))/4;
 
     V_DrawPatch((ORIGWIDTH - SHORT(lnames[wbs->next]->width))/2,
-		y, 
+		y,
                 lnames[wbs->next]);
 
 }
@@ -528,7 +526,7 @@ WI_drawOnLnode
     else
     {
 	// DEBUG
-	printf("Could not place patch on level %d", n+1); 
+	printf("Could not place patch on level %d", n+1);
     }
 }
 
@@ -596,7 +594,7 @@ void WI_updateAnimatedBack(void)
 		}
 		else a->nexttic = bcnt + a->period;
 		break;
-		
+
 	      case ANIM_LEVEL:
 		// gawd-awful hack for level anims
 		if (!(state == StatCount && i == 7)
@@ -752,7 +750,7 @@ WI_drawTime
 	    // draw
 	    if (div==60 || t / div)
 		V_DrawPatch(x, y, colon);
-	    
+
 	} while (t / div && div < 3600);
 
 	// [crispy] print at most in hhhh:mm:ss format
@@ -764,7 +762,7 @@ WI_drawTime
     else
     {
 	// "sucks"
-	V_DrawPatch(x - SHORT(sucks->width), y, sucks); 
+	V_DrawPatch(x - SHORT(sucks->width), y, sucks);
     }
 }
 
@@ -788,7 +786,7 @@ void WI_updateNoState(void) {
 
     if (!--cnt)
     {
-        // Don't call WI_End yet.  G_WorldDone doesnt immediately 
+        // Don't call WI_End yet.  G_WorldDone doesnt immediately
         // change gamestate, so WI_Drawer is still going to get
         // run until that happens.  If we do that after WI_End
         // (which unloads all the graphics), we're in trouble.
@@ -837,7 +835,7 @@ void WI_drawShowNextLoc(void)
     WI_slamBackground();
 
     // draw animated background
-    WI_drawAnimatedBack(); 
+    WI_drawAnimatedBack();
 
     if ( gamemode != commercial)
     {
@@ -846,7 +844,7 @@ void WI_drawShowNextLoc(void)
 	    WI_drawEL();
 	    return;
 	}
-	
+
 	last = (wbs->last == 8 || wbs->last == 9) ? wbs->next - 1 : wbs->last; // [crispy] support E1M10 "Sewers"
 
 	// draw a splat on taken cities.
@@ -869,7 +867,7 @@ void WI_drawShowNextLoc(void)
 
 	// draw flashing ptr
 	if (snl_pointeron)
-	    WI_drawOnLnode(wbs->next, yah); 
+	    WI_drawOnLnode(wbs->next, yah);
     }
 
     if ((gamemission == pack_nerve && wbs->last == 7) ||
@@ -880,7 +878,7 @@ void WI_drawShowNextLoc(void)
     // draws which level you are entering..
     if ( (gamemode != commercial)
 	 || wbs->next != 30)
-	WI_drawEL();  
+	WI_drawEL();
 
 }
 
@@ -894,7 +892,7 @@ int WI_fragSum(int playernum)
 {
     int		i;
     int		frags = 0;
-    
+
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
 	if (playeringame[i]
@@ -904,7 +902,7 @@ int WI_fragSum(int playernum)
 	}
     }
 
-	
+
     // JDC hack - negative frags.
     frags -= plrs[playernum].frags[playernum];
     // UNUSED if (frags < 0)
@@ -944,7 +942,7 @@ void WI_initDeathmatchStats(void)
 	    dm_totals[i] = 0;
 	}
     }
-    
+
     WI_initAnimatedBack();
 }
 
@@ -955,7 +953,7 @@ void WI_updateDeathmatchStats(void)
 
     int		i;
     int		j;
-    
+
     boolean	stillticking;
 
     WI_updateAnimatedBack();
@@ -975,18 +973,18 @@ void WI_updateDeathmatchStats(void)
 		dm_totals[i] = WI_fragSum(i);
 	    }
 	}
-	
+
 
 	S_StartSoundOptional(0, sfx_inttot, sfx_barexp); // [NS] Optional inter sounds.
 	dm_state = 4;
     }
 
-    
+
     if (dm_state == 2)
     {
 	if (!(bcnt&3))
 	    S_StartSoundOptional(0, sfx_inttic, sfx_pistol); // [NS] Optional inter sounds.
-	
+
 	stillticking = false;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
@@ -1008,7 +1006,7 @@ void WI_updateDeathmatchStats(void)
 
 			if (dm_frags[i][j] < -99)
 			    dm_frags[i][j] = -99;
-			
+
 			stillticking = true;
 		    }
 		}
@@ -1016,11 +1014,11 @@ void WI_updateDeathmatchStats(void)
 
 		if (dm_totals[i] > 99)
 		    dm_totals[i] = 99;
-		
+
 		if (dm_totals[i] < -99)
 		    dm_totals[i] = -99;
 	    }
-	    
+
 	}
 	if (!stillticking)
 	{
@@ -1063,16 +1061,16 @@ void WI_drawDeathmatchStats(void)
     int		w;
 
     WI_slamBackground();
-    
+
     // draw animated background
-    WI_drawAnimatedBack(); 
+    WI_drawAnimatedBack();
     WI_drawLF();
 
     // draw stat titles (top line)
     V_DrawPatch(DM_TOTALSX-SHORT(total->width)/2,
 		DM_MATRIXY-WI_SPACINGY+10,
 		total);
-    
+
     V_DrawPatch(DM_KILLERSX, DM_KILLERSY, killers);
     V_DrawPatch(DM_VICTIMSX, DM_VICTIMSY, victims);
 
@@ -1087,7 +1085,7 @@ void WI_drawDeathmatchStats(void)
 	    V_DrawPatch(x-SHORT(p[i]->width)/2,
 			DM_MATRIXY - WI_SPACINGY,
 			p[i]);
-	    
+
 	    V_DrawPatch(DM_MATRIXX-SHORT(p[i]->width)/2,
 			y,
 			p[i]);
@@ -1174,7 +1172,7 @@ void WI_updateNetgameStats(void)
 
     int		i;
     int		fsum;
-    
+
     boolean	stillticking;
 
     WI_updateAnimatedBack();
@@ -1218,7 +1216,7 @@ void WI_updateNetgameStats(void)
 	    else
 		stillticking = true;
 	}
-	
+
 	if (!stillticking)
 	{
 	    S_StartSoundOptional(0, sfx_inttot, sfx_barexp); // [NS] Optional inter sounds.
@@ -1268,7 +1266,7 @@ void WI_updateNetgameStats(void)
 	    else
 		stillticking = true;
 	}
-	
+
 	if (!stillticking)
 	{
 	    S_StartSoundOptional(0, sfx_inttot, sfx_barexp); // [NS] Optional inter sounds.
@@ -1294,7 +1292,7 @@ void WI_updateNetgameStats(void)
 	    else
 		stillticking = true;
 	}
-	
+
 	if (!stillticking)
 	{
 	    S_StartSoundOptional(0, sfx_intnet, sfx_pldeth); // [NS] Optional inter sounds.
@@ -1332,9 +1330,9 @@ void WI_drawNetgameStats(void)
     int		pwidth = SHORT(percent->width);
 
     WI_slamBackground();
-    
+
     // draw animated background
-    WI_drawAnimatedBack(); 
+    WI_drawAnimatedBack();
 
     WI_drawLF();
 
@@ -1347,7 +1345,7 @@ void WI_drawNetgameStats(void)
 
     V_DrawPatch(NG_STATSX+3*NG_SPACINGX-SHORT(secret->width),
 		NG_STATSY, secret);
-    
+
     if (dofrags)
 	V_DrawPatch(NG_STATSX+4*NG_SPACINGX-SHORT(frags->width),
 		    NG_STATSY, frags);
@@ -1525,12 +1523,6 @@ static boolean WI_drawParTime (void)
 		{
 			result = true;
 		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times
-		if (bex_cpars[wbs->last])
-		{
-			result = true;
-		}
 	}
 	else
 	{
@@ -1539,19 +1531,6 @@ static boolean WI_drawParTime (void)
 		if (wbs->epsd == 3 && !crispy->singleplayer)
 		{
 			result = false;
-		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times for Episode 4
-		// (disguised as par times for Doom II MAP02 to MAP10)
-		if (wbs->epsd == 3 && bex_cpars[wbs->last + 1])
-		{
-			result = true;
-		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times for Episodes 1-4
-		if (wbs->epsd <= 3 && bex_pars[wbs->epsd + 1][wbs->last + 1])
-		{
-			result = true;
 		}
 
 		// [crispy] PWAD: par times for Sigil
@@ -1567,7 +1546,7 @@ static boolean WI_drawParTime (void)
 void WI_drawStats(void)
 {
     // line height
-    int lh;	
+    int lh;
 
     lh = (3*SHORT(num[0]->height))/2;
 
@@ -1575,7 +1554,7 @@ void WI_drawStats(void)
 
     // draw animated background
     WI_drawAnimatedBack();
-    
+
     WI_drawLF();
 
     V_DrawPatch(SP_STATSX, SP_STATSY, kills);
@@ -1666,7 +1645,7 @@ void WI_checkForAccelerate(void)
 void WI_Ticker(void)
 {
     // counter for general background animation
-    bcnt++;  
+    bcnt++;
 
     if (bcnt == 1)
     {
@@ -1674,10 +1653,10 @@ void WI_Ticker(void)
   	if ( gamemode == commercial )
 	  S_ChangeMusic(mus_dm2int, true);
 	// [crispy] Sigil
-	else if (crispy->haved1e5 && wbs->epsd == 4 && W_CheckNumForName(DEH_String("D_SIGINT")) != -1)
+	else if (crispy->haved1e5 && wbs->epsd == 4 && W_CheckNumForName("D_SIGINT") != -1)
 	  S_ChangeMusic(mus_sigint, true);
 	else
-	  S_ChangeMusic(mus_inter, true); 
+	  S_ChangeMusic(mus_inter, true);
     }
 
     WI_checkForAccelerate();
@@ -1689,11 +1668,11 @@ void WI_Ticker(void)
 	else if (netgame) WI_updateNetgameStats();
 	else WI_updateStats();
 	break;
-	
+
       case ShowNextLoc:
 	WI_updateShowNextLoc();
 	break;
-	
+
       case NoState:
 	WI_updateNoState();
 	break;
@@ -1716,7 +1695,7 @@ static void WI_loadUnloadData(load_callback_t callback)
     {
 	for (i=0 ; i<NUMCMAPS ; i++)
 	{
-	    DEH_snprintf(name, 9, "CWILV%2.2d", i);
+	    M_snprintf(name, 9, "CWILV%2.2d", i);
 	    // [crispy] NRFTL / The Master Levels
 	    if (crispy->havenerve && wbs->epsd == 1 && i < 9) // [crispy] gamemission == pack_nerve
 	    {
@@ -1733,24 +1712,24 @@ static void WI_loadUnloadData(load_callback_t callback)
     {
 	for (i=0 ; i<NUMMAPS ; i++)
 	{
-	    DEH_snprintf(name, 9, "WILV%d%d", wbs->epsd, i);
+	    M_snprintf(name, 9, "WILV%d%d", wbs->epsd, i);
             callback(name, &lnames[i]);
 	}
 	// [crispy] special-casing for E1M10 "Sewers" support
 	if (crispy->havee1m10)
 	{
-	    DEH_snprintf(name, 9, "SEWERS");
+	    M_snprintf(name, 9, "SEWERS");
 	    callback(name, &lnames[i]);
 	}
 
 	// you are here
-        callback(DEH_String("WIURH0"), &yah[0]);
+        callback("WIURH0", &yah[0]);
 
 	// you are here (alt.)
-        callback(DEH_String("WIURH1"), &yah[1]);
+        callback("WIURH1", &yah[1]);
 
 	// splat
-        callback(DEH_String("WISPLAT"), &splat[0]);
+        callback("WISPLAT", &splat[0]);
 
 	if (wbs->epsd < 3)
 	{
@@ -1763,7 +1742,7 @@ static void WI_loadUnloadData(load_callback_t callback)
 		    if (wbs->epsd != 1 || j != 8)
 		    {
 			// animations
-			DEH_snprintf(name, 9, "WIA%d%.2d%.2d", wbs->epsd, j, i);
+			M_snprintf(name, 9, "WIA%d%.2d%.2d", wbs->epsd, j, i);
                         callback(name, &a->p[i]);
 		    }
 		    else
@@ -1777,80 +1756,80 @@ static void WI_loadUnloadData(load_callback_t callback)
     }
 
     // More hacks on minus sign.
-    if (W_CheckNumForName(DEH_String("WIMINUS")) > 0)
-        callback(DEH_String("WIMINUS"), &wiminus);
+    if (W_CheckNumForName("WIMINUS") > 0)
+        callback("WIMINUS", &wiminus);
     else
         wiminus = NULL;
 
     for (i=0;i<10;i++)
     {
 	 // numbers 0-9
-	DEH_snprintf(name, 9, "WINUM%d", i);
+	M_snprintf(name, 9, "WINUM%d", i);
         callback(name, &num[i]);
     }
 
     // percent sign
-    callback(DEH_String("WIPCNT"), &percent);
+    callback("WIPCNT", &percent);
 
     // "finished"
-    callback(DEH_String("WIF"), &finished);
+    callback("WIF", &finished);
 
     // "entering"
-    callback(DEH_String("WIENTER"), &entering);
+    callback("WIENTER", &entering);
 
     // "kills"
-    callback(DEH_String("WIOSTK"), &kills);
+    callback("WIOSTK", &kills);
 
     // "scrt"
-    callback(DEH_String("WIOSTS"), &secret);
+    callback("WIOSTS", &secret);
 
      // "secret"
-    callback(DEH_String("WISCRT2"), &sp_secret);
+    callback("WISCRT2", &sp_secret);
 
     // french wad uses WIOBJ (?)
-    if (W_CheckNumForName(DEH_String("WIOBJ")) >= 0)
+    if (W_CheckNumForName("WIOBJ") >= 0)
     {
     	// "items"
     	if (netgame && !deathmatch)
-            callback(DEH_String("WIOBJ"), &items);
+            callback("WIOBJ", &items);
     	else
-            callback(DEH_String("WIOSTI"), &items);
+            callback("WIOSTI", &items);
     } else {
-        callback(DEH_String("WIOSTI"), &items);
+        callback("WIOSTI", &items);
     }
 
     // "frgs"
-    callback(DEH_String("WIFRGS"), &frags);
+    callback("WIFRGS", &frags);
 
     // ":"
-    callback(DEH_String("WICOLON"), &colon);
+    callback("WICOLON", &colon);
 
     // "time"
-    callback(DEH_String("WITIME"), &timepatch);
+    callback("WITIME", &timepatch);
 
     // "sucks"
-    callback(DEH_String("WISUCKS"), &sucks);
+    callback("WISUCKS", &sucks);
 
     // "par"
-    callback(DEH_String("WIPAR"), &par);
+    callback("WIPAR", &par);
 
     // "killers" (vertical)
-    callback(DEH_String("WIKILRS"), &killers);
+    callback("WIKILRS", &killers);
 
     // "victims" (horiz)
-    callback(DEH_String("WIVCTMS"), &victims);
+    callback("WIVCTMS", &victims);
 
     // "total"
-    callback(DEH_String("WIMSTT"), &total);
+    callback("WIMSTT", &total);
 
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
 	// "1,2,3,4"
-	DEH_snprintf(name, 9, "STPB%d", i);
+	M_snprintf(name, 9, "STPB%d", i);
         callback(name, &p[i]);
 
 	// "1,2,3,4"
-	DEH_snprintf(name, 9, "WIBP%d", i+1);
+	M_snprintf(name, 9, "WIBP%d", i+1);
         callback(name, &bp[i]);
     }
 
@@ -1858,32 +1837,32 @@ static void WI_loadUnloadData(load_callback_t callback)
 
     if (gamemode == commercial)
     {
-        if (crispy->havenerve && wbs->epsd == 1 && W_CheckNumForName(DEH_String("NERVEINT")) != -1) // [crispy] gamemission == pack_nerve
+        if (crispy->havenerve && wbs->epsd == 1 && W_CheckNumForName("NERVEINT") != -1) // [crispy] gamemission == pack_nerve
         {
-            M_StringCopy(name, DEH_String("NERVEINT"), sizeof(name));
+            M_StringCopy(name, "NERVEINT", sizeof(name));
         }
         else
         {
-        M_StringCopy(name, DEH_String("INTERPIC"), sizeof(name));
+        M_StringCopy(name, "INTERPIC", sizeof(name));
         }
     }
     else if (gameversion >= exe_ultimate && wbs->epsd == 3)
     {
-        M_StringCopy(name, DEH_String("INTERPIC"), sizeof(name));
+        M_StringCopy(name, "INTERPIC", sizeof(name));
     }
-    else if (crispy->haved1e5 && wbs->epsd == 4 && W_CheckNumForName(DEH_String("SIGILINT")) != -1) // [crispy] Sigil
+    else if (crispy->haved1e5 && wbs->epsd == 4 && W_CheckNumForName("SIGILINT") != -1) // [crispy] Sigil
     {
-        M_StringCopy(name, DEH_String("SIGILINT"), sizeof(name));
+        M_StringCopy(name, "SIGILINT", sizeof(name));
     }
     else
     {
-	DEH_snprintf(name, sizeof(name), "WIMAP%d", wbs->epsd);
+	M_snprintf(name, sizeof(name), "WIMAP%d", wbs->epsd);
     }
 
     // [crispy] if still in doubt, use INTERPIC
     if (W_CheckNumForName(name) == -1)
     {
-        M_StringCopy(name, DEH_String("INTERPIC"), sizeof(name));
+        M_StringCopy(name, "INTERPIC", sizeof(name));
     }
 
     // Draw backdrop and save to a temporary buffer
@@ -1924,10 +1903,10 @@ void WI_loadData(void)
     // them with the status bar code
 
     // your face
-    star = W_CacheLumpName(DEH_String("STFST01"), PU_STATIC);
+    star = W_CacheLumpName("STFST01", PU_STATIC);
 
     // dead face
-    bstar = W_CacheLumpName(DEH_String("STFDEAD0"), PU_STATIC);
+    bstar = W_CacheLumpName("STFDEAD0", PU_STATIC);
 }
 
 static void WI_unloadCallback(const char *name, patch_t **variable)
@@ -1942,7 +1921,7 @@ void WI_unloadData(void)
 
     // We do not free these lumps as they are shared with the status
     // bar code.
-   
+
     // W_ReleaseLumpName("STFST01");
     // W_ReleaseLumpName("STFDEAD0");
 }
@@ -1959,11 +1938,11 @@ void WI_Drawer (void)
 	else
 	    WI_drawStats();
 	break;
-	
+
       case ShowNextLoc:
 	WI_drawShowNextLoc();
 	break;
-	
+
       case NoState:
 	WI_drawNoState();
 	break;

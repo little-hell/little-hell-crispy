@@ -15,8 +15,6 @@
 // DESCRIPTION:
 //      FluidSynth backend
 
-#include "config.h"
-
 #ifdef HAVE_FLUIDSYNTH
 
 #include "fluidsynth.h"

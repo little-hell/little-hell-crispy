@@ -63,6 +63,7 @@ boolean M_StringEndsWith(const char *s, const char *suffix);
 int M_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args);
 int M_snprintf(char *buf, size_t buf_len, const char *s, ...) PRINTF_ATTR(3, 4);
 void M_NormalizeSlashes(char *str);
+char *M_CleanString(char *s); // [crispy] un-static
 
 
 // debugging code to check there are no loops in a linked list

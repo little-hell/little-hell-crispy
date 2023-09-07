@@ -26,7 +26,6 @@
 #include "z_zone.h"
 
 // [crispy] support maps with compressed ZDBSP nodes
-#include "config.h"
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif

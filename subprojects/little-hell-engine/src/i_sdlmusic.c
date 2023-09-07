@@ -25,12 +25,10 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-#include "config.h"
 #include "doomtype.h"
 #include "memio.h"
 #include "mus2mid.h"
 
-#include "deh_str.h"
 #include "gusconf.h"
 #include "i_sound.h"
 #include "i_system.h"

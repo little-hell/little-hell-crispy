@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "config.h"
 #include "doomkeys.h"
 
 #include "i_system.h"
@@ -65,7 +64,7 @@ static void OpenWaitDialog(void)
 {
     txt_window_action_t *cancel;
 
-    TXT_SetDesktopTitle(PACKAGE_STRING);
+    TXT_SetDesktopTitle("change me");
 
     window = TXT_NewWindow("Waiting for game start...");
 

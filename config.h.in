@@ -1,0 +1,9 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#mesondefine PACKAGE_NAME
+#mesondefine PACKAGE_TARNAME
+#mesondefine PACKAGE_VERSION
+#mesondefine PACKAGE_STRING 
+
+#endif

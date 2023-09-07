@@ -27,12 +27,10 @@
 
 #include "i_glob.h"
 
-#include "config.h"
 #include "doomtype.h"
 #include "memio.h"
 #include "mus2mid.h"
 
-#include "deh_str.h"
 #include "gusconf.h"
 #include "i_sound.h"
 #include "i_system.h"
@@ -119,7 +117,7 @@ static unsigned int subst_music_len = 0;
 
 static boolean music_initialized = false;
 
-// If this is true, this module initialized SDL sound and has the 
+// If this is true, this module initialized SDL sound and has the
 // responsibility to shut it down
 
 static boolean sdl_was_initialized = false;
@@ -1065,7 +1063,7 @@ static void DumpSubstituteConfig(const char *filename)
         return;
     }
 
-    fprintf(fs, "# Example %s substitute MIDI file.\n\n", PACKAGE_NAME);
+    fprintf(fs, "# Example substitute MIDI file.\n\n");
     fprintf(fs, "# SHA1 hash                              = filename\n");
 
     for (lumpnum = 0; lumpnum < numlumps; ++lumpnum)

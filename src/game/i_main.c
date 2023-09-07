@@ -16,7 +16,6 @@
 //	Main program, simply calls D_DoomMain high level loop.
 //
 
-#include "config.h"
 #include "crispy.h"
 
 #include <assert.h>
@@ -30,6 +29,8 @@
 #include "m_argv.h"
 #include "m_misc.h"
 
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
 
 //
 // D_DoomMain()

@@ -27,7 +27,6 @@
 #include "dstrings.h"
 
 #include "d_main.h"
-#include "deh_main.h"
 
 #include "i_input.h"
 #include "i_swap.h"
@@ -73,7 +72,7 @@ int			mouseSensitivity_y = 5; // [crispy] mouse sensitivity menu
 
 // Show messages has default, 0 = off, 1 = on
 int			showMessages = 1;
-	
+
 
 // Blocky mode, has default, 0 = high, 1 = normal
 int			detailLevel = 0;
@@ -115,12 +114,12 @@ char gammamsg[5+4][26+2] =
 };
 
 // we are going to be entering a savegame string
-int			saveStringEnter;              
+int			saveStringEnter;
 int             	saveSlot;	// which slot to save in
 int			saveCharIndex;	// which char we're editing
 static boolean          joypadSave = false; // was the save action initiated by joypad?
 // old save description before edit
-char			saveOldString[SAVESTRINGSIZE];  
+char			saveOldString[SAVESTRINGSIZE];
 
 // [crispy] for entering numeric values
 #define NUMERIC_ENTRY_NUMDIGITS 3
@@ -157,18 +156,18 @@ typedef struct
     // [crispy] 3 = arrows ok, no mouse x
     // [crispy] 4 = arrows ok, enter for numeric entry, no mouse x
     short	status;
-    
+
     char	name[10];
-    
+
     // choice = menu item #.
     // if status = 2,
     //   choice=0:leftarrow,1:rightarrow
     // [crispy] if status = 3,
     //   choice=0:leftarrow,1:rightarrow,2:enter
     void	(*routine)(int choice);
-    
+
     // hotkey in menu
-    char	alphaKey;			
+    char	alphaKey;
     const char	*alttext; // [crispy] alternative text for menu items
 } menuitem_t;
 
@@ -195,7 +194,7 @@ short		whichSkull;		// which skull to draw
 const char *skullName[2] = {"M_SKULL1","M_SKULL2"};
 
 // current menudef
-menu_t*	currentMenu;                          
+menu_t*	currentMenu;
 
 //
 // PROTOTYPES
@@ -860,9 +859,9 @@ static int LoadDef_x = 72, LoadDef_y = 28;
 void M_DrawLoad(void)
 {
     int             i;
-	
+
     V_DrawPatchDirect(LoadDef_x, LoadDef_y,
-                      W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE));
+                      W_CacheLumpName("M_LOADG", PU_CACHE));
 
     for (i = 0;i < load_end; i++)
     {
@@ -881,19 +880,19 @@ void M_DrawLoad(void)
 void M_DrawSaveLoadBorder(int x,int y)
 {
     int             i;
-	
+
     V_DrawPatchDirect(x - 8, y + 7,
-                      W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE));
-	
+                      W_CacheLumpName("M_LSLEFT", PU_CACHE));
+
     for (i = 0;i < 24;i++)
     {
 	V_DrawPatchDirect(x, y + 7,
-                          W_CacheLumpName(DEH_String("M_LSCNTR"), PU_CACHE));
+                          W_CacheLumpName("M_LSCNTR", PU_CACHE));
 	x += 8;
     }
 
-    V_DrawPatchDirect(x, y + 7, 
-                      W_CacheLumpName(DEH_String("M_LSRGHT"), PU_CACHE));
+    V_DrawPatchDirect(x, y + 7,
+                      W_CacheLumpName("M_LSRGHT", PU_CACHE));
 }
 
 
@@ -904,7 +903,7 @@ void M_DrawSaveLoadBorder(int x,int y)
 void M_LoadSelect(int choice)
 {
     char    name[256];
-	
+
     M_StringCopy(name, P_SaveGameFile(choice), sizeof(name));
 
     // [crispy] save the last game you loaded
@@ -925,10 +924,10 @@ void M_LoadGame (int choice)
     // [crispy] allow loading game while multiplayer demo playback
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(LOADNET),NULL,false);
+	M_StartMessage(LOADNET,NULL,false);
 	return;
     }
-	
+
     M_SetupNextMenu(&LoadDef);
     M_ReadSaveStrings();
 }
@@ -941,14 +940,14 @@ static int SaveDef_x = 72, SaveDef_y = 28;
 void M_DrawSave(void)
 {
     int             i;
-	
-    V_DrawPatchDirect(SaveDef_x, SaveDef_y, W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE));
+
+    V_DrawPatchDirect(SaveDef_x, SaveDef_y, W_CacheLumpName("M_SAVEG", PU_CACHE));
     for (i = 0;i < load_end; i++)
     {
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
 	M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
     }
-	
+
     if (saveStringEnter)
     {
 	i = M_StringWidth(savegamestrings[saveSlot]);
@@ -1065,13 +1064,13 @@ void M_SaveGame (int choice)
 {
     if (!usergame)
     {
-	M_StartMessage(DEH_String(SAVEDEAD),NULL,false);
+	M_StartMessage(SAVEDEAD,NULL,false);
 	return;
     }
-	
+
     if (gamestate != GS_LEVEL)
 	return;
-	
+
     M_SetupNextMenu(&SaveDef);
     M_ReadSaveStrings();
 }
@@ -1101,7 +1100,7 @@ void M_QuickSave(void)
 
     if (gamestate != GS_LEVEL)
 	return;
-	
+
     if (quickSaveSlot < 0)
     {
 	M_StartControlPanel();
@@ -1133,10 +1132,10 @@ void M_QuickLoad(void)
     // [crispy] allow quickloading game while multiplayer demo playback
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(QLOADNET),NULL,false);
+	M_StartMessage(QLOADNET,NULL,false);
 	return;
     }
-	
+
     if (quickSaveSlot < 0)
     {
 	// [crispy] allow quickload before quicksave
@@ -1160,7 +1159,7 @@ void M_DrawReadThis1(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP2"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName("HELP2", PU_CACHE), false);
 }
 
 
@@ -1172,17 +1171,17 @@ void M_DrawReadThis2(void)
 {
     inhelpscreens = true;
 
-    // We only ever draw the second page if this is 
+    // We only ever draw the second page if this is
     // gameversion == exe_doom_1_9 and gamemode == registered
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP1"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName("HELP1", PU_CACHE), false);
 }
 
 void M_DrawReadThisCommercial(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP"), PU_CACHE), false);
+    V_DrawPatchFullScreen(W_CacheLumpName("HELP", PU_CACHE), false);
 }
 
 
@@ -1191,7 +1190,7 @@ void M_DrawReadThisCommercial(void)
 //
 void M_DrawSound(void)
 {
-    V_DrawPatchDirect (60, 38, W_CacheLumpName(DEH_String("M_SVOL"), PU_CACHE));
+    V_DrawPatchDirect (60, 38, W_CacheLumpName("M_SVOL", PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
 		 16,sfxVolume);
@@ -1218,7 +1217,7 @@ void M_SfxVol(int choice)
 	    sfxVolume++;
 	break;
     }
-	
+
     S_SetSfxVolume(sfxVolume * 8);
 }
 
@@ -1235,7 +1234,7 @@ void M_MusicVol(int choice)
 	    musicVolume++;
 	break;
     }
-	
+
     S_SetMusicVolume(musicVolume * 8);
 }
 
@@ -1251,7 +1250,7 @@ void M_DrawMainMenu(void)
     inhelpscreens = true;
 
     V_DrawPatchDirect(94, 2,
-                      W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
+                      W_CacheLumpName("M_DOOM", PU_CACHE));
 }
 
 
@@ -1265,8 +1264,8 @@ void M_DrawNewGame(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
-    V_DrawPatchDirect(96, 14, W_CacheLumpName(DEH_String("M_NEWG"), PU_CACHE));
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_SKILL"), PU_CACHE));
+    V_DrawPatchDirect(96, 14, W_CacheLumpName("M_NEWG", PU_CACHE));
+    V_DrawPatchDirect(54, 38, W_CacheLumpName("M_SKILL", PU_CACHE));
 }
 
 void M_NewGame(int choice)
@@ -1279,10 +1278,10 @@ void M_NewGame(int choice)
 
     if (netgame && !demoplayback)
     {
-	M_StartMessage(DEH_String(NEWGAME),NULL,false);
+	M_StartMessage(NEWGAME,NULL,false);
 	return;
     }
-	
+
     // Chex Quest disabled the episode select screen, as did Doom II.
 
     if ((gamemode == commercial && !crispy->havenerve && !crispy->havemaster) || gameversion == exe_chex) // [crispy] NRFTL / The Master Levels
@@ -1302,8 +1301,8 @@ void M_DrawEpisode(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
-    if (W_CheckNumForName(DEH_String("M_EPISOD")) != -1)
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
+    if (W_CheckNumForName("M_EPISOD") != -1)
+    V_DrawPatchDirect(54, 38, W_CacheLumpName("M_EPISOD", PU_CACHE));
     else
     {
       M_WriteText(54, 38, "Which Episode?");
@@ -1315,7 +1314,7 @@ void M_VerifyNightmare(int key)
 {
     if (key != key_menu_confirm)
 	return;
-		
+
     G_DeferedInitNew(nightmare,epi+1,1);
     M_ClearMenus ();
 }
@@ -1324,10 +1323,10 @@ void M_ChooseSkill(int choice)
 {
     if (choice == nightmare)
     {
-	M_StartMessage(DEH_String(NIGHTMARE),M_VerifyNightmare,true);
+	M_StartMessage(NIGHTMARE,M_VerifyNightmare,true);
 	return;
     }
-	
+
     G_DeferedInitNew(choice,epi+1,1);
     M_ClearMenus ();
 }
@@ -1337,7 +1336,7 @@ void M_Episode(int choice)
     if ( (gamemode == shareware)
 	 && choice)
     {
-	M_StartMessage(DEH_String(SWSTRING),NULL,false);
+	M_StartMessage(SWSTRING,NULL,false);
 	M_SetupNextMenu(&ReadDef1);
 	return;
     }
@@ -1356,13 +1355,13 @@ static const char *msgNames[2] = {"M_MSGOFF","M_MSGON"};
 
 void M_DrawOptions(void)
 {
-    V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
+    V_DrawPatchDirect(108, 15, W_CacheLumpName("M_OPTTTL",
                                                PU_CACHE));
-	
+
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
-		      W_CacheLumpName(DEH_String(detailNames[detailLevel]),
+		      W_CacheLumpName(detailNames[detailLevel],
 			              PU_CACHE));
     }
     else
@@ -1376,7 +1375,7 @@ void M_DrawOptions(void)
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * messages,
-                      W_CacheLumpName(DEH_String(msgNames[showMessages]),
+                      W_CacheLumpName(msgNames[showMessages],
                                       PU_CACHE));
     }
     else
@@ -1402,7 +1401,7 @@ static void M_DrawMouse(void)
 {
     char mouse_menu_text[48];
 
-    V_DrawPatchDirect (60, LoadDef_y, W_CacheLumpName(DEH_String("M_MSENS"), PU_CACHE));
+    V_DrawPatchDirect (60, LoadDef_y, W_CacheLumpName("M_MSENS", PU_CACHE));
 
     M_WriteText(MouseDef.x, MouseDef.y + LINEHEIGHT * mouse_horiz + 6,
                 "HORIZONTAL: TURN");
@@ -1691,11 +1690,11 @@ void M_ChangeMessages(int choice)
     // warning: unused parameter `int choice'
     choice = 0;
     showMessages = 1 - showMessages;
-	
+
     if (!showMessages)
-	players[consoleplayer].message = DEH_String(MSGOFF);
+	players[consoleplayer].message = MSGOFF;
     else
-	players[consoleplayer].message = DEH_String(MSGON);
+	players[consoleplayer].message = MSGON;
 
     message_dontfuckwithme = true;
 }
@@ -1708,7 +1707,7 @@ void M_EndGameResponse(int key)
 {
     if (key != key_menu_confirm)
 	return;
-		
+
     // [crispy] killough 5/26/98: make endgame quit if recording or playing back demo
     if (demorecording || singledemo)
 	G_CheckDemoStatus();
@@ -1728,14 +1727,14 @@ void M_EndGame(int choice)
 	S_StartSoundOptional(NULL, sfx_mnuerr, sfx_oof); // [NS] Optional menu sounds.
 	return;
     }
-	
+
     if (netgame)
     {
-	M_StartMessage(DEH_String(NETEND),NULL,false);
+	M_StartMessage(NETEND,NULL,false);
 	return;
     }
-	
-    M_StartMessage(DEH_String(ENDGAME),M_EndGameResponse,true);
+
+    M_StartMessage(ENDGAME,M_EndGameResponse,true);
 }
 
 
@@ -1826,7 +1825,7 @@ static const char *M_SelectEndMessage(void)
     else
     {
         // Doom 2
-        
+
         endmsg = doom2_endmsg;
     }
 
@@ -1840,8 +1839,8 @@ void M_QuitDOOM(int choice)
     if (speedkeydown())
 	I_Quit();
 
-    DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
-                 DEH_String(M_SelectEndMessage()));
+    M_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
+                 M_SelectEndMessage());
 
     M_StartMessage(endstring,M_QuitResponse,true);
 }
@@ -1909,9 +1908,9 @@ void M_ChangeDetail(int choice)
     R_SetViewSize (screenblocks, detailLevel);
 
     if (!detailLevel)
-	players[consoleplayer].message = DEH_String(DETAILHI);
+	players[consoleplayer].message = DETAILHI;
     else
-	players[consoleplayer].message = DEH_String(DETAILLO);
+	players[consoleplayer].message = DETAILLO;
 }
 
 
@@ -1942,7 +1941,7 @@ void M_SizeDisplay(int choice)
 	}
 	break;
     }
-	
+
 
     R_SetViewSize (screenblocks, detailLevel);
 }
@@ -1970,14 +1969,14 @@ M_DrawThermo
     }
 
     xx = x;
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERML"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, W_CacheLumpName("M_THERML", PU_CACHE));
     xx += 8;
     for (i=0;i<thermWidth;i++)
     {
-	V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMM"), PU_CACHE));
+	V_DrawPatchDirect(xx, y, W_CacheLumpName("M_THERMM", PU_CACHE));
 	xx += 8;
     }
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMR"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, W_CacheLumpName("M_THERMR", PU_CACHE));
 
     M_snprintf(num, 4, "%3d", thermDot);
     M_WriteText(xx + 8, y + 3, num);
@@ -1990,7 +1989,7 @@ M_DrawThermo
     }
 
     V_DrawPatchDirect((x + 8) + thermDot * 8, y,
-		      W_CacheLumpName(DEH_String("M_THERMO"), PU_CACHE));
+		      W_CacheLumpName("M_THERMO", PU_CACHE));
 
     dp_translation = NULL;
 }
@@ -2025,7 +2024,7 @@ int M_StringWidth(const char *string)
     size_t             i;
     int             w = 0;
     int             c;
-	
+
     for (i = 0;i < strlen(string);i++)
     {
 	// [crispy] correctly center colorized strings
@@ -2044,7 +2043,7 @@ int M_StringWidth(const char *string)
 	else
 	    w += SHORT (hu_font[c]->width);
     }
-		
+
     return w;
 }
 
@@ -2058,12 +2057,12 @@ int M_StringHeight(const char* string)
     size_t             i;
     int             h;
     int             height = SHORT(hu_font[0]->height);
-	
+
     h = height;
     for (i = 0;i < strlen(string);i++)
 	if (string[i] == '\n')
 	    h += height;
-		
+
     return h;
 }
 
@@ -2082,12 +2081,12 @@ M_WriteText
     int		c;
     int		cx;
     int		cy;
-		
+
 
     ch = string;
     cx = x;
     cy = y;
-	
+
     while(1)
     {
 	c = *ch++;
@@ -2109,14 +2108,14 @@ M_WriteText
 		continue;
 	    }
 	}
-		
+
 	c = toupper(c) - HU_FONTSTART;
 	if (c < 0 || c>= HU_FONTSIZE)
 	{
 	    cx += 4;
 	    continue;
 	}
-		
+
 	w = SHORT (hu_font[c]->width);
 	if (cx+w > ORIGWIDTH)
 	    break;
@@ -2309,10 +2308,10 @@ boolean M_Responder (event_t* ev)
     }
 
     // key is the key pressed, ch is the actual character typed
-  
+
     ch = 0;
     key = -1;
-	
+
     if (ev->type == ev_joystick)
     {
         // Simulate key presses from joystick events to interact with the menu.
@@ -2412,7 +2411,7 @@ boolean M_Responder (event_t* ev)
 		mousewait = I_GetTime() + 5;
 		mousey = lasty += 30;
 	    }
-		
+
 	    mousex += ev->data2;
 	    if (mousex < lastx-30)
 	    {
@@ -2428,13 +2427,13 @@ boolean M_Responder (event_t* ev)
 		mousex = lastx += 30;
 		mousextobutton = true;
 	    }
-		
+
 	    if (ev->data1&1)
 	    {
 		key = key_menu_forward;
 		mousewait = I_GetTime() + 15;
 	    }
-			
+
 	    if (ev->data1&2)
 	    {
 		key = key_menu_back;
@@ -2463,7 +2462,7 @@ boolean M_Responder (event_t* ev)
 	    }
 	}
     }
-    
+
     if (key == -1)
 	return false;
 
@@ -2728,9 +2727,9 @@ boolean M_Responder (event_t* ev)
 	    usegamma++;
 	    if (usegamma > 4+4) // [crispy] intermediate gamma levels
 		usegamma = 0;
-	    players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
+	    players[consoleplayer].message = gammamsg[usegamma];
 #ifndef CRISPY_TRUECOLOR
-            I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+            I_SetPalette (W_CacheLumpName ("PLAYPAL",PU_CACHE));
 #else
             {
 		extern void R_InitColormaps (void);
@@ -3009,7 +3008,7 @@ void M_StartControlPanel (void)
     // [crispy] entering menus while recording demos pauses the game
     if (demorecording && !paused)
         sendpause = true;
-    
+
     menuactive = 1;
     currentMenu = &MainDef;         // JDC
     itemOn = currentMenu->lastOn;   // JDC
@@ -3064,7 +3063,7 @@ void M_Drawer (void)
     int			start;
 
     inhelpscreens = false;
-    
+
     // Horiz. & Vertically center string and print it.
     if (messageToPrint)
     {
@@ -3121,7 +3120,7 @@ void M_Drawer (void)
 
     if (currentMenu->routine)
 	currentMenu->routine();         // call Draw routine
-    
+
     // DRAW MENU
     x = currentMenu->x;
     y = currentMenu->y;
@@ -3143,7 +3142,7 @@ void M_Drawer (void)
     for (i=0;i<max;i++)
     {
         const char *alttext = currentMenu->menuitems[i].alttext;
-        name = DEH_String(currentMenu->menuitems[i].name);
+        name = currentMenu->menuitems[i].name;
 
 	if (name[0] && (W_CheckNumForName(name) > 0 || alttext))
 	{
@@ -3155,7 +3154,7 @@ void M_Drawer (void)
 	y += LINEHEIGHT;
     }
 
-    
+
     // DRAW SKULL
     if (currentMenu == CrispnessMenus[crispness_cur])
     {
@@ -3166,7 +3165,7 @@ void M_Drawer (void)
     }
     else
     V_DrawPatchDirect(x + SKULLXOFF, currentMenu->y - 5 + itemOn*LINEHEIGHT,
-		      W_CacheLumpName(DEH_String(skullName[whichSkull]),
+		      W_CacheLumpName(skullName[whichSkull],
 				      PU_CACHE));
 }
 
@@ -3364,9 +3363,9 @@ void M_Init (void)
 	const patch_t *patchl, *patchs, *patchm;
 	short captionheight, vstep;
 
-	patchl = W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE);
-	patchs = W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE);
-	patchm = W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE);
+	patchl = W_CacheLumpName("M_LOADG", PU_CACHE);
+	patchs = W_CacheLumpName("M_SAVEG", PU_CACHE);
+	patchm = W_CacheLumpName("M_LSLEFT", PU_CACHE);
 
 	LoadDef_x = (ORIGWIDTH - SHORT(patchl->width)) / 2 + SHORT(patchl->leftoffset);
 	SaveDef_x = (ORIGWIDTH - SHORT(patchs->width)) / 2 + SHORT(patchs->leftoffset);
@@ -3385,40 +3384,6 @@ void M_Init (void)
 		SaveDef_y = vstep + captionheight - SHORT(patchs->height) + SHORT(patchs->topoffset);
 		LoadDef.y = SaveDef.y = vstep + captionheight + vstep + SHORT(patchm->topoffset) - 7; // [crispy] see M_DrawSaveLoadBorder()
 		MouseDef.y = LoadDef.y;
-	}
-    }
-
-    // [crispy] remove DOS reference from the game quit confirmation dialogs
-    if (!M_ParmExists("-nodeh"))
-    {
-	const char *string;
-	char *replace;
-
-	// [crispy] "i wouldn't leave if i were you.\ndos is much worse."
-	string = doom1_endmsg[3];
-	if (!DEH_HasStringReplacement(string))
-	{
-		replace = M_StringReplace(string, "dos", crispy->platform);
-		DEH_AddStringReplacement(string, replace);
-		free(replace);
-	}
-
-	// [crispy] "you're trying to say you like dos\nbetter than me, right?"
-	string = doom1_endmsg[4];
-	if (!DEH_HasStringReplacement(string))
-	{
-		replace = M_StringReplace(string, "dos", crispy->platform);
-		DEH_AddStringReplacement(string, replace);
-		free(replace);
-	}
-
-	// [crispy] "don't go now, there's a \ndimensional shambler waiting\nat the dos prompt!"
-	string = doom2_endmsg[2];
-	if (!DEH_HasStringReplacement(string))
-	{
-		replace = M_StringReplace(string, "dos", "command");
-		DEH_AddStringReplacement(string, replace);
-		free(replace);
 	}
     }
 
