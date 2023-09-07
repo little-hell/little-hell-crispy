@@ -26,7 +26,6 @@
 #include <string.h>
 #include <time.h> // [crispy] time_t, time(), struct tm, localtime()
 
-#include "config.h"
 #include "doomdef.h"
 #include "doomstat.h"
 
@@ -34,7 +33,6 @@
 #include "sounds.h"
 
 #include "d_iwad.h"
-#include "d_pwad.h" // [crispy] D_Load{Sigil,Nerve,Masterlevels}Wad()
 
 #include "z_zone.h"
 #include "w_main.h"
@@ -79,6 +77,9 @@
 #include "d_main.h"
 
 #include "doom_icon.c"
+
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
 
 //
 // D-DoomLoop()
@@ -979,67 +980,7 @@ void D_IdentifyVersion(void)
 
 static void D_SetGameDescription(void)
 {
-    if (logical_gamemission == doom)
-    {
-        // Doom 1.  But which version?
-
-        if (gamevariant == freedoom)
-        {
-            gamedescription = GetGameName("Freedoom: Phase 1");
-        }
-        else if (gamemode == retail)
-        {
-            // Ultimate Doom
-
-            gamedescription = GetGameName("The Ultimate DOOM");
-        }
-        else if (gamemode == registered)
-        {
-            gamedescription = GetGameName("DOOM Registered");
-        }
-        else if (gamemode == shareware)
-        {
-            gamedescription = GetGameName("DOOM Shareware");
-        }
-    }
-    else
-    {
-        // Doom 2 of some kind.  But which mission?
-
-        if (gamevariant == freedm)
-        {
-            gamedescription = GetGameName("FreeDM");
-        }
-        else if (gamevariant == freedoom)
-        {
-            gamedescription = GetGameName("Freedoom: Phase 2");
-        }
-        else if (logical_gamemission == doom2)
-        {
-            gamedescription = GetGameName("DOOM 2: Hell on Earth");
-        }
-        else if (logical_gamemission == pack_plut)
-        {
-            gamedescription = GetGameName("DOOM 2: Plutonia Experiment");
-        }
-        else if (logical_gamemission == pack_tnt)
-        {
-            gamedescription = GetGameName("DOOM 2: TNT - Evilution");
-        }
-        else if (logical_gamemission == pack_nerve)
-        {
-            gamedescription = GetGameName("DOOM 2: No Rest For The Living");
-        }
-        else if (logical_gamemission == pack_master)
-        {
-            gamedescription = GetGameName("Master Levels for DOOM 2");
-        }
-    }
-
-    if (gamedescription == NULL)
-    {
-        gamedescription = M_StringDuplicate("Unknown");
-    }
+    gamedescription = GetGameName("DOOM Registered");
 }
 
 //      print title for every printed line
@@ -1053,56 +994,6 @@ static boolean D_AddFile(char *filename)
     handle = W_AddFile(filename);
 
     return handle != NULL;
-}
-
-// Copyright message banners
-// Some dehacked mods replace these.  These are only displayed if they are
-// replaced by dehacked.
-
-static const char *copyright_banners[] =
-{
-    "===========================================================================\n"
-    "ATTENTION:  This version of DOOM has been modified.  If you would like to\n"
-    "get a copy of the original game, call 1-800-IDGAMES or see the readme file.\n"
-    "        You will not receive technical support for modified games.\n"
-    "                      press enter to continue\n"
-    "===========================================================================\n",
-
-    "===========================================================================\n"
-    "                 Commercial product - do not distribute!\n"
-    "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
-    "===========================================================================\n",
-
-    "===========================================================================\n"
-    "                                Shareware!\n"
-    "===========================================================================\n"
-};
-
-// Prints a message only if it has been modified by dehacked.
-
-void PrintDehackedBanners(void)
-{
-    size_t i;
-
-    for (i=0; i<arrlen(copyright_banners); ++i)
-    {
-        const char *deh_s;
-
-        deh_s = copyright_banners[i];
-
-        if (deh_s != copyright_banners[i])
-        {
-            printf("%s", deh_s);
-
-            // Make sure the modified banner always ends in a newline character.
-            // If it doesn't, add a newline.  This fixes av.wad.
-
-            if (deh_s[strlen(deh_s) - 1] != '\n')
-            {
-                printf("\n");
-            }
-        }
-    }
 }
 
 static struct
@@ -1128,148 +1019,8 @@ static struct
 
 static void InitGameVersion(void)
 {
-    byte *demolump;
-    char demolumpname[6];
-    int demoversion;
-    int p;
-    int i;
-    boolean status;
-
-    //!
-    // @arg <version>
-    // @category compat
-    //
-    // Emulate a specific version of Doom.  Valid values are "1.2",
-    // "1.666", "1.7", "1.8", "1.9", "ultimate", "final", "final2",
-    // "hacx" and "chex".
-    //
-
-    p = M_CheckParmWithArgs("-gameversion", 1);
-
-    if (p)
-    {
-        for (i=0; gameversions[i].description != NULL; ++i)
-        {
-            if (!strcmp(myargv[p+1], gameversions[i].cmdline))
-            {
-                gameversion = gameversions[i].version;
-                break;
-            }
-        }
-
-        if (gameversions[i].description == NULL)
-        {
-            printf("Supported game versions:\n");
-
-            for (i=0; gameversions[i].description != NULL; ++i)
-            {
-                printf("\t%s (%s)\n", gameversions[i].cmdline,
-                        gameversions[i].description);
-            }
-
-            I_Error("Unknown game version '%s'", myargv[p+1]);
-        }
-    }
-    else
-    {
-        // Determine automatically
-
-        if (gamemission == pack_chex)
-        {
-            // chex.exe - identified by iwad filename
-
-            gameversion = exe_chex;
-        }
-        else if (gamemission == pack_hacx)
-        {
-            // hacx.exe: identified by iwad filename
-
-            gameversion = exe_hacx;
-        }
-        else if (gamemode == shareware || gamemode == registered
-              || (gamemode == commercial && gamemission == doom2))
-        {
-            // original
-            gameversion = exe_doom_1_9;
-
-            // Detect version from demo lump
-            for (i = 1; i <= 3; ++i)
-            {
-                M_snprintf(demolumpname, 6, "demo%i", i);
-                if (W_CheckNumForName(demolumpname) > 0)
-                {
-                    demolump = W_CacheLumpName(demolumpname, PU_STATIC);
-                    demoversion = demolump[0];
-                    W_ReleaseLumpName(demolumpname);
-                    status = true;
-                    switch (demoversion)
-                    {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                            gameversion = exe_doom_1_2;
-                            break;
-                        case 106:
-                            gameversion = exe_doom_1_666;
-                            break;
-                        case 107:
-                            gameversion = exe_doom_1_7;
-                            break;
-                        case 108:
-                            gameversion = exe_doom_1_8;
-                            break;
-                        case 109:
-                            gameversion = exe_doom_1_9;
-                            break;
-                        default:
-                            status = false;
-                            break;
-                    }
-                    if (status)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-        else if (gamemode == retail)
-        {
-            gameversion = exe_ultimate;
-        }
-        else if (gamemode == commercial)
-        {
-            // Final Doom: tnt or plutonia
-            // Defaults to emulating the first Final Doom executable,
-            // which has the crash in the demo loop; however, having
-            // this as the default should mean that it plays back
-            // most demos correctly.
-
-            gameversion = exe_final;
-        }
-    }
-
-    // Deathmatch 2.0 did not exist until Doom v1.4
-    if (gameversion <= exe_doom_1_2 && deathmatch == 2)
-    {
-        deathmatch = 1;
-    }
-
-    // The original exe does not support retail - 4th episode not supported
-
-    if (gameversion < exe_ultimate && gamemode == retail)
-    {
-        gamemode = registered;
-    }
-
-    // EXEs prior to the Final Doom exes do not support Final Doom.
-
-    if (gameversion < exe_final && gamemode == commercial
-     && (gamemission == pack_tnt || gamemission == pack_plut))
-    {
-        gamemission = doom2;
-    }
+    gameversion = exe_doom_1_9;
+    gamemode = registered;
 }
 
 void PrintGameVersion(void)
@@ -1308,116 +1059,6 @@ static void D_Endoom(void)
     I_Endoom(endoom);
 }
 
-boolean IsFrenchIWAD(void)
-{
-    return (gamemission == doom2 && W_CheckNumForName("M_RDTHIS") < 0
-          && W_CheckNumForName("M_EPISOD") < 0 && W_CheckNumForName("M_EPI1") < 0
-          && W_CheckNumForName("M_EPI2") < 0 && W_CheckNumForName("M_EPI3") < 0
-          && W_CheckNumForName("WIOSTF") < 0 && W_CheckNumForName("WIOBJ") >= 0);
-}
-
-// Load dehacked patches needed for certain IWADs.
-static void LoadIwadDeh(void)
-{
-    // The Freedoom IWADs have DEHACKED lumps that must be loaded.
-    if (gamevariant == freedoom || gamevariant == freedm)
-    {
-        // Old versions of Freedoom (before 2014-09) did not have technically
-        // valid DEHACKED lumps, so ignore errors and just continue if this
-        // is an old IWAD.
-        DEH_LoadLumpByName("DEHACKED", false, true);
-    }
-
-    else // [crispy]
-    // If this is the HACX IWAD, we need to load the DEHACKED lump.
-    if (gameversion == exe_hacx)
-    {
-        if (!DEH_LoadLumpByName("DEHACKED", true, false))
-        {
-            I_Error("DEHACKED lump not found.  Please check that this is the "
-                    "Hacx v1.2 IWAD.");
-        }
-    }
-
-    else // [crispy]
-    // Chex Quest needs a separate Dehacked patch which must be downloaded
-    // and installed next to the IWAD.
-    if (gameversion == exe_chex)
-    {
-        char *chex_deh = NULL;
-        char *dirname;
-
-        // Look for chex.deh in the same directory as the IWAD file.
-        dirname = M_DirName(iwadfile);
-        chex_deh = M_StringJoin(dirname, DIR_SEPARATOR_S, "chex.deh", NULL);
-        free(dirname);
-
-        // If the dehacked patch isn't found, try searching the WAD
-        // search path instead.  We might find it...
-        if (!M_FileExists(chex_deh))
-        {
-            free(chex_deh);
-            chex_deh = D_FindWADByName("chex.deh");
-        }
-
-        // Still not found?
-        if (chex_deh == NULL)
-        {
-            I_Error("Unable to find Chex Quest dehacked file (chex.deh).\n"
-                    "The dehacked file is required in order to emulate\n"
-                    "chex.exe correctly.  It can be found in your nearest\n"
-                    "/idgames repository mirror at:\n\n"
-                    "   utils/exe_edit/patches/chexdeh.zip");
-        }
-
-        if (!DEH_LoadFile(chex_deh))
-        {
-            I_Error("Failed to load chex.deh needed for emulating chex.exe.");
-        }
-    }
-    // [crispy] try anyway...
-    else if (W_CheckNumForName("DEHACKED") != -1)
-    {
-        DEH_LoadLumpByName("DEHACKED", true, true);
-    }
-
-    if (IsFrenchIWAD())
-    {
-        char *french_deh = NULL;
-        char *dirname;
-
-        // Look for french.deh in the same directory as the IWAD file.
-        dirname = M_DirName(iwadfile);
-        french_deh = M_StringJoin(dirname, DIR_SEPARATOR_S, "french.deh", NULL);
-        printf("French version\n");
-        free(dirname);
-
-        // If the dehacked patch isn't found, try searching the WAD
-        // search path instead.  We might find it...
-        if (!M_FileExists(french_deh))
-        {
-            free(french_deh);
-            french_deh = D_FindWADByName("french.deh");
-        }
-
-        // Still not found?
-        if (french_deh == NULL)
-        {
-            I_Error("Unable to find French Doom II dehacked file\n"
-                    "(french.deh).  The dehacked file is required in order to\n"
-                    "emulate French doom2.exe correctly.  It can be found in\n"
-                    "your nearest /idgames repository mirror at:\n\n"
-                    "   utils/exe_edit/patches/french.zip");
-        }
-
-        if (!DEH_LoadFile(french_deh))
-        {
-            I_Error("Failed to load french.deh needed for emulating French\n"
-                    "doom2.exe.");
-        }
-    }
-}
-
 static void G_CheckDemoStatusAtExit (void)
 {
     G_CheckDemoStatus();
@@ -1435,16 +1076,13 @@ void D_DoomMain (void)
     char demolumpname[9] = {0};
     int numiwadlumps;
 
-    // [crispy] unconditionally initialize DEH tables
-    DEH_Init();
-
     I_AtExit(D_Endoom, false);
 
     // print banner
 
     I_PrintBanner(PACKAGE_STRING);
 
-    DEH_printf("Z_Init: Init zone memory allocation daemon. \n");
+    printf("Z_Init: Init zone memory allocation daemon. \n");
     Z_Init ();
 
     //!
@@ -1574,7 +1212,7 @@ void D_DoomMain (void)
 	deathmatch = 3;
 
     if (devparm)
-	_printf(D_DEVSTR);
+	printf(D_DEVSTR);
 
     // find which dir to use for config files
 
@@ -1635,7 +1273,7 @@ void D_DoomMain (void)
 
     // Load configuration files before initialising other subsystems.
     printf("M_LoadDefaults: Load system defaults.\n");
-    M_SetConfigFilenames("default.cfg", PROGRAM_PREFIX "doom.cfg");
+    M_SetConfigFilenames("default.cfg", PACKAGE_STRING ".cfg");
     D_BindVariables();
     M_LoadDefaults();
 
@@ -1685,59 +1323,6 @@ void D_DoomMain (void)
     }
 
     //!
-    // @category mod
-    //
-    // Disable automatic loading of Dehacked patches for certain
-    // IWAD files.
-    //
-    if (!M_ParmExists("-nodeh"))
-    {
-        // Some IWADs have dehacked patches that need to be loaded for
-        // them to be played properly.
-        LoadIwadDeh();
-    }
-
-    // Doom 3: BFG Edition includes modified versions of the classic
-    // IWADs which can be identified by an additional DMENUPIC lump.
-    // Furthermore, the M_GDHIGH lumps have been modified in a way that
-    // makes them incompatible to Vanilla Doom and the modified version
-    // of doom2.wad is missing the TITLEPIC lump.
-    // We specifically check for DMENUPIC here, before PWADs have been
-    // loaded which could probably include a lump of that name.
-
-    if (gamevariant == bfgedition)
-    {
-        printf("BFG Edition: Using workarounds as needed.\n");
-
-        // BFG Edition changes the names of the secret levels to
-        // censor the Wolfenstein references. It also has an extra
-        // secret level (MAP33). In Vanilla Doom (meaning the DOS
-        // version), MAP33 overflows into the Plutonia level names
-        // array, so HUSTR_33 is actually PHUSTR_1.
-        DEH_AddStringReplacement(HUSTR_31, "level 31: idkfa");
-        DEH_AddStringReplacement(HUSTR_32, "level 32: keen");
-        DEH_AddStringReplacement(PHUSTR_1, "level 33: betray");
-
-        // The BFG edition doesn't have the "low detail" menu option (fair
-        // enough). But bizarrely, it reuses the M_GDHIGH patch as a label
-        // for the options menu (says "Fullscreen:"). Why the perpetrators
-        // couldn't just add a new graphic lump and had to reuse this one,
-        // I don't know.
-        //
-        // The end result is that M_GDHIGH is too wide and causes the game
-        // to crash. As a workaround to get a minimum level of support for
-        // the BFG edition IWADs, use the "ON"/"OFF" graphics instead.
-        DEH_AddStringReplacement("M_GDHIGH", "M_MSGON");
-        DEH_AddStringReplacement("M_GDLOW", "M_MSGOFF");
-
-        // The BFG edition's "Screen Size:" graphic has also been changed
-        // to say "Gamepad:". Fortunately, it (along with the original
-        // Doom IWADs) has an unused graphic that says "Display". So we
-        // can swap this in instead, and it kind of makes sense.
-        DEH_AddStringReplacement("M_SCRNSZ", "M_DISP");
-    }
-
-    //!
     // @category game
     //
     // Automatic pistol start when advancing from one level to the next. At the
@@ -1774,7 +1359,6 @@ void D_DoomMain (void)
             autoload_dir = M_GetAutoloadDir("doom-all", true);
             if (autoload_dir != NULL)
             {
-                DEH_AutoLoadPatches(autoload_dir);
                 W_AutoLoadWADs(autoload_dir);
                 free(autoload_dir);
             }
@@ -1784,19 +1368,10 @@ void D_DoomMain (void)
         autoload_dir = M_GetAutoloadDir(D_SaveGameIWADName(gamemission, gamevariant), true);
         if (autoload_dir != NULL)
         {
-            DEH_AutoLoadPatches(autoload_dir);
             W_AutoLoadWADs(autoload_dir);
             free(autoload_dir);
         }
     }
-
-    // Load Dehacked patches specified on the command line with -deh.
-    // Note that there's a very careful and deliberate ordering to how
-    // Dehacked patches are loaded. The order we use is:
-    //  1. IWAD dehacked patches.
-    //  2. Command line dehacked patches specified with -deh.
-    //  3. PWAD dehacked patches in DEHACKED lumps.
-    DEH_ParseCommandLine();
 
     // Load PWAD files.
     modifiedgame = W_ParseCommandLine();
@@ -1975,81 +1550,10 @@ void D_DoomMain (void)
     // Generate the WAD hash table.  Speed things up a bit.
     W_GenerateHashTable();
 
-    // [crispy] allow overriding of special-casing
-
-    //!
-    // @category mod
-    //
-    // Disable automatic loading of Master Levels, No Rest for the Living and
-    // Sigil.
-    //
-    if (!M_ParmExists("-nosideload") && gamemode != shareware && !demolumpname[0])
-    {
-	if (gamemode == retail &&
-	    gameversion == exe_ultimate &&
-	    gamevariant != freedoom &&
-	    strncasecmp(M_BaseName(iwadfile), "rekkr", 5))
-	{
-		D_LoadSigilWad();
-	}
-
-	if (gamemission == doom2)
-	{
-		D_LoadNerveWad();
-		D_LoadMasterlevelsWad();
-	}
-    }
-
     // Load DEHACKED lumps from WAD files - but only if we give the right
     // command line parameter.
 
     // [crispy] load DEHACKED lumps by default, but allow overriding
-
-    //!
-    // @category mod
-    //
-    // Disable automatic loading of embedded DEHACKED lumps in wad files.
-    //
-    if (!M_ParmExists("-nodehlump") && !M_ParmExists("-nodeh"))
-    {
-        int i, loaded = 0;
-
-        for (i = numiwadlumps; i < numlumps; ++i)
-        {
-            if (!strncmp(lumpinfo[i]->name, "DEHACKED", 8))
-            {
-                DEH_LoadLump(i, true, true); // [crispy] allow long, allow error
-                loaded++;
-            }
-        }
-
-        printf("  loaded %i DEHACKED lumps from PWAD files.\n", loaded);
-    }
-
-    // [crispy] process .deh files from PWADs autoload directories
-
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
-    {
-        int i;
-
-        for (i = 0; loadparms[i]; i++)
-        {
-            int p;
-            p = M_CheckParmWithArgs(loadparms[i], 1);
-            if (p)
-            {
-                while (++p != myargc && myargv[p][0] != '-')
-                {
-                    char *autoload_dir;
-                    if ((autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false)))
-                    {
-                        DEH_AutoLoadPatches(autoload_dir);
-                        free(autoload_dir);
-                    }
-                }
-            }
-        }
-    }
 
     // Set the gamedescription string. This is only possible now that
     // we've finished loading Dehacked patches.
@@ -2082,20 +1586,7 @@ void D_DoomMain (void)
 		    I_Error("\nThis is not the registered version.");
     }
 
-// [crispy] disable meaningless warning, we always use "-merge" anyway
-#if 0
-    if (W_CheckNumForName("SS_START") >= 0
-     || W_CheckNumForName("FF_END") >= 0)
-    {
-        I_PrintDivider();
-        printf(" WARNING: The loaded WAD file contains modified sprites or\n"
-               " floor textures.  You may want to use the '-merge' command\n"
-               " line option instead of '-file'.\n");
-    }
-#endif
-
     I_PrintStartupBanner(gamedescription);
-    PrintDehackedBanners();
 
     printf("I_Init: Setting up machine state.\n");
     I_CheckIsScreensaver();
@@ -2104,40 +1595,6 @@ void D_DoomMain (void)
     I_InitSound(true);
     I_InitMusic();
 
-    // [crispy] check for SSG resources
-    crispy->havessg =
-    (
-        gamemode == commercial ||
-        (
-            W_CheckNumForName("sht2a0")         != -1 && // [crispy] wielding/firing sprite sequence
-            I_GetSfxLumpNum(&S_sfx[sfx_dshtgn]) != -1 && // [crispy] firing sound
-            I_GetSfxLumpNum(&S_sfx[sfx_dbopn])  != -1 && // [crispy] opening sound
-            I_GetSfxLumpNum(&S_sfx[sfx_dbload]) != -1 && // [crispy] reloading sound
-            I_GetSfxLumpNum(&S_sfx[sfx_dbcls])  != -1    // [crispy] closing sound
-        )
-    );
-
-    // [crispy] check for presence of a 5th episode
-    crispy->haved1e5 = (gameversion == exe_ultimate) &&
-                       (W_CheckNumForName("m_epi5") != -1) &&
-                       (W_CheckNumForName("e5m1") != -1) &&
-                       (W_CheckNumForName("wilv40") != -1);
-
-    // [crispy] check for presence of E1M10
-    crispy->havee1m10 = (gamemode == retail) &&
-                       (W_CheckNumForName("e1m10") != -1) &&
-                       (W_CheckNumForName("sewers") != -1);
-
-    // [crispy] check for presence of MAP33
-    crispy->havemap33 = (gamemode == commercial) &&
-                       (W_CheckNumForName("map33") != -1) &&
-                       (W_CheckNumForName("cwilv32") != -1);
-
-    // [crispy] change level name for MAP33 if not already changed
-    if (crispy->havemap33 && !DEH_HasStringReplacement(PHUSTR_1))
-    {
-        DEH_AddStringReplacement(PHUSTR_1, "level 33: betray");
-    }
 
     printf ("NET_Init: Init network subsystem.\n");
     NET_Init ();

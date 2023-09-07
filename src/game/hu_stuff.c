@@ -397,22 +397,6 @@ const char *mapnames_commercial[] =
     MHUSTR_21
 };
 
-static void CrispyReplaceColor (const char *str, const int cr, const char *col)
-{
-    char *str_replace, col_replace[16];
-
-    if (DEH_HasStringReplacement(str))
-    {
-	return;
-    }
-
-    M_snprintf(col_replace, sizeof(col_replace),
-               "%s%s%s", crstr[cr], col, crstr[CR_NONE]);
-    str_replace = M_StringReplace(str, col, col_replace);
-    DEH_AddStringReplacement(str, str_replace);
-    free(str_replace);
-}
-
 static const char *cr_stat, *cr_stat2, *kills;
 
 void HU_Init(void)
@@ -482,28 +466,6 @@ void HU_Init(void)
 	laserpatch[i].h += SHORT(patch->height)/2;
     }
 
-    if (!M_ParmExists("-nodeh"))
-    {
-	// [crispy] colorize keycard and skull key messages
-	CrispyReplaceColor(GOTBLUECARD, CR_BLUE, " blue ");
-	CrispyReplaceColor(GOTBLUESKUL, CR_BLUE, " blue ");
-	CrispyReplaceColor(PD_BLUEO,    CR_BLUE, " blue ");
-	CrispyReplaceColor(PD_BLUEK,    CR_BLUE, " blue ");
-	CrispyReplaceColor(GOTREDCARD,  CR_RED,  " red ");
-	CrispyReplaceColor(GOTREDSKULL, CR_RED,  " red ");
-	CrispyReplaceColor(PD_REDO,     CR_RED,  " red ");
-	CrispyReplaceColor(PD_REDK,     CR_RED,  " red ");
-	CrispyReplaceColor(GOTYELWCARD, CR_GOLD, " yellow ");
-	CrispyReplaceColor(GOTYELWSKUL, CR_GOLD, " yellow ");
-	CrispyReplaceColor(PD_YELLOWO,  CR_GOLD, " yellow ");
-	CrispyReplaceColor(PD_YELLOWK,  CR_GOLD, " yellow ");
-
-	// [crispy] colorize multi-player messages
-	CrispyReplaceColor(HUSTR_PLRGREEN,  CR_GREEN, "Green: ");
-	CrispyReplaceColor(HUSTR_PLRINDIGO, CR_GRAY,  "Indigo: ");
-	CrispyReplaceColor(HUSTR_PLRBROWN,  CR_GOLD,  "Brown: ");
-	CrispyReplaceColor(HUSTR_PLRRED,    CR_RED,   "Red: ");
-    }
 }
 
 void HU_Stop(void)
@@ -710,24 +672,6 @@ void HU_Start(void)
 
     // [crispy] display names of single special levels in Automap
     HU_SetSpecialLevelName(W_WadNameForLump(maplumpinfo), &s);
-
-    // [crispy] explicitely display (episode and) map if the
-    // map is from a PWAD or if the map title string has been dehacked
-    if (!W_IsIWADLump(maplumpinfo) &&
-        (DEH_HasStringReplacement(s) ||
-        (!(crispy->havenerve && gamemission == pack_nerve) &&
-        !(crispy->havemaster && gamemission == pack_master))))
-    {
-	char *m;
-
-	ptr = M_StringJoin(crstr[CR_GOLD], W_WadNameForLump(maplumpinfo), ": ", crstr[CR_GRAY], maplumpinfo->name, NULL);
-	m = ptr;
-
-	while (*m)
-	    HUlib_addCharToTextLine(&w_map, *(m++));
-
-	free(ptr);
-    }
 
     // [crispy] print the map title in white from the first colon onward
     M_snprintf(buf, sizeof(buf), "%s%s", ":", crstr[CR_GRAY]);

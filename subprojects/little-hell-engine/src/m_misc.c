@@ -280,6 +280,10 @@ int M_rename(const char *oldname, const char *newname)
 #endif
 }
 
+/**
+ * @todo Make a Windows stat() in platforms/windows.h and 
+ * call that function with the ifdef instead.
+ * */
 int M_stat(const char *path, struct stat *buf)
 {
 #ifdef _WIN32
@@ -1025,4 +1029,28 @@ void M_NormalizeSlashes(char *str)
             }
         }
     }
+}
+
+// Strip whitespace from the start and end of a string
+
+char *M_CleanString(char *s) // [crispy] un-static
+{
+    char *strending;
+
+    // Leading whitespace
+
+    while (*s && isspace(*s))
+        ++s;
+
+    // Trailing whitespace
+   
+    strending = s + strlen(s) - 1;
+
+    while (strlen(s) > 0 && isspace(*strending))
+    {
+        *strending = '\0';
+        --strending;
+    }
+
+    return s;
 }

@@ -210,7 +210,7 @@ if meson.is_subproject()
         sdl2,
         sdl2_net,
         sdl2_mixer,
-        math
+        math,
       ],
       include_directories: [
         include_directories(libs_src_dir),

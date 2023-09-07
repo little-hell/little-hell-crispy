@@ -32,7 +32,6 @@
 
 #include "crispy.h"
 
-#include "config.h"
 #include "d_loop.h"
 #include "doomtype.h"
 #include "i_input.h"
@@ -1080,7 +1079,7 @@ void I_InitWindowTitle(void)
 {
     char *buf;
 
-    buf = M_StringJoin(window_title, " - ", PACKAGE_STRING, NULL);
+    buf = M_StringJoin(window_title, " - ", "change me!", NULL);
     SDL_SetWindowTitle(screen, buf);
     free(buf);
 }

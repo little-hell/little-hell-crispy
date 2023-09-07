@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "pcsound.h"
 #include "pcsound_internal.h"
 

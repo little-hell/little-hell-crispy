@@ -18,7 +18,6 @@
 
 #include <stdlib.h>
 
-#include "config.h"
 #include "d_iwad.h"
 #include "i_glob.h"
 #include "i_system.h"
@@ -27,6 +26,9 @@
 #include "w_merge.h"
 #include "w_wad.h"
 #include "z_zone.h"
+
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
 
 // Parse the command line, merging WAD files that are sppecified.
 // Returns true if at least one file was added.
@@ -256,9 +258,9 @@ void W_CheckCorrectIWAD(GameMission_t mission)
                         "You probably want to use the %s%s binary.",
                         D_SuggestGameName(unique_lumps[i].mission,
                                           indetermined),
-                        PROGRAM_PREFIX,
+                        PACKAGE_STRING,
                         D_GameMissionString(mission),
-                        PROGRAM_PREFIX,
+                        PACKAGE_STRING,
                         D_GameMissionString(unique_lumps[i].mission));
             }
         }

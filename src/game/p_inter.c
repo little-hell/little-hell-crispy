@@ -431,7 +431,7 @@ P_TouchSpecialThing
       case SPR_MEGA:
 	if (gamemode != commercial)
 	    return;
-	player->health = DEFAULT_MEGASPHERE_HELATH;
+	player->health = DEFAULT_MEGASPHERE_HEALTH;
 	player->mo->health = player->health;
         // We always give armor type 2 for the megasphere; dehacked only
         // affects the MegaArmor.

@@ -43,7 +43,6 @@
 #include "z_zone.h"
 #include "crispy.h"
 
-#include "config.h"
 #ifdef HAVE_LIBPNG
 #include <png.h>
 #endif

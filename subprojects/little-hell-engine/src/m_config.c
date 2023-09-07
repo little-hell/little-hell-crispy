@@ -28,8 +28,6 @@
 
 #include "SDL_filesystem.h"
 
-#include "config.h"
-
 #include "doomtype.h"
 #include "doomkeys.h"
 #include "i_system.h"
@@ -38,6 +36,9 @@
 #include "m_misc.h"
 
 #include "z_zone.h"
+
+// TODO: FIX
+#define PACKAGE_TARNAME "littlehell"
 
 //
 // DEFAULTS

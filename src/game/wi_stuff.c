@@ -1523,12 +1523,6 @@ static boolean WI_drawParTime (void)
 		{
 			result = true;
 		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times
-		if (bex_cpars[wbs->last])
-		{
-			result = true;
-		}
 	}
 	else
 	{
@@ -1537,19 +1531,6 @@ static boolean WI_drawParTime (void)
 		if (wbs->epsd == 3 && !crispy->singleplayer)
 		{
 			result = false;
-		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times for Episode 4
-		// (disguised as par times for Doom II MAP02 to MAP10)
-		if (wbs->epsd == 3 && bex_cpars[wbs->last + 1])
-		{
-			result = true;
-		}
-
-		// [crispy] IWAD/PWAD: BEX patch provided par times for Episodes 1-4
-		if (wbs->epsd <= 3 && bex_pars[wbs->epsd + 1][wbs->last + 1])
-		{
-			result = true;
 		}
 
 		// [crispy] PWAD: par times for Sigil

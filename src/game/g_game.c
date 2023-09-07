@@ -77,6 +77,9 @@
 
 #define SAVEGAMESIZE	0x2c000
 
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
+
 void	G_ReadDemoTiccmd (ticcmd_t* cmd);
 void	G_WriteDemoTiccmd (ticcmd_t* cmd);
 void	G_PlayerReborn (int player);
@@ -2004,11 +2007,6 @@ void G_DoCompleted (void)
 
             wminfo.partime = TICRATE*cpars32;
         }
-        // [crispy] support [PARS] sections in BEX files
-        else if (bex_cpars[gamemap-1])
-        {
-            wminfo.partime = TICRATE*bex_cpars[gamemap-1];
-        }
         // [crispy] par times for NRFTL
         else if (gamemission == pack_nerve)
         {
@@ -2027,12 +2025,6 @@ void G_DoCompleted (void)
         // [crispy] par times for Sigil
         gameepisode == 5)
     {
-        // [crispy] support [PARS] sections in BEX files
-        if (bex_pars[gameepisode][gamemap])
-        {
-            wminfo.partime = TICRATE*bex_pars[gameepisode][gamemap];
-        }
-        else
         if (gameversion == exe_chex && gameepisode == 1 && gamemap < 6)
         {
             wminfo.partime = TICRATE*chexpars[gamemap];
@@ -3148,20 +3140,6 @@ static size_t WriteCmdLineLump(MEMFILE *stream)
         mem_fputs(" -file", stream);
 
         for (i = 1; filenames[i]; i++)
-        {
-            tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
-            mem_fputs(tmp, stream);
-            free(tmp);
-        }
-    }
-
-    filenames = DEH_GetFileNames();
-
-    if (filenames)
-    {
-        mem_fputs(" -deh", stream);
-
-        for (i = 0; filenames[i]; i++)
         {
             tmp = M_StringJoin(" \"", M_BaseName(filenames[i]), "\"", NULL);
             mem_fputs(tmp, stream);

@@ -27,7 +27,6 @@
 
 #include "i_glob.h"
 
-#include "config.h"
 #include "doomtype.h"
 #include "memio.h"
 #include "mus2mid.h"
@@ -1064,7 +1063,7 @@ static void DumpSubstituteConfig(const char *filename)
         return;
     }
 
-    fprintf(fs, "# Example %s substitute MIDI file.\n\n", PACKAGE_NAME);
+    fprintf(fs, "# Example substitute MIDI file.\n\n");
     fprintf(fs, "# SHA1 hash                              = filename\n");
 
     for (lumpnum = 0; lumpnum < numlumps; ++lumpnum)

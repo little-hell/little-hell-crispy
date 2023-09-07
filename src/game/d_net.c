@@ -211,7 +211,6 @@ static void InitConnectData(net_connect_data_t *connect_data)
     // Read checksums of our WAD directory and dehacked information
 
     W_Checksum(connect_data->wad_sha1sum);
-    DEH_Checksum(connect_data->deh_sha1sum);
 
     // Are we playing with the Freedoom IWAD?
 
@@ -258,10 +257,10 @@ void D_CheckNetGame (void)
     D_StartNetGame(&settings, NULL);
     LoadGameSettings(&settings);
 
-    M_printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
+    printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
                startskill, deathmatch, startmap, startepisode);
 
-    M_printf("player %i of %i (%i nodes)\n",
+    printf("player %i of %i (%i nodes)\n",
                consoleplayer+1, settings.num_players, settings.num_players);
 
     // Show players here; the server might have specified a time limit
@@ -272,12 +271,12 @@ void D_CheckNetGame (void)
 
         if (timelimit == 20 && M_CheckParm("-avg"))
         {
-            M_printf("Austin Virtual Gaming: Levels will end "
+            printf("Austin Virtual Gaming: Levels will end "
                            "after 20 minutes\n");
         }
         else
         {
-            M_printf("Levels will end after %d minute", timelimit);
+            printf("Levels will end after %d minute", timelimit);
             if (timelimit > 1)
                 printf("s");
             printf(".\n");

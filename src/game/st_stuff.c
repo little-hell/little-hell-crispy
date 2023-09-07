@@ -62,6 +62,9 @@
 
 #include "v_trans.h" // [crispy] colored cheat messages
 
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
+
 extern int screenblocks; // [crispy] for the Crispy HUD
 extern boolean inhelpscreens; // [crispy] prevent palette changes
 
@@ -1088,7 +1091,7 @@ ST_Responder (event_t* ev)
 	    {
 		plyr->ammo[i] = 0;
 	    }
-	    plyr->ammo[am_clip] = default_initial_bullets;
+	    plyr->ammo[am_clip] = DEFAULT_INITIAL_BULLETS;
 
 	    if (plyr->readyweapon > wp_pistol)
 	    {

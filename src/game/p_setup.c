@@ -1066,9 +1066,9 @@ int P_GetNumForMap (int episode, int map, boolean critical)
     if ( gamemode == commercial)
     {
 	if (map<10)
-	    DEH_snprintf(lumpname, 9, "map0%i", map);
+	    M_snprintf(lumpname, 9, "map0%i", map);
 	else
-	    DEH_snprintf(lumpname, 9, "map%i", map);
+	    M_snprintf(lumpname, 9, "map%i", map);
     }
     else
     {
@@ -1082,7 +1082,7 @@ int P_GetNumForMap (int episode, int map, boolean critical)
     // [crispy] special-casing for E1M10 "Sewers" support
     if (crispy->havee1m10 && episode == 1 && map == 10)
     {
-	DEH_snprintf(lumpname, 9, "E1M10");
+	M_snprintf(lumpname, 9, "E1M10");
     }
 
     // [crispy] NRFTL / The Master Levels
@@ -1185,27 +1185,6 @@ P_SetupLevel
     // if working with a devlopment map, reload it
     W_Reload ();
 
-// [crispy] factor out map lump name and number finding into a separate function
-/*
-    // find map name
-    if ( gamemode == commercial)
-    {
-	if (map<10)
-	    DEH_snprintf(lumpname, 9, "map0%i", map);
-	else
-	    DEH_snprintf(lumpname, 9, "map%i", map);
-    }
-    else
-    {
-	lumpname[0] = 'E';
-	lumpname[1] = '0' + episode;
-	lumpname[2] = 'M';
-	lumpname[3] = '0' + map;
-	lumpname[4] = 0;
-    }
-
-    lumpnum = W_GetNumForName (lumpname);
-*/
     lumpnum = P_GetNumForMap (episode, map, true);
 
     maplumpinfo = lumpinfo[lumpnum];

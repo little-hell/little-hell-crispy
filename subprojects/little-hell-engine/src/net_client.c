@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "doomtype.h"
 #include "d_loop.h"
 #include "i_system.h"
@@ -40,6 +39,9 @@
 #include "net_petname.h"
 #include "w_checksum.h"
 #include "w_wad.h"
+
+// TODO: FIX
+#define PACKAGE_STRING "littlehell"
 
 
 typedef enum

@@ -172,11 +172,11 @@ extern const int DEFAULT_MAX_HEALTH;
 extern const int DEFAULT_MAX_ARMOR;
 extern const int DEFAULT_GOD_MODE_HEALTH;
 
-extern const int DEFAULT_DEFAULT_GREEN_ARMOR_CLASS;
-extern const int DEFAULT_DEFAULT_BLUE_ARMOR_CLASS;
+extern const int DEFAULT_GREEN_ARMOR_CLASS;
+extern const int DEFAULT_BLUE_ARMOR_CLASS;
 extern const int DEFAULT_MAX_SOULSPHERE_HEALTH;
 extern const int DEFAULT_SOULSPHERE_HEALTH;
-extern const int MEGASPHERE_HEALTH;
+extern const int DEFAULT_MEGASPHERE_HEALTH;
 
 extern const int DEFAULT_IDFA_ARMOR;
 extern const int DEFAULT_IDFA_ARMOR_CLASS;
