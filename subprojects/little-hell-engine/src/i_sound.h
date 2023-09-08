@@ -262,7 +262,6 @@ extern const sound_module_t sound_sdl_module;
 extern const sound_module_t sound_pcsound_module;
 extern const music_module_t music_sdl_module;
 extern const music_module_t music_opl_module;
-extern const music_module_t music_pack_module;
 extern const music_module_t music_fl_module;
 
 // For OPL module:
@@ -271,7 +270,6 @@ extern int opl_io_port;
 
 // For native music module:
 
-extern char *music_pack_path;
 extern char *timidity_cfg_path;
 
 // For FluidSynth module:
