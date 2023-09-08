@@ -53,7 +53,6 @@ engine_source_files = files(
     src_dir / 'i_cdmus.c',
     src_dir / 'i_endoom.c',
     src_dir / 'i_videohr.c',
-    src_dir / 'i_musicpack.c',
     src_dir / 'i_oplmusic.c',
     src_dir / 'i_pcsound.c',
     src_dir / 'i_sdlsound.c',
