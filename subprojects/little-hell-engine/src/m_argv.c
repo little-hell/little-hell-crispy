@@ -27,12 +27,10 @@
 #include "d_iwad.h"
 #include "i_system.h"
 #include "m_misc.h"
-#include "m_argv.h"  // haleyjd 20110212: warning fix
+#include "m_argv.h" // haleyjd 20110212: warning fix
 
-int		myargc;
-char**		myargv;
-
-
+int myargc;
+char **myargv;
 
 
 //
@@ -49,8 +47,8 @@ int M_CheckParmWithArgs(const char *check, int num_args)
 
     for (i = 1; i < myargc - num_args; i++)
     {
-	if (!strcasecmp(check, myargv[i]))
-	    return i;
+        if (!strcasecmp(check, myargv[i]))
+            return i;
     }
 
     return 0;
@@ -73,7 +71,7 @@ int M_CheckParm(const char *check)
     return M_CheckParmWithArgs(check, 0);
 }
 
-#define MAXARGVS        100
+#define MAXARGVS 100
 
 static void LoadResponseFile(int argv_index, const char *filename)
 {
@@ -90,7 +88,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     if (handle == NULL)
     {
-        printf ("\nNo such response file!");
+        printf("\nNo such response file!");
         exit(1);
     }
 
@@ -129,7 +127,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     // Copy all the arguments in the list up to the response file
 
-    for (i=0; i<argv_index; ++i)
+    for (i = 0; i < argv_index; ++i)
     {
         newargv[i] = myargv[i];
         myargv[i] = NULL;
@@ -139,11 +137,11 @@ static void LoadResponseFile(int argv_index, const char *filename)
     infile = file;
     k = 0;
 
-    while(k < size)
+    while (k < size)
     {
         // Skip past space characters to the next argument
 
-        while(k < size && isspace(infile[k]))
+        while (k < size && isspace(infile[k]))
         {
             ++k;
         }
@@ -174,8 +172,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
             if (k >= size || infile[k] == '\n')
             {
-                I_Error("Quotes unclosed in response file '%s'",
-                        filename);
+                I_Error("Quotes unclosed in response file '%s'", filename);
             }
 
             // Cut off the string at the closing quote
@@ -191,7 +188,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
             argstart = &infile[k];
 
-            while(k < size && !isspace(infile[k]))
+            while (k < size && !isspace(infile[k]))
             {
                 ++k;
             }
@@ -207,7 +204,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     // Add arguments following the response file argument
 
-    for (i=argv_index + 1; i<myargc; ++i)
+    for (i = argv_index + 1; i < myargc; ++i)
     {
         newargv[newargc] = myargv[i];
         myargv[i] = NULL;
@@ -288,10 +285,10 @@ void M_FindResponseFile(void)
 enum
 {
     FILETYPE_UNKNOWN = 0x0,
-    FILETYPE_IWAD =    0x2,
-    FILETYPE_PWAD =    0x4,
-    FILETYPE_DEH =     0x8,
-    FILETYPE_DEMO =    0x10,
+    FILETYPE_IWAD = 0x2,
+    FILETYPE_PWAD = 0x4,
+    FILETYPE_DEH = 0x8,
+    FILETYPE_DEMO = 0x10,
 };
 
 static boolean FileIsDemoLump(const char *filename)
@@ -391,10 +388,9 @@ static int GuessFileType(const char *name)
             ret = FILETYPE_PWAD;
         }
     }
-    else if (M_StringEndsWith(lower, ".deh") ||
-             M_StringEndsWith(lower, ".bex") || // [crispy] *.bex
-             M_StringEndsWith(lower, ".hhe") ||
-             M_StringEndsWith(lower, ".seh"))
+    else if (
+        M_StringEndsWith(lower, ".deh") || M_StringEndsWith(lower, ".bex") || // [crispy] *.bex
+        M_StringEndsWith(lower, ".hhe") || M_StringEndsWith(lower, ".seh"))
     {
         ret = FILETYPE_DEH;
     }
@@ -446,11 +442,9 @@ void M_AddLooseFiles(void)
         char *arg = myargv[i];
         int type;
 
-        if (strlen(arg) < 3 ||
-            arg[0] == '-' ||
-            arg[0] == '@' ||
+        if (strlen(arg) < 3 || arg[0] == '-' || arg[0] == '@' ||
             ((!isalpha(arg[0]) || arg[1] != ':' || arg[2] != '\\') &&
-            (arg[0] != '\\' || arg[1] != '\\')))
+             (arg[0] != '\\' || arg[1] != '\\')))
         {
             free(arguments);
             return;

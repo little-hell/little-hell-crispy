@@ -37,11 +37,11 @@
 #include "net_sdl.h"
 #include "net_structrw.h"
 
-//TODO: FIX
+// TODO: FIX
 #define PACKAGE_STRING "littlehell"
 
 // How often to refresh our registration with the master server.
-#define MASTER_REFRESH_PERIOD 30  /* twice per minute */
+#define MASTER_REFRESH_PERIOD 30 /* twice per minute */
 
 // How often to re-resolve the address of the master server?
 #define MASTER_RESOLVE_PERIOD 8 * 60 * 60 /* 8 hours */
@@ -179,8 +179,7 @@ static boolean ClientConnected(net_client_t *client)
     // Check that the client is properly connected: ie. not in the
     // process of connecting or disconnecting
 
-    return client->active
-        && client->connection.state == NET_CONN_STATE_CONNECTED;
+    return client->active && client->connection.state == NET_CONN_STATE_CONNECTED;
 }
 
 // Send a message to be displayed on a client's console
@@ -196,8 +195,7 @@ static void NET_SV_SendConsoleMessage(net_client_t *client, const char *s, ...)
     M_vsnprintf(buf, sizeof(buf), s, args);
     va_end(args);
 
-    packet = NET_Conn_NewReliable(&client->connection,
-                                  NET_PACKET_TYPE_CONSOLE_MESSAGE);
+    packet = NET_Conn_NewReliable(&client->connection, NET_PACKET_TYPE_CONSOLE_MESSAGE);
 
     NET_WriteString(packet, buf);
 }
@@ -215,7 +213,7 @@ static void NET_SV_BroadcastMessage(const char *s, ...)
     M_vsnprintf(buf, sizeof(buf), s, args);
     va_end(args);
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (ClientConnected(&clients[i]))
         {
@@ -236,7 +234,7 @@ static void NET_SV_AssignPlayers(void)
 
     pl = 0;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (ClientConnected(&clients[i]))
         {
@@ -253,7 +251,7 @@ static void NET_SV_AssignPlayers(void)
         }
     }
 
-    for (; pl<NET_MAXPLAYERS; ++pl)
+    for (; pl < NET_MAXPLAYERS; ++pl)
     {
         sv_players[pl] = NULL;
     }
@@ -268,7 +266,7 @@ static int NET_SV_NumPlayers(void)
 
     result = 0;
 
-    for (i=0; i<NET_MAXPLAYERS; ++i)
+    for (i = 0; i < NET_MAXPLAYERS; ++i)
     {
         if (sv_players[i] != NULL && ClientConnected(sv_players[i]))
         {
@@ -288,8 +286,7 @@ static int NET_SV_NumReadyPlayers(void)
 
     for (i = 0; i < MAXNETNODES; ++i)
     {
-        if (ClientConnected(&clients[i])
-         && !clients[i].drone && clients[i].ready)
+        if (ClientConnected(&clients[i]) && !clients[i].drone && clients[i].ready)
         {
             ++result;
         }
@@ -324,7 +321,7 @@ static int NET_SV_NumDrones(void)
 
     result = 0;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (ClientConnected(&clients[i]) && clients[i].drone)
         {
@@ -344,7 +341,7 @@ static int NET_SV_NumClients(void)
 
     count = 0;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (ClientConnected(&clients[i]))
         {
@@ -366,7 +363,7 @@ static net_client_t *NET_SV_Controller(void)
 
     best = NULL;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         // Can't be controller?
 
@@ -411,22 +408,17 @@ static void NET_SV_SendWaitingData(net_client_t *client)
         controller = client;
     }
 
-    memcpy(&wait_data.wad_sha1sum, &controller->wad_sha1sum,
-           sizeof(sha1_digest_t));
-    memcpy(&wait_data.deh_sha1sum, &controller->deh_sha1sum,
-           sizeof(sha1_digest_t));
+    memcpy(&wait_data.wad_sha1sum, &controller->wad_sha1sum, sizeof(sha1_digest_t));
+    memcpy(&wait_data.deh_sha1sum, &controller->deh_sha1sum, sizeof(sha1_digest_t));
     wait_data.is_freedoom = controller->is_freedoom;
 
     // set name and address of each player:
 
     for (i = 0; i < wait_data.num_players; ++i)
     {
-        M_StringCopy(wait_data.player_names[i],
-                     sv_players[i]->name,
-                     MAXPLAYERNAME);
-        M_StringCopy(wait_data.player_addrs[i],
-                     NET_AddrToString(sv_players[i]->addr),
-                     MAXPLAYERNAME);
+        M_StringCopy(wait_data.player_names[i], sv_players[i]->name, MAXPLAYERNAME);
+        M_StringCopy(
+            wait_data.player_addrs[i], NET_AddrToString(sv_players[i]->addr), MAXPLAYERNAME);
     }
 
     // Construct packet:
@@ -449,7 +441,7 @@ static unsigned int NET_SV_LatestAcknowledged(void)
     unsigned int lowtic = UINT_MAX;
     int i;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (ClientConnected(&clients[i]))
         {
@@ -490,7 +482,7 @@ static void NET_SV_AdvanceWindow(void)
 
         should_advance = true;
 
-        for (i=0; i<NET_MAXPLAYERS; ++i)
+        for (i = 0; i < NET_MAXPLAYERS; ++i)
         {
             if (sv_players[i] == NULL || !ClientConnected(sv_players[i]))
             {
@@ -515,9 +507,8 @@ static void NET_SV_AdvanceWindow(void)
 
         // Advance the window
 
-        memmove(recvwindow, recvwindow + 1,
-                sizeof(*recvwindow) * (BACKUPTICS - 1));
-        memset(&recvwindow[BACKUPTICS-1], 0, sizeof(*recvwindow));
+        memmove(recvwindow, recvwindow + 1, sizeof(*recvwindow) * (BACKUPTICS - 1));
+        memset(&recvwindow[BACKUPTICS - 1], 0, sizeof(*recvwindow));
         ++recvwindow_start;
         NET_Log("server: advanced receive window to %d", recvwindow_start);
     }
@@ -529,7 +520,7 @@ static net_client_t *NET_SV_FindClient(net_addr_t *addr)
 {
     int i;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (clients[i].active && clients[i].addr == addr)
         {
@@ -557,8 +548,7 @@ static void NET_SV_SendReject(net_addr_t *addr, const char *msg)
     NET_FreePacket(packet);
 }
 
-static void NET_SV_InitNewClient(net_client_t *client, net_addr_t *addr,
-                                 net_protocol_t protocol)
+static void NET_SV_InitNewClient(net_client_t *client, net_addr_t *addr, net_protocol_t protocol)
 {
     client->active = true;
     client->connect_time = I_GetTimeMS();
@@ -583,8 +573,7 @@ static void NET_SV_InitNewClient(net_client_t *client, net_addr_t *addr,
 
 // parse a SYN from a client(initiating a connection)
 
-static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
-                            net_addr_t *addr)
+static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client, net_addr_t *addr)
 {
     unsigned int magic;
     net_connect_data_t data;
@@ -611,7 +600,8 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
 
         case NET_OLD_MAGIC_NUMBER:
             NET_Log("server: error: client using old magic number: %d", magic);
-            NET_SV_SendReject(addr,
+            NET_SV_SendReject(
+                addr,
                 "You are using an old client version that is not supported by "
                 "this server. This server is running " PACKAGE_STRING ".");
             return;
@@ -639,10 +629,13 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     {
         char reject_msg[256];
 
-        M_snprintf(reject_msg, sizeof(reject_msg),
+        M_snprintf(
+            reject_msg,
+            sizeof(reject_msg),
             "Version mismatch: server version is: " PACKAGE_STRING "; "
             "client is: %s. No common compatible protocol could be "
-            "negotiated.", client_version);
+            "negotiated.",
+            client_version);
         NET_SV_SendReject(addr, reject_msg);
         NET_Log("server: error: no common protocol");
         return;
@@ -656,12 +649,14 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
         return;
     }
 
-    if (!D_ValidGameMode(data.gamemission, data.gamemode)
-     || data.max_players > NET_MAXPLAYERS)
+    if (!D_ValidGameMode(data.gamemission, data.gamemode) || data.max_players > NET_MAXPLAYERS)
     {
-        NET_Log("server: error: invalid connect data, max_players=%d, "
-                "gamemission=%d, gamemode=%d",
-                data.max_players, data.gamemission, data.gamemode);
+        NET_Log(
+            "server: error: invalid connect data, max_players=%d, "
+            "gamemission=%d, gamemode=%d",
+            data.max_players,
+            data.gamemission,
+            data.gamemode);
         return;
     }
 
@@ -678,10 +673,8 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     // Not accepting new connections?
     if (server_state != SERVER_WAITING_LAUNCH)
     {
-        NET_Log("server: error: not in waiting launch state, server_state=%d",
-                server_state);
-        NET_SV_SendReject(addr,
-                          "Server is not currently accepting connections");
+        NET_Log("server: error: not in waiting launch state, server_state=%d", server_state);
+        NET_SV_SendReject(addr, "Server is not currently accepting connections");
         return;
     }
 
@@ -689,11 +682,10 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     NET_SV_AssignPlayers();
     num_players = NET_SV_NumPlayers();
 
-    if ((!data.drone && num_players >= NET_SV_MaxPlayers())
-     || NET_SV_NumClients() >= MAXNETNODES)
+    if ((!data.drone && num_players >= NET_SV_MaxPlayers()) || NET_SV_NumClients() >= MAXNETNODES)
     {
-        NET_Log("server: no more players, num_players=%d, max=%d",
-                num_players, NET_SV_MaxPlayers());
+        NET_Log(
+            "server: no more players, num_players=%d, max=%d", num_players, NET_SV_MaxPlayers());
         NET_SV_SendReject(addr, "Server is full!");
         return;
     }
@@ -707,8 +699,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     {
         sv_gamemode = data.gamemode;
         sv_gamemission = data.gamemission;
-        NET_Log("server: new game, mode=%d, mission=%d",
-                sv_gamemode, sv_gamemission);
+        NET_Log("server: new game, mode=%d, mission=%d", sv_gamemode, sv_gamemission);
     }
 
     // Check the connecting client is playing the same game as all
@@ -716,14 +707,20 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     if (data.gamemode != sv_gamemode || data.gamemission != sv_gamemission)
     {
         char msg[128];
-        NET_Log("server: wrong mode/mission, %d != %d || %d != %d",
-                data.gamemode, sv_gamemode, data.gamemission, sv_gamemission);
-        M_snprintf(msg, sizeof(msg),
-                   "Game mismatch: server is %s (%s), client is %s (%s)",
-                   D_GameMissionString(sv_gamemission),
-                   D_GameModeString(sv_gamemode),
-                   D_GameMissionString(data.gamemission),
-                   D_GameModeString(data.gamemode));
+        NET_Log(
+            "server: wrong mode/mission, %d != %d || %d != %d",
+            data.gamemode,
+            sv_gamemode,
+            data.gamemission,
+            sv_gamemission);
+        M_snprintf(
+            msg,
+            sizeof(msg),
+            "Game mismatch: server is %s (%s), client is %s (%s)",
+            D_GameMissionString(sv_gamemission),
+            D_GameModeString(sv_gamemode),
+            D_GameMissionString(data.gamemission),
+            D_GameModeString(data.gamemode));
 
         NET_SV_SendReject(addr, msg);
         return;
@@ -734,7 +731,7 @@ static void NET_SV_ParseSYN(net_packet_t *packet, net_client_t *client,
     {
         // find a slot, or return if none found
 
-        for (i=0; i<MAXNETNODES; ++i)
+        for (i = 0; i < MAXNETNODES; ++i)
         {
             if (!clients[i].active)
             {
@@ -801,8 +798,10 @@ static void NET_SV_ParseLaunch(net_packet_t *packet, net_client_t *client)
 
     if (client != NET_SV_Controller())
     {
-        NET_Log("server: error: this client isn't the controller, %d != %d",
-                client, NET_SV_Controller());
+        NET_Log(
+            "server: error: this client isn't the controller, %d != %d",
+            client,
+            NET_SV_Controller());
         return;
     }
 
@@ -810,8 +809,7 @@ static void NET_SV_ParseLaunch(net_packet_t *packet, net_client_t *client)
 
     if (server_state != SERVER_WAITING_LAUNCH)
     {
-        NET_Log("server: error: not in waiting launch state, state=%d",
-                server_state);
+        NET_Log("server: error: not in waiting launch state, state=%d", server_state);
         return;
     }
 
@@ -820,13 +818,12 @@ static void NET_SV_ParseLaunch(net_packet_t *packet, net_client_t *client)
     NET_SV_AssignPlayers();
     num_players = NET_SV_NumPlayers();
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (!ClientConnected(&clients[i]))
             continue;
 
-        launchpacket = NET_Conn_NewReliable(&clients[i].connection,
-                                            NET_PACKET_TYPE_LAUNCH);
+        launchpacket = NET_Conn_NewReliable(&clients[i].connection, NET_PACKET_TYPE_LAUNCH);
         NET_WriteInt8(launchpacket, num_players);
     }
 
@@ -888,8 +885,7 @@ static void StartGame(void)
 
         clients[i].last_gamedata_time = nowtime;
 
-        startpacket = NET_Conn_NewReliable(&clients[i].connection,
-                                           NET_PACKET_TYPE_GAMESTART);
+        startpacket = NET_Conn_NewReliable(&clients[i].connection, NET_PACKET_TYPE_GAMESTART);
 
         sv_settings.consoleplayer = clients[i].player_number;
 
@@ -963,8 +959,7 @@ static void NET_SV_ParseGameStart(net_packet_t *packet, net_client_t *client)
 
     if (server_state != SERVER_WAITING_START)
     {
-        NET_Log("server: error: not in waiting start state, server_state=%d",
-                server_state);
+        NET_Log("server: error: not in waiting start state, server_state=%d", server_state);
         return;
     }
 
@@ -1009,8 +1004,7 @@ static void NET_SV_SendResendRequest(net_client_t *client, int start, int end)
     unsigned int nowtime;
     int index;
 
-    NET_Log("server: send resend to %s for tics %d-%d",
-            NET_AddrToString(client->addr), start, end);
+    NET_Log("server: send resend to %s for tics %d-%d", NET_AddrToString(client->addr), start, end);
 
     packet = NET_NewPacket(20);
 
@@ -1025,7 +1019,7 @@ static void NET_SV_SendResendRequest(net_client_t *client, int start, int end)
 
     nowtime = I_GetTimeMS();
 
-    for (i=start; i<=end; ++i)
+    for (i = start; i <= end; ++i)
     {
         index = i - recvwindow_start;
 
@@ -1057,7 +1051,7 @@ static void NET_SV_CheckResends(net_client_t *client)
     resend_start = -1;
     resend_end = -1;
 
-    for (i=0; i<BACKUPTICS; ++i)
+    for (i = 0; i < BACKUPTICS; ++i)
     {
         net_client_recv_t *recvobj;
         boolean need_resend;
@@ -1067,9 +1061,8 @@ static void NET_SV_CheckResends(net_client_t *client)
         // if need_resend is true, this tic needs another retransmit
         // request (300ms timeout)
 
-        need_resend = !recvobj->active
-                   && recvobj->resend_time != 0
-                   && nowtime > recvobj->resend_time + 300;
+        need_resend =
+            !recvobj->active && recvobj->resend_time != 0 && nowtime > recvobj->resend_time + 300;
 
         if (need_resend)
         {
@@ -1083,14 +1076,14 @@ static void NET_SV_CheckResends(net_client_t *client)
         else if (resend_start >= 0)
         {
             // End of a run of resend tics
-            NET_Log("server: resend request to %s timed out for %d-%d (%d)",
-                    NET_AddrToString(client->addr),
-                    recvwindow_start + resend_start,
-                    recvwindow_start + resend_end,
-                    &recvwindow[resend_start][player].resend_time);
-            NET_SV_SendResendRequest(client,
-                                     recvwindow_start + resend_start,
-                                     recvwindow_start + resend_end);
+            NET_Log(
+                "server: resend request to %s timed out for %d-%d (%d)",
+                NET_AddrToString(client->addr),
+                recvwindow_start + resend_start,
+                recvwindow_start + resend_end,
+                &recvwindow[resend_start][player].resend_time);
+            NET_SV_SendResendRequest(
+                client, recvwindow_start + resend_start, recvwindow_start + resend_end);
 
             resend_start = -1;
         }
@@ -1098,14 +1091,14 @@ static void NET_SV_CheckResends(net_client_t *client)
 
     if (resend_start >= 0)
     {
-        NET_Log("server: resend request to %s timed out for %d-%d (%d)",
-                NET_AddrToString(client->addr),
-                recvwindow_start + resend_start,
-                recvwindow_start + resend_end,
-                &recvwindow[resend_start][player].resend_time);
-        NET_SV_SendResendRequest(client,
-                                 recvwindow_start + resend_start,
-                                 recvwindow_start + resend_end);
+        NET_Log(
+            "server: resend request to %s timed out for %d-%d (%d)",
+            NET_AddrToString(client->addr),
+            recvwindow_start + resend_start,
+            recvwindow_start + resend_end,
+            &recvwindow[resend_start][player].resend_time);
+        NET_SV_SendResendRequest(
+            client, recvwindow_start + resend_start, recvwindow_start + resend_end);
     }
 }
 
@@ -1125,8 +1118,7 @@ static void NET_SV_ParseGameData(net_packet_t *packet, net_client_t *client)
 
     if (server_state != SERVER_IN_GAME)
     {
-        NET_Log("server: error: not in game state: server_state=%d",
-                server_state);
+        NET_Log("server: error: not in game state: server_state=%d", server_state);
         return;
     }
 
@@ -1140,16 +1132,14 @@ static void NET_SV_ParseGameData(net_packet_t *packet, net_client_t *client)
     player = client->player_number;
 
     // Read header
-    if (!NET_ReadInt8(packet, &ackseq)
-     || !NET_ReadInt8(packet, &seq)
-     || !NET_ReadInt8(packet, &num_tics))
+    if (!NET_ReadInt8(packet, &ackseq) || !NET_ReadInt8(packet, &seq) ||
+        !NET_ReadInt8(packet, &num_tics))
     {
         NET_Log("server: error: failed to read header");
         return;
     }
 
-    NET_Log("server: got game data, seq=%d, num_tics=%d, ackseq=%d",
-            seq, num_tics, ackseq);
+    NET_Log("server: got game data, seq=%d, num_tics=%d, ackseq=%d", seq, num_tics, ackseq);
 
     // Get the current time
     nowtime = I_GetTimeMS();
@@ -1160,13 +1150,13 @@ static void NET_SV_ParseGameData(net_packet_t *packet, net_client_t *client)
 
     // Sanity checks
 
-    for (i=0; i<num_tics; ++i)
+    for (i = 0; i < num_tics; ++i)
     {
         net_ticdiff_t diff;
         signed int latency;
 
-        if (!NET_ReadSInt16(packet, &latency)
-         || !NET_ReadTiccmdDiff(packet, &diff, sv_settings.lowres_turn))
+        if (!NET_ReadSInt16(packet, &latency) ||
+            !NET_ReadTiccmdDiff(packet, &diff, sv_settings.lowres_turn))
         {
             return;
         }
@@ -1201,7 +1191,7 @@ static void NET_SV_ParseGameData(net_packet_t *packet, net_client_t *client)
     // all tics before the first tic in this packet?  If so, send a
     // resend request.
 
-    //printf("SV: %p: %i\n", client, seq);
+    // printf("SV: %p: %i\n", client, seq);
 
     resend_end = seq - recvwindow_start;
 
@@ -1239,12 +1229,13 @@ static void NET_SV_ParseGameData(net_packet_t *packet, net_client_t *client)
     // Possibly send a resend request
     if (resend_start < resend_end)
     {
-        NET_Log("server: request resend for %d-%d before %d",
-                recvwindow_start + resend_start,
-                recvwindow_start + resend_end - 1, seq);
-        NET_SV_SendResendRequest(client,
-                                 recvwindow_start + resend_start,
-                                 recvwindow_start + resend_end - 1);
+        NET_Log(
+            "server: request resend for %d-%d before %d",
+            recvwindow_start + resend_start,
+            recvwindow_start + resend_end - 1,
+            seq);
+        NET_SV_SendResendRequest(
+            client, recvwindow_start + resend_start, recvwindow_start + resend_end - 1);
     }
 }
 
@@ -1256,8 +1247,7 @@ static void NET_SV_ParseGameDataACK(net_packet_t *packet, net_client_t *client)
 
     if (server_state != SERVER_IN_GAME)
     {
-        NET_Log("server: error: not in game state, server_state=%d",
-                server_state);
+        NET_Log("server: error: not in game state, server_state=%d", server_state);
         return;
     }
 
@@ -1282,8 +1272,7 @@ static void NET_SV_ParseGameDataACK(net_packet_t *packet, net_client_t *client)
     }
 }
 
-static void NET_SV_SendTics(net_client_t *client,
-                            unsigned int start, unsigned int end)
+static void NET_SV_SendTics(net_client_t *client, unsigned int start, unsigned int end)
 {
     net_packet_t *packet;
     unsigned int i;
@@ -1295,11 +1284,11 @@ static void NET_SV_SendTics(net_client_t *client,
     // Send the start tic and number of tics
 
     NET_WriteInt8(packet, start & 0xff);
-    NET_WriteInt8(packet, end-start + 1);
+    NET_WriteInt8(packet, end - start + 1);
 
     // Write the tics
 
-    for (i=start; i<=end; ++i)
+    for (i = start; i <= end; ++i)
     {
         net_full_ticcmd_t *cmd;
 
@@ -1334,20 +1323,19 @@ static void NET_SV_ParseResendRequest(net_packet_t *packet, net_client_t *client
 
     // Read the starting tic and number of tics
 
-    if (!NET_ReadInt32(packet, &start)
-     || !NET_ReadInt8(packet, &num_tics))
+    if (!NET_ReadInt32(packet, &start) || !NET_ReadInt8(packet, &num_tics))
     {
         NET_Log("server: error: missing fields for resend");
         return;
     }
 
-    //printf("SV: %p: resend %i-%i\n", client, start, start+num_tics-1);
+    // printf("SV: %p: resend %i-%i\n", client, start, start+num_tics-1);
 
     // Check we have all the requested tics
 
     last = start + num_tics - 1;
 
-    for (i=start; i<=last; ++i)
+    for (i = start; i <= last; ++i)
     {
         net_full_ticcmd_t *cmd;
 
@@ -1359,8 +1347,10 @@ static void NET_SV_ParseResendRequest(net_packet_t *packet, net_client_t *client
             // This is pretty fatal.  We could disconnect the client,
             // but then again this could be a spoofed packet.  Just
             // ignore it.
-            NET_Log("server: error: don't have tic %d any more, "
-                    "can't resend", i);
+            NET_Log(
+                "server: error: don't have tic %d any more, "
+                "can't resend",
+                i);
             return;
         }
     }
@@ -1506,8 +1496,10 @@ static void NET_SV_Packet(net_packet_t *packet, net_addr_t *addr)
         return;
     }
 
-    NET_Log("server: packet from %s; type %d", NET_AddrToString(addr),
-            packet_type & ~NET_RELIABLE_PACKET);
+    NET_Log(
+        "server: packet from %s; type %d",
+        NET_AddrToString(addr),
+        packet_type & ~NET_RELIABLE_PACKET);
     NET_LogPacket(packet);
 
     if (packet_type == NET_PACKET_TYPE_SYN)
@@ -1528,7 +1520,7 @@ static void NET_SV_Packet(net_packet_t *packet, net_addr_t *addr)
     }
     else
     {
-        //printf("SV: %s: %i\n", NET_AddrToString(addr), packet_type);
+        // printf("SV: %s: %i\n", NET_AddrToString(addr), packet_type);
 
         switch (packet_type)
         {
@@ -1586,7 +1578,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
 
     num_players = 0;
 
-    for (i=0; i<NET_MAXPLAYERS; ++i)
+    for (i = 0; i < NET_MAXPLAYERS; ++i)
     {
         if (sv_players[i] == client)
         {
@@ -1630,7 +1622,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
 
     cmd.latency = 0;
 
-    for (i=0; i<NET_MAXPLAYERS; ++i)
+    for (i = 0; i < NET_MAXPLAYERS; ++i)
     {
         net_client_recv_t *recvobj;
 
@@ -1658,7 +1650,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
             cmd.latency = recvobj->latency;
     }
 
-    //printf("SV: %i: latency %i\n", client->player_number, cmd.latency);
+    // printf("SV: %i: latency %i\n", client->player_number, cmd.latency);
 
     // Add into the queue
 
@@ -1672,8 +1664,7 @@ static void NET_SV_PumpSendQueue(net_client_t *client)
     if (starttic < 0)
         starttic = 0;
 
-    NET_Log("server: send tics %d-%d to %s", starttic, endtic,
-            NET_AddrToString(client->addr));
+    NET_Log("server: send tics %d-%d to %s", starttic, endtic, NET_AddrToString(client->addr));
     NET_SV_SendTics(client, starttic, endtic);
 
     ++client->sendseq;
@@ -1704,25 +1695,26 @@ void NET_SV_CheckDeadlock(net_client_t *client)
 
     if (nowtime - client->last_gamedata_time > 1000)
     {
-        NET_Log("server: no gamedata from %s since %d - deadlock?",
-                NET_AddrToString(client->addr),
-                client->last_gamedata_time);
+        NET_Log(
+            "server: no gamedata from %s since %d - deadlock?",
+            NET_AddrToString(client->addr),
+            client->last_gamedata_time);
 
         // Search the receive window for the first tic we are expecting
         // from this player.
 
-        for (i=0; i<BACKUPTICS; ++i)
+        for (i = 0; i < BACKUPTICS; ++i)
         {
             if (!recvwindow[i][client->player_number].active)
             {
-                NET_Log("server: deadlock: sending resend request for %d-%d",
-                        recvwindow_start + i, recvwindow_start + i + 5);
+                NET_Log(
+                    "server: deadlock: sending resend request for %d-%d",
+                    recvwindow_start + i,
+                    recvwindow_start + i + 5);
 
                 // Found a tic we haven't received.  Send a resend request.
 
-                NET_SV_SendResendRequest(client,
-                                         recvwindow_start + i,
-                                         recvwindow_start + i + 5);
+                NET_SV_SendResendRequest(client, recvwindow_start + i, recvwindow_start + i + 5);
 
                 client->last_gamedata_time = nowtime;
                 break;
@@ -1736,8 +1728,10 @@ void NET_SV_CheckDeadlock(net_client_t *client)
         // resends to break deadlock.
         if (i < BACKUPTICS && client->sendseq > client->acknowledged)
         {
-            NET_Log("server: also resending tics %d-%d to break deadlock",
-                    client->acknowledged, client->sendseq - 1);
+            NET_Log(
+                "server: also resending tics %d-%d to break deadlock",
+                client->acknowledged,
+                client->sendseq - 1);
             NET_SV_SendTics(client, client->acknowledged, client->sendseq - 1);
         }
     }
@@ -1753,7 +1747,7 @@ static void NET_SV_GameEnded(void)
     server_state = SERVER_WAITING_LAUNCH;
     sv_gamemode = indetermined;
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (clients[i].active)
         {
@@ -1770,13 +1764,11 @@ static void NET_SV_RunClient(net_client_t *client)
 
     NET_Conn_Run(&client->connection);
 
-    if (client->connection.state == NET_CONN_STATE_DISCONNECTED
-     && client->connection.disconnect_reason == NET_DISCONNECT_TIMEOUT)
+    if (client->connection.state == NET_CONN_STATE_DISCONNECTED &&
+        client->connection.disconnect_reason == NET_DISCONNECT_TIMEOUT)
     {
-        NET_Log("server: client at %s timed out",
-                NET_AddrToString(client->addr));
-        NET_SV_BroadcastMessage("Client '%s' timed out and disconnected",
-                                client->name);
+        NET_Log("server: client at %s timed out", NET_AddrToString(client->addr));
+        NET_SV_BroadcastMessage("Client '%s' timed out and disconnected", client->name);
     }
 
     // Is this client disconnected?
@@ -1790,9 +1782,10 @@ static void NET_SV_RunClient(net_client_t *client)
 
         if (server_state == SERVER_WAITING_START && !client->drone)
         {
-            NET_SV_BroadcastMessage("Game startup aborted because "
-                                    "player '%s' disconnected.",
-                                    client->name);
+            NET_SV_BroadcastMessage(
+                "Game startup aborted because "
+                "player '%s' disconnected.",
+                client->name);
             NET_SV_GameEnded();
         }
 
@@ -1802,7 +1795,7 @@ static void NET_SV_RunClient(net_client_t *client)
         // Are there any clients left connected?  If not, return the
         // server to the waiting-for-players state.
         //
-	// Disconnect any drones still connected.
+        // Disconnect any drones still connected.
 
         if (NET_SV_NumPlayers() <= 0)
         {
@@ -1824,8 +1817,7 @@ static void NET_SV_RunClient(net_client_t *client)
 
         // Send information once every second
 
-        if (client->last_send_time < 0
-         || I_GetTimeMS() - client->last_send_time > 1000)
+        if (client->last_send_time < 0 || I_GetTimeMS() - client->last_send_time > 1000)
         {
             NET_SV_SendWaitingData(client);
             client->last_send_time = I_GetTimeMS();
@@ -1859,7 +1851,7 @@ void NET_SV_Init(void)
 
     // no clients yet
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         clients[i].active = false;
     }
@@ -1957,7 +1949,7 @@ void NET_SV_Run(void)
     // "Run" any clients that may have things to do, independent of responses
     // to received packets
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (clients[i].active)
         {
@@ -2003,7 +1995,7 @@ void NET_SV_Shutdown(void)
 
     // Disconnect all clients
 
-    for (i=0; i<MAXNETNODES; ++i)
+    for (i = 0; i < MAXNETNODES; ++i)
     {
         if (clients[i].active)
         {
@@ -2022,7 +2014,7 @@ void NET_SV_Shutdown(void)
 
         running = false;
 
-        for (i=0; i<MAXNETNODES; ++i)
+        for (i = 0; i < MAXNETNODES; ++i)
         {
             if (clients[i].active)
             {

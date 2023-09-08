@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // $Id: v_video.h,v 1.9 1998/05/06 11:12:54 jim Exp $
@@ -19,7 +19,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 
+//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 //  02111-1307, USA.
 //
 // DESCRIPTION:
@@ -59,13 +59,13 @@ extern char **crstr;
 #ifndef CRISPY_TRUECOLOR
 extern byte *tranmap;
 #else
-extern const pixel_t (*blendfunc) (const pixel_t fg, const pixel_t bg);
-extern const pixel_t I_BlendAdd (const pixel_t bg, const pixel_t fg);
-extern const pixel_t I_BlendDark (const pixel_t bg, const int d);
-extern const pixel_t I_BlendOver (const pixel_t bg, const pixel_t fg);
+extern const pixel_t (*blendfunc)(const pixel_t fg, const pixel_t bg);
+extern const pixel_t I_BlendAdd(const pixel_t bg, const pixel_t fg);
+extern const pixel_t I_BlendDark(const pixel_t bg, const int d);
+extern const pixel_t I_BlendOver(const pixel_t bg, const pixel_t fg);
 #endif
 
 int V_GetPaletteIndex(byte *palette, int r, int g, int b);
-byte V_Colorize (byte *playpal, int cr, byte source, boolean keepgray109);
+byte V_Colorize(byte *playpal, int cr, byte source, boolean keepgray109);
 
 #endif // __V_TRANS__

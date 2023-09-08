@@ -28,7 +28,7 @@
 //
 // SoundFX struct.
 //
-typedef struct sfxinfo_struct	sfxinfo_t;
+typedef struct sfxinfo_struct sfxinfo_t;
 
 struct sfxinfo_struct
 {
@@ -60,7 +60,7 @@ struct sfxinfo_struct
     // lump number of sfx
     int lumpnum;
 
-    // Maximum number of channels that the sound can be played on 
+    // Maximum number of channels that the sound can be played on
     // (Heretic)
     int numchannels;
 
@@ -87,7 +87,7 @@ typedef struct
 
 } musicinfo_t;
 
-typedef enum 
+typedef enum
 {
     SNDDEVICE_NONE = 0,
     SNDDEVICE_PCSPEAKER = 1,
@@ -245,10 +245,11 @@ extern float libsamplerate_scale;
 void I_BindSoundVariables(void);
 
 // DMX version to emulate for OPL emulation:
-typedef enum {
-    opl_doom1_1_666,    // Doom 1 v1.666
-    opl_doom2_1_666,    // Doom 2 v1.666, Hexen, Heretic
-    opl_doom_1_9        // Doom v1.9, Strife
+typedef enum
+{
+    opl_doom1_1_666, // Doom 1 v1.666
+    opl_doom2_1_666, // Doom 2 v1.666, Hexen, Heretic
+    opl_doom_1_9     // Doom v1.9, Strife
 } opl_driver_ver_t;
 
 void I_SetOPLDriverVer(opl_driver_ver_t ver);
@@ -262,7 +263,6 @@ extern const sound_module_t sound_pcsound_module;
 extern const music_module_t music_sdl_module;
 extern const music_module_t music_opl_module;
 extern const music_module_t music_pack_module;
-extern const music_module_t music_win_module;
 extern const music_module_t music_fl_module;
 
 // For OPL module:
@@ -273,12 +273,6 @@ extern int opl_io_port;
 
 extern char *music_pack_path;
 extern char *timidity_cfg_path;
-#ifdef _WIN32
-extern char *winmm_midi_device;
-extern int winmm_complevel;
-extern int winmm_reset_type;
-extern int winmm_reset_delay;
-#endif
 
 // For FluidSynth module:
 

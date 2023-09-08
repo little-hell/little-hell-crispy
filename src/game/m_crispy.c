@@ -20,111 +20,94 @@
 #include "crispy.h"
 #include "doomstat.h"
 #include "i_input.h" // [crispy] start/stop text input
-#include "m_menu.h" // [crispy] M_SetDefaultDifficulty()
+#include "m_menu.h"  // [crispy] M_SetDefaultDifficulty()
 #include "p_local.h" // [crispy] thinkercap
 #include "s_sound.h"
 #include "r_defs.h" // [crispy] laserpatch
-#include "r_sky.h" // [crispy] R_InitSkyMap()
+#include "r_sky.h"  // [crispy] R_InitSkyMap()
 
 #include "m_crispy.h"
 
-multiitem_t multiitem_bobfactor[NUM_BOBFACTORS] =
-{
+multiitem_t multiitem_bobfactor[NUM_BOBFACTORS] = {
     {BOBFACTOR_FULL, "full"},
     {BOBFACTOR_75, "75%"},
     {BOBFACTOR_OFF, "off"},
 };
 
-multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS] =
-{
+multiitem_t multiitem_brightmaps[NUM_BRIGHTMAPS] = {
     {BRIGHTMAPS_OFF, "none"},
     {BRIGHTMAPS_TEXTURES, "walls"},
     {BRIGHTMAPS_SPRITES, "items"},
     {BRIGHTMAPS_BOTH, "both"},
 };
 
-multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] =
-{
-    {COLOREDBLOOD_OFF, "off"},
-    {COLOREDBLOOD_BLOOD, "blood"},
-    {COLOREDBLOOD_ALL, "all"}
-};
+multiitem_t multiitem_coloredblood[NUM_COLOREDBLOOD] = {
+    {COLOREDBLOOD_OFF, "off"}, {COLOREDBLOOD_BLOOD, "blood"}, {COLOREDBLOOD_ALL, "all"}};
 
-multiitem_t multiitem_centerweapon[NUM_CENTERWEAPON] =
-{
+multiitem_t multiitem_centerweapon[NUM_CENTERWEAPON] = {
     {CENTERWEAPON_OFF, "off"},
     {CENTERWEAPON_CENTER, "centered"},
     {CENTERWEAPON_BOB, "bobbing"},
 };
 
-multiitem_t multiitem_coloredhud[NUM_COLOREDHUD] =
-{
+multiitem_t multiitem_coloredhud[NUM_COLOREDHUD] = {
     {COLOREDHUD_OFF, "off"},
     {COLOREDHUD_BAR, "status bar"},
     {COLOREDHUD_TEXT, "hud texts"},
     {COLOREDHUD_BOTH, "both"},
 };
 
-multiitem_t multiitem_crosshair[NUM_CROSSHAIRS] =
-{
+multiitem_t multiitem_crosshair[NUM_CROSSHAIRS] = {
     {CROSSHAIR_OFF, "off"},
     {CROSSHAIR_STATIC, "static"},
     {CROSSHAIR_PROJECTED, "projected"},
 };
 
-multiitem_t multiitem_crosshairtype[] =
-{
+multiitem_t multiitem_crosshairtype[] = {
     {-1, "none"},
     {0, "cross"},
     {1, "chevron"},
     {2, "dot"},
 };
 
-multiitem_t multiitem_freeaim[NUM_FREEAIMS] =
-{
+multiitem_t multiitem_freeaim[NUM_FREEAIMS] = {
     {FREEAIM_AUTO, "autoaim"},
     {FREEAIM_DIRECT, "direct"},
     {FREEAIM_BOTH, "both"},
 };
 
-multiitem_t multiitem_demotimer[NUM_DEMOTIMERS] =
-{
+multiitem_t multiitem_demotimer[NUM_DEMOTIMERS] = {
     {DEMOTIMER_OFF, "off"},
     {DEMOTIMER_RECORD, "recording"},
     {DEMOTIMER_PLAYBACK, "playback"},
     {DEMOTIMER_BOTH, "both"},
 };
 
-multiitem_t multiitem_demotimerdir[] =
-{
+multiitem_t multiitem_demotimerdir[] = {
     {0, "none"},
     {1, "forward"},
     {2, "backward"},
 };
 
-multiitem_t multiitem_freelook[NUM_FREELOOKS] =
-{
+multiitem_t multiitem_freelook[NUM_FREELOOKS] = {
     {FREELOOK_OFF, "off"},
     {FREELOOK_SPRING, "spring"},
     {FREELOOK_LOCK, "lock"},
 };
 
-multiitem_t multiitem_jump[NUM_JUMPS] =
-{
+multiitem_t multiitem_jump[NUM_JUMPS] = {
     {JUMP_OFF, "off"},
     {JUMP_LOW, "low"},
     {JUMP_HIGH, "high"},
 };
 
-multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] =
-{
+multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE] = {
     {SECRETMESSAGE_OFF, "off"},
     {SECRETMESSAGE_ON, "on"},
     {SECRETMESSAGE_COUNT, "count"},
 };
 
-multiitem_t multiitem_difficulties[NUM_SKILLS] =
-{
+multiitem_t multiitem_difficulties[NUM_SKILLS] = {
     {SKILL_HMP, "HMP"},
     {SKILL_UV, "UV"},
     {SKILL_NIGHTMARE, "NIGHTMARE"},
@@ -132,39 +115,34 @@ multiitem_t multiitem_difficulties[NUM_SKILLS] =
     {SKILL_HNTR, "HNTR"},
 };
 
-multiitem_t multiitem_statsformat[NUM_STATSFORMATS] =
-{
+multiitem_t multiitem_statsformat[NUM_STATSFORMATS] = {
     {STATSFORMAT_RATIO, "ratio"},
     {STATSFORMAT_REMAINING, "remaining"},
     {STATSFORMAT_PERCENT, "percent"},
     {STATSFORMAT_BOOLEAN, "boolean"},
 };
 
-multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] =
-{
+multiitem_t multiitem_translucency[NUM_TRANSLUCENCY] = {
     {TRANSLUCENCY_OFF, "off"},
     {TRANSLUCENCY_MISSILE, "projectiles"},
     {TRANSLUCENCY_ITEM, "items"},
     {TRANSLUCENCY_BOTH, "both"},
 };
 
-multiitem_t multiitem_sndchannels[4] =
-{
+multiitem_t multiitem_sndchannels[4] = {
     {8, "8"},
     {16, "16"},
     {32, "32"},
 };
 
-multiitem_t multiitem_widgets[NUM_WIDGETS] =
-{
+multiitem_t multiitem_widgets[NUM_WIDGETS] = {
     {WIDGETS_OFF, "never"},
     {WIDGETS_AUTOMAP, "in Automap"},
     {WIDGETS_ALWAYS, "always"},
     {WIDGETS_STBAR, "status bar"},
 };
 
-multiitem_t multiitem_widescreen[NUM_RATIOS] =
-{
+multiitem_t multiitem_widescreen[NUM_RATIOS] = {
     {RATIO_ORIG, "Original"},
     {RATIO_MATCH_SCREEN, "Match screen"},
     {RATIO_16_10, "16:10"},
@@ -172,11 +150,11 @@ multiitem_t multiitem_widescreen[NUM_RATIOS] =
     {RATIO_21_9, "21:9"},
 };
 
-extern void AM_LevelInit (boolean reinit);
-extern void EnableLoadingDisk (void);
-extern void P_SegLengths (boolean contrast_only);
-extern void R_InitLightTables (void);
-extern void I_ReInitGraphics (int reinit);
+extern void AM_LevelInit(boolean reinit);
+extern void EnableLoadingDisk(void);
+extern void P_SegLengths(boolean contrast_only);
+extern void R_InitLightTables(void);
+extern void I_ReInitGraphics(int reinit);
 
 static void ChangeSettingEnum(int *setting, int choice, int num_values)
 {
@@ -218,7 +196,7 @@ void M_CrispyToggleColoredblood(int choice)
 
     if (gameversion == exe_chex)
     {
-	return;
+        return;
     }
 
     ChangeSettingEnum(&crispy->coloredblood, choice, NUM_COLOREDBLOOD);
@@ -226,22 +204,22 @@ void M_CrispyToggleColoredblood(int choice)
     // [crispy] switch NOBLOOD flag for Lost Souls
     for (th = thinkercap.next; th && th != &thinkercap; th = th->next)
     {
-	if (th->function.acp1 == (actionf_p1)P_MobjThinker)
-	{
-		mobj_t *mobj = (mobj_t *)th;
+        if (th->function.acp1 == (actionf_p1) P_MobjThinker)
+        {
+            mobj_t *mobj = (mobj_t *) th;
 
-		if (mobj->type == MT_SKULL)
-		{
-			if (crispy->coloredblood == COLOREDBLOOD_ALL)
-			{
-				mobj->flags |= MF_NOBLOOD;
-			}
-			else
-			{
-				mobj->flags &= ~MF_NOBLOOD;
-			}
-		}
-	}
+            if (mobj->type == MT_SKULL)
+            {
+                if (crispy->coloredblood == COLOREDBLOOD_ALL)
+                {
+                    mobj->flags |= MF_NOBLOOD;
+                }
+                else
+                {
+                    mobj->flags &= ~MF_NOBLOOD;
+                }
+            }
+        }
     }
 }
 
@@ -271,7 +249,7 @@ void M_CrispyToggleCrosshairtype(int choice)
 {
     if (!crispy->crosshair)
     {
-	return;
+        return;
     }
 
     ChangeSettingEnum(&crispy->crosshairtype, choice, NUM_CROSSHAIRTYPES);
@@ -292,7 +270,7 @@ void M_CrispyToggleDemoTimerDir(int choice)
 {
     if (!(crispy->demotimer & DEMOTIMER_PLAYBACK))
     {
-	return;
+        return;
     }
 
     choice = 0;
@@ -315,7 +293,7 @@ void M_CrispyToggleFlipcorpses(int choice)
 {
     if (gameversion == exe_chex)
     {
-	return;
+        return;
     }
 
     choice = 0;
@@ -326,7 +304,7 @@ void M_CrispyToggleFreeaim(int choice)
 {
     if (!crispy->singleplayer)
     {
-	return;
+        return;
     }
 
     ChangeSettingEnum(&crispy->freeaim, choice, NUM_FREEAIMS);
@@ -335,7 +313,7 @@ void M_CrispyToggleFreeaim(int choice)
     CheckCrispySingleplayer(!demorecording && !demoplayback && !netgame);
 }
 
-static void M_CrispyToggleSkyHook (void)
+static void M_CrispyToggleSkyHook(void)
 {
     players[consoleplayer].lookdir = 0;
     R_InitSkyMap();
@@ -405,14 +383,14 @@ void M_CrispyToggleFullsounds(int choice)
     // [crispy] weapon sound sources
     for (i = 0; i < MAXPLAYERS; i++)
     {
-	if (playeringame[i])
-	{
-	    players[i].so = Crispy_PlayerSO(i);
-	}
+        if (playeringame[i])
+        {
+            players[i].so = Crispy_PlayerSO(i);
+        }
     }
 }
 
-static void M_CrispyToggleHiresHook (void)
+static void M_CrispyToggleHiresHook(void)
 {
     crispy->hires = !crispy->hires;
 
@@ -439,7 +417,7 @@ void M_CrispyToggleJumping(int choice)
 {
     if (!crispy->singleplayer)
     {
-	return;
+        return;
     }
 
     ChangeSettingEnum(&crispy->jump, choice, NUM_JUMPS);
@@ -477,7 +455,7 @@ void M_CrispyToggleOverunder(int choice)
 {
     if (!crispy->singleplayer)
     {
-	return;
+        return;
     }
 
     choice = 0;
@@ -512,7 +490,7 @@ void M_CrispyToggleSmoothScaling(int choice)
     crispy->smoothscaling = !crispy->smoothscaling;
 }
 
-static void M_CrispyToggleSmoothLightingHook (void)
+static void M_CrispyToggleSmoothLightingHook(void)
 {
     crispy->smoothlight = !crispy->smoothlight;
 
@@ -576,7 +554,7 @@ void M_CrispyToggleUncapped(int choice)
     crispy->uncapped = !crispy->uncapped;
 }
 
-void M_CrispyToggleVsyncHook (void)
+void M_CrispyToggleVsyncHook(void)
 {
     crispy->vsync = !crispy->vsync;
 
@@ -589,29 +567,29 @@ void M_CrispyToggleVsync(int choice)
 
     if (force_software_renderer)
     {
-	return;
+        return;
     }
 
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
 }
 
 static int hookchoice;
-static void M_CrispyToggleWidescreenHook (void)
+static void M_CrispyToggleWidescreenHook(void)
 {
     ChangeSettingEnum(&crispy->widescreen, hookchoice, NUM_RATIOS);
 
     // [crispy] no need to re-init when switching from wide to compact
     {
-	// [crispy] re-initialize framebuffers, textures and renderer
-	I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
-	// [crispy] re-calculate framebuffer coordinates
-	R_ExecuteSetViewSize();
-	// [crispy] re-draw bezel
-	R_FillBackScreen();
-	// [crispy] re-calculate disk icon coordinates
-	EnableLoadingDisk();
-	// [crispy] re-calculate automap coordinates
-	AM_LevelInit(true);
+        // [crispy] re-initialize framebuffers, textures and renderer
+        I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
+        // [crispy] re-calculate framebuffer coordinates
+        R_ExecuteSetViewSize();
+        // [crispy] re-draw bezel
+        R_FillBackScreen();
+        // [crispy] re-calculate disk icon coordinates
+        EnableLoadingDisk();
+        // [crispy] re-calculate automap coordinates
+        AM_LevelInit(true);
     }
 }
 

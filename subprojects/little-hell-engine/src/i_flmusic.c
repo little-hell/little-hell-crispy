@@ -19,8 +19,9 @@
 
 #include "fluidsynth.h"
 
-#if (FLUIDSYNTH_VERSION_MAJOR < 2 ||                                           \
-     (FLUIDSYNTH_VERSION_MAJOR == 2 && FLUIDSYNTH_VERSION_MINOR < 2))
+#if (                                                                                              \
+    FLUIDSYNTH_VERSION_MAJOR < 2 ||                                                                \
+    (FLUIDSYNTH_VERSION_MAJOR == 2 && FLUIDSYNTH_VERSION_MINOR < 2))
 
 typedef int fluid_int_t;
 typedef long fluid_long_long_t;
@@ -66,8 +67,7 @@ static void FL_Mix_Callback(void *udata, Uint8 *stream, int len)
 
     if (result != FLUID_OK)
     {
-        fprintf(stderr,
-                "FL_Mix_Callback: Error generating FluidSynth audio.\n");
+        fprintf(stderr, "FL_Mix_Callback: Error generating FluidSynth audio.\n");
     }
 }
 
@@ -77,52 +77,40 @@ static boolean I_FL_InitMusic(void)
 
     if (strlen(fsynth_sf_path) == 0)
     {
-        fprintf(stderr,
-                "I_FL_InitMusic: No FluidSynth soundfont file specified.\n");
+        fprintf(stderr, "I_FL_InitMusic: No FluidSynth soundfont file specified.\n");
         return false;
     }
 
     settings = new_fluid_settings();
 
     fluid_settings_setnum(settings, "synth.sample-rate", snd_samplerate);
-    fluid_settings_setstr(settings, "synth.midi-bank-select",
-                          fsynth_midibankselect);
+    fluid_settings_setstr(settings, "synth.midi-bank-select", fsynth_midibankselect);
     fluid_settings_setint(settings, "synth.polyphony", fsynth_polyphony);
 
-    fluid_settings_setint(settings, "synth.chorus.active",
-                          fsynth_chorus_active);
-    fluid_settings_setint(settings, "synth.reverb.active",
-                          fsynth_reverb_active);
+    fluid_settings_setint(settings, "synth.chorus.active", fsynth_chorus_active);
+    fluid_settings_setint(settings, "synth.reverb.active", fsynth_reverb_active);
 
     if (fsynth_reverb_active)
     {
-        fluid_settings_setnum(settings, "synth.reverb.room-size",
-                              fsynth_reverb_roomsize);
-        fluid_settings_setnum(settings, "synth.reverb.damp",
-                              fsynth_reverb_damp);
-        fluid_settings_setnum(settings, "synth.reverb.width",
-                              fsynth_reverb_width);
-        fluid_settings_setnum(settings, "synth.reverb.level",
-                              fsynth_reverb_level);
+        fluid_settings_setnum(settings, "synth.reverb.room-size", fsynth_reverb_roomsize);
+        fluid_settings_setnum(settings, "synth.reverb.damp", fsynth_reverb_damp);
+        fluid_settings_setnum(settings, "synth.reverb.width", fsynth_reverb_width);
+        fluid_settings_setnum(settings, "synth.reverb.level", fsynth_reverb_level);
     }
 
     if (fsynth_chorus_active)
     {
-        fluid_settings_setnum(settings, "synth.chorus.level",
-                              fsynth_chorus_level);
-        fluid_settings_setnum(settings, "synth.chorus.depth",
-                              fsynth_chorus_depth);
+        fluid_settings_setnum(settings, "synth.chorus.level", fsynth_chorus_level);
+        fluid_settings_setnum(settings, "synth.chorus.depth", fsynth_chorus_depth);
         fluid_settings_setint(settings, "synth.chorus.nr", fsynth_chorus_nr);
-        fluid_settings_setnum(settings, "synth.chorus.speed",
-                              fsynth_chorus_speed);
+        fluid_settings_setnum(settings, "synth.chorus.speed", fsynth_chorus_speed);
     }
 
     synth = new_fluid_synth(settings);
 
     if (synth == NULL)
     {
-        fprintf(stderr,
-                "I_FL_InitMusic: FluidSynth failed to initialize synth.\n");
+        fprintf(stderr, "I_FL_InitMusic: FluidSynth failed to initialize synth.\n");
         return false;
     }
 
@@ -133,9 +121,8 @@ static boolean I_FL_InitMusic(void)
         synth = NULL;
         delete_fluid_settings(settings);
         settings = NULL;
-        fprintf(stderr,
-                "I_FL_InitMusic: Error loading FluidSynth soundfont: '%s'.\n",
-                fsynth_sf_path);
+        fprintf(
+            stderr, "I_FL_InitMusic: Error loading FluidSynth soundfont: '%s'.\n", fsynth_sf_path);
         return false;
     }
 
@@ -196,8 +183,7 @@ static void *I_FL_RegisterSong(void *data, int len)
 
     if (player == NULL)
     {
-        fprintf(stderr,
-                "I_FL_RegisterSong: FluidSynth failed to initialize player.\n");
+        fprintf(stderr, "I_FL_RegisterSong: FluidSynth failed to initialize player.\n");
         return NULL;
     }
 
@@ -207,8 +193,7 @@ static void *I_FL_RegisterSong(void *data, int len)
 
         if (result == FLUID_FAILED)
         {
-            fprintf(stderr,
-                    "I_FL_RegisterSong: FluidSynth failed to load MIDI.\n");
+            fprintf(stderr, "I_FL_RegisterSong: FluidSynth failed to load MIDI.\n");
             return NULL;
         }
     }
@@ -234,8 +219,7 @@ static void *I_FL_RegisterSong(void *data, int len)
 
         if (result == FLUID_FAILED)
         {
-            fprintf(stderr,
-                    "I_FL_RegisterSong: FluidSynth failed to load MUS.\n");
+            fprintf(stderr, "I_FL_RegisterSong: FluidSynth failed to load MUS.\n");
             return NULL;
         }
     }
@@ -286,13 +270,11 @@ static boolean I_FL_MusicIsPlaying(void)
     return (fluid_player_get_status(player) == FLUID_PLAYER_PLAYING);
 }
 
-static const snddevice_t music_fl_devices[] =
-{
+static const snddevice_t music_fl_devices[] = {
     SNDDEVICE_FSYNTH,
 };
 
-const music_module_t music_fl_module =
-{
+const music_module_t music_fl_module = {
     music_fl_devices,
     arrlen(music_fl_devices),
     I_FL_InitMusic,

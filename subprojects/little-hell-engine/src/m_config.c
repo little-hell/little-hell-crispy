@@ -44,7 +44,7 @@
 // DEFAULTS
 //
 
-// Location where all configuration data is stored - 
+// Location where all configuration data is stored -
 // default.cfg, savegames, etc.
 
 const char *configdir;
@@ -56,7 +56,7 @@ static char *autoload_path = "";
 static const char *default_main_config;
 static const char *default_extra_config;
 
-typedef enum 
+typedef enum
 {
     DEFAULT_INT,
     DEFAULT_INT_HEX,
@@ -71,7 +71,8 @@ typedef struct
     const char *name;
 
     // Pointer to the location in memory of the variable
-    union {
+    union
+    {
         int *i;
         char **s;
         float *f;
@@ -85,7 +86,7 @@ typedef struct
     // If zero, we didn't read this value from a config file.
     int untranslated;
 
-    // The value we translated the scancode into when we read the 
+    // The value we translated the scancode into when we read the
     // config file on startup.  If the variable value is different from
     // this, it has been changed and needs to be converted; otherwise,
     // use the 'untranslated' value.
@@ -103,24 +104,20 @@ typedef struct
     const char *filename;
 } default_collection_t;
 
-#define CONFIG_VARIABLE_GENERIC(name, type) \
-    { #name, {NULL}, type, 0, 0, false }
+#define CONFIG_VARIABLE_GENERIC(name, type)                                                        \
+    {                                                                                              \
+#name, {NULL }, type, 0, 0, false                                                          \
+    }
 
-#define CONFIG_VARIABLE_KEY(name) \
-    CONFIG_VARIABLE_GENERIC(name, DEFAULT_KEY)
-#define CONFIG_VARIABLE_INT(name) \
-    CONFIG_VARIABLE_GENERIC(name, DEFAULT_INT)
-#define CONFIG_VARIABLE_INT_HEX(name) \
-    CONFIG_VARIABLE_GENERIC(name, DEFAULT_INT_HEX)
-#define CONFIG_VARIABLE_FLOAT(name) \
-    CONFIG_VARIABLE_GENERIC(name, DEFAULT_FLOAT)
-#define CONFIG_VARIABLE_STRING(name) \
-    CONFIG_VARIABLE_GENERIC(name, DEFAULT_STRING)
+#define CONFIG_VARIABLE_KEY(name)     CONFIG_VARIABLE_GENERIC(name, DEFAULT_KEY)
+#define CONFIG_VARIABLE_INT(name)     CONFIG_VARIABLE_GENERIC(name, DEFAULT_INT)
+#define CONFIG_VARIABLE_INT_HEX(name) CONFIG_VARIABLE_GENERIC(name, DEFAULT_INT_HEX)
+#define CONFIG_VARIABLE_FLOAT(name)   CONFIG_VARIABLE_GENERIC(name, DEFAULT_FLOAT)
+#define CONFIG_VARIABLE_STRING(name)  CONFIG_VARIABLE_GENERIC(name, DEFAULT_STRING)
 
 //! @begin_config_file default
 
-static default_t	doom_defaults_list[] =
-{
+static default_t doom_defaults_list[] = {
     //!
     // Mouse sensitivity.  This value is used to multiply input mouse
     // movement to control the effect of moving the mouse.
@@ -748,8 +745,7 @@ static default_t	doom_defaults_list[] =
     CONFIG_VARIABLE_INT(comport),
 };
 
-static default_collection_t doom_defaults =
-{
+static default_collection_t doom_defaults = {
     doom_defaults_list,
     arrlen(doom_defaults_list),
     NULL,
@@ -757,8 +753,7 @@ static default_collection_t doom_defaults =
 
 //! @begin_config_file extended
 
-static default_t extra_defaults_list[] =
-{
+static default_t extra_defaults_list[] = {
     //!
     // Name of the SDL video driver to use.  If this is an empty string,
     // the default video driver is used.
@@ -1126,34 +1121,6 @@ static default_t extra_defaults_list[] =
 
     CONFIG_VARIABLE_INT(gus_ram_kb),
 
-#ifdef _WIN32
-    //!
-    // MIDI device for native Windows MIDI.
-    //
-
-    CONFIG_VARIABLE_STRING(winmm_midi_device),
-
-    //!
-    // Compatibility level for native Windows MIDI, default 1. Valid values are
-    // 0 (Vanilla), 1 (Standard), 2 (Full).
-    //
-
-    CONFIG_VARIABLE_INT(winmm_complevel),
-
-    //!
-    // Reset device type for native Windows MIDI, default 1. Valid values are
-    // 0 (None), 1 (GM Mode), 2 (GS Mode), 3 (XG Mode).
-    //
-
-    CONFIG_VARIABLE_INT(winmm_reset_type),
-
-    //!
-    // Reset device delay for native Windows MIDI, default 0, median value 100 ms.
-    //
-
-    CONFIG_VARIABLE_INT(winmm_reset_delay),
-#endif
-
     //!
     // @game doom strife
     //
@@ -1317,7 +1284,7 @@ static default_t extra_defaults_list[] =
     //
 
     CONFIG_VARIABLE_INT(mouseb_nextweapon),
-    
+
     //!
     // @game heretic
     //
@@ -2511,8 +2478,7 @@ static default_t extra_defaults_list[] =
     CONFIG_VARIABLE_INT(crispy_widescreen),
 };
 
-static default_collection_t extra_defaults =
-{
+static default_collection_t extra_defaults = {
     extra_defaults_list,
     arrlen(extra_defaults_list),
     NULL,
@@ -2524,7 +2490,7 @@ static default_t *SearchCollection(default_collection_t *collection, const char 
 {
     int i;
 
-    for (i=0; i<collection->numdefaults; ++i) 
+    for (i = 0; i < collection->numdefaults; ++i)
     {
         if (!strcmp(name, collection->defaults[i].name))
         {
@@ -2545,25 +2511,135 @@ static default_t *SearchCollection(default_collection_t *collection, const char 
 //    sends an interrupt). So I added a fake scan code of 126 for it.
 //    The presence of this is important so we can bind PrintScreen as
 //    a screenshot key.
-static const int scantokey[128] =
-{
-    0  ,    27,     '1',    '2',    '3',    '4',    '5',    '6',
-    '7',    '8',    '9',    '0',    '-',    '=',    KEY_BACKSPACE, 9,
-    'q',    'w',    'e',    'r',    't',    'y',    'u',    'i',
-    'o',    'p',    '[',    ']',    13,		KEY_RCTRL, 'a',    's',
-    'd',    'f',    'g',    'h',    'j',    'k',    'l',    ';',
-    '\'',   '`',    KEY_RSHIFT,'\\',   'z',    'x',    'c',    'v',
-    'b',    'n',    'm',    ',',    '.',    '/',    KEY_RSHIFT,KEYP_MULTIPLY,
-    KEY_RALT,  ' ',  KEY_CAPSLOCK,KEY_F1,  KEY_F2,   KEY_F3,   KEY_F4,   KEY_F5,
-    KEY_F6,   KEY_F7,   KEY_F8,   KEY_F9,   KEY_F10,  /*KEY_NUMLOCK?*/KEY_PAUSE,KEY_SCRLCK,KEY_HOME,
-    KEY_UPARROW,KEY_PGUP,KEY_MINUS,KEY_LEFTARROW,KEYP_5,KEY_RIGHTARROW,KEYP_PLUS,KEY_END,
-    KEY_DOWNARROW,KEY_PGDN,KEY_INS,KEY_DEL,0,   0,      0,      KEY_F11,
-    KEY_F12,  0,      0,      0,      0,      0,      0,      0,
-    0,      0,      0,      0,      0,      0,      0,      0,
-    0,      0,      0,      0,      0,      0,      0,      0,
-    0,      0,      0,      0,      0,      0,      0,      0,
-    0,      0,      0,      0,      0,      0,      KEY_PRTSCR, 0
-};
+static const int scantokey[128] = {
+    0,
+    27,
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '0',
+    '-',
+    '=',
+    KEY_BACKSPACE,
+    9,
+    'q',
+    'w',
+    'e',
+    'r',
+    't',
+    'y',
+    'u',
+    'i',
+    'o',
+    'p',
+    '[',
+    ']',
+    13,
+    KEY_RCTRL,
+    'a',
+    's',
+    'd',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'l',
+    ';',
+    '\'',
+    '`',
+    KEY_RSHIFT,
+    '\\',
+    'z',
+    'x',
+    'c',
+    'v',
+    'b',
+    'n',
+    'm',
+    ',',
+    '.',
+    '/',
+    KEY_RSHIFT,
+    KEYP_MULTIPLY,
+    KEY_RALT,
+    ' ',
+    KEY_CAPSLOCK,
+    KEY_F1,
+    KEY_F2,
+    KEY_F3,
+    KEY_F4,
+    KEY_F5,
+    KEY_F6,
+    KEY_F7,
+    KEY_F8,
+    KEY_F9,
+    KEY_F10,
+    /*KEY_NUMLOCK?*/ KEY_PAUSE,
+    KEY_SCRLCK,
+    KEY_HOME,
+    KEY_UPARROW,
+    KEY_PGUP,
+    KEY_MINUS,
+    KEY_LEFTARROW,
+    KEYP_5,
+    KEY_RIGHTARROW,
+    KEYP_PLUS,
+    KEY_END,
+    KEY_DOWNARROW,
+    KEY_PGDN,
+    KEY_INS,
+    KEY_DEL,
+    0,
+    0,
+    0,
+    KEY_F11,
+    KEY_F12,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    KEY_PRTSCR,
+    0};
 
 
 static void SaveDefaultCollection(default_collection_t *collection)
@@ -2571,14 +2647,14 @@ static void SaveDefaultCollection(default_collection_t *collection)
     default_t *defaults;
     int i, v;
     FILE *f;
-	
+
     f = M_fopen(collection->filename, "w");
     if (!f)
-	return; // can't write the file, but don't complain
+        return; // can't write the file, but don't complain
 
     defaults = collection->defaults;
-		
-    for (i=0 ; i<collection->numdefaults ; i++)
+
+    for (i = 0; i < collection->numdefaults; i++)
     {
         int chars_written;
 
@@ -2598,14 +2674,14 @@ static void SaveDefaultCollection(default_collection_t *collection)
 
         // Print the value
 
-        switch (defaults[i].type) 
+        switch (defaults[i].type)
         {
             case DEFAULT_KEY:
 
                 // use the untranslated version if we can, to reduce
                 // the possibility of screwing up the user's config
                 // file
-                
+
                 v = *defaults[i].location.i;
 
                 if (v == KEY_RSHIFT)
@@ -2618,8 +2694,7 @@ static void SaveDefaultCollection(default_collection_t *collection)
 
                     v = 54;
                 }
-                else if (defaults[i].untranslated
-                      && v == defaults[i].original_translated)
+                else if (defaults[i].untranslated && v == defaults[i].original_translated)
                 {
                     // Has not been changed since the last time we
                     // read the config file.
@@ -2633,7 +2708,7 @@ static void SaveDefaultCollection(default_collection_t *collection)
 
                     int s;
 
-                    for (s=0; s<128; ++s)
+                    for (s = 0; s < 128; ++s)
                     {
                         if (scantokey[s] == v)
                         {
@@ -2643,15 +2718,15 @@ static void SaveDefaultCollection(default_collection_t *collection)
                     }
                 }
 
-	        fprintf(f, "%i", v);
+                fprintf(f, "%i", v);
                 break;
 
             case DEFAULT_INT:
-	        fprintf(f, "%i", *defaults[i].location.i);
+                fprintf(f, "%i", *defaults[i].location.i);
                 break;
 
             case DEFAULT_INT_HEX:
-	        fprintf(f, "0x%x", *defaults[i].location.i);
+                fprintf(f, "0x%x", *defaults[i].location.i);
                 break;
 
             case DEFAULT_FLOAT:
@@ -2659,14 +2734,14 @@ static void SaveDefaultCollection(default_collection_t *collection)
                 break;
 
             case DEFAULT_STRING:
-	        fprintf(f,"\"%s\"", *defaults[i].location.s);
+                fprintf(f, "\"%s\"", *defaults[i].location.s);
                 break;
         }
 
         fprintf(f, "\n");
     }
 
-    fclose (f);
+    fclose(f);
 }
 
 // Parses integer values in the configuration file
@@ -2676,7 +2751,7 @@ static int ParseIntParameter(const char *strparm)
     int parm;
 
     if (strparm[0] == '0' && strparm[1] == 'x')
-        sscanf(strparm+2, "%x", (unsigned int *) &parm);
+        sscanf(strparm + 2, "%x", (unsigned int *) &parm);
     else
         sscanf(strparm, "%i", &parm);
 
@@ -2720,8 +2795,7 @@ static void SetVariable(default_t *def, const char *value)
             *def->location.i = intparm;
             break;
 
-        case DEFAULT_FLOAT:
-        {
+        case DEFAULT_FLOAT: {
             // Different locales use different decimal separators.
             // However, the choice of the current locale isn't always
             // under our own control. If the atof() function fails to
@@ -2744,7 +2818,7 @@ static void SetVariable(default_t *def, const char *value)
                 i++;
             }
 
-            for ( ; str[i] != '\0'; i++)
+            for (; str[i] != '\0'; i++)
             {
                 if (!isdigit(str[i]))
                 {
@@ -2756,7 +2830,7 @@ static void SetVariable(default_t *def, const char *value)
             *def->location.f = (float) atof(str);
             free(str);
         }
-            break;
+        break;
     }
 }
 
@@ -2772,7 +2846,7 @@ static void LoadDefaultCollection(default_collection_t *collection)
 
     if (f == NULL)
     {
-        // File not opened, but don't complain. 
+        // File not opened, but don't complain.
         // It's probably just the first time they ran the game.
 
         return;
@@ -2802,14 +2876,13 @@ static void LoadDefaultCollection(default_collection_t *collection)
         // Strip off trailing non-printable characters (\r characters
         // from DOS text files)
 
-        while (strlen(strparm) > 0 && !isprint(strparm[strlen(strparm)-1]))
+        while (strlen(strparm) > 0 && !isprint(strparm[strlen(strparm) - 1]))
         {
-            strparm[strlen(strparm)-1] = '\0';
+            strparm[strlen(strparm) - 1] = '\0';
         }
 
         // Surrounded by quotes? If so, remove them.
-        if (strlen(strparm) >= 2
-         && strparm[0] == '"' && strparm[strlen(strparm) - 1] == '"')
+        if (strlen(strparm) >= 2 && strparm[0] == '"' && strparm[strlen(strparm) - 1] == '"')
         {
             strparm[strlen(strparm) - 1] = '\0';
             memmove(strparm, strparm + 1, sizeof(strparm) - 1);
@@ -2818,7 +2891,7 @@ static void LoadDefaultCollection(default_collection_t *collection)
         SetVariable(def, strparm);
     }
 
-    fclose (f);
+    fclose(f);
 }
 
 // Set the default filenames to use for configuration files.
@@ -2833,7 +2906,7 @@ void M_SetConfigFilenames(const char *main_config, const char *extra_config)
 // M_SaveDefaults
 //
 
-void M_SaveDefaults (void)
+void M_SaveDefaults(void)
 {
     SaveDefaultCollection(&doom_defaults);
     SaveDefaultCollection(&extra_defaults);
@@ -2868,7 +2941,7 @@ void M_SaveDefaultsAlternate(const char *main, const char *extra)
 // M_LoadDefaults
 //
 
-void M_LoadDefaults (void)
+void M_LoadDefaults(void)
 {
     int i;
 
@@ -2889,13 +2962,12 @@ void M_LoadDefaults (void)
 
     if (i)
     {
-	doom_defaults.filename = myargv[i+1];
-	printf ("	default file: %s\n",doom_defaults.filename);
+        doom_defaults.filename = myargv[i + 1];
+        printf("	default file: %s\n", doom_defaults.filename);
     }
     else
     {
-        doom_defaults.filename
-            = M_StringJoin(configdir, default_main_config, NULL);
+        doom_defaults.filename = M_StringJoin(configdir, default_main_config, NULL);
     }
 
     printf("saving config in %s\n", doom_defaults.filename);
@@ -2911,14 +2983,12 @@ void M_LoadDefaults (void)
 
     if (i)
     {
-        extra_defaults.filename = myargv[i+1];
-        printf("        extra configuration file: %s\n", 
-               extra_defaults.filename);
+        extra_defaults.filename = myargv[i + 1];
+        printf("        extra configuration file: %s\n", extra_defaults.filename);
     }
     else
     {
-        extra_defaults.filename
-            = M_StringJoin(configdir, default_extra_config, NULL);
+        extra_defaults.filename = M_StringJoin(configdir, default_extra_config, NULL);
     }
 
     LoadDefaultCollection(&doom_defaults);
@@ -2959,9 +3029,9 @@ void M_BindIntVariable(const char *name, int *location)
     default_t *variable;
 
     variable = GetDefaultForName(name);
-    assert(variable->type == DEFAULT_INT
-        || variable->type == DEFAULT_INT_HEX
-        || variable->type == DEFAULT_KEY);
+    assert(
+        variable->type == DEFAULT_INT || variable->type == DEFAULT_INT_HEX ||
+        variable->type == DEFAULT_KEY);
 
     variable->location.i = location;
     variable->bound = true;
@@ -3016,8 +3086,8 @@ int M_GetIntVariable(const char *name)
 
     variable = GetDefaultForName(name);
 
-    if (variable == NULL || !variable->bound
-     || (variable->type != DEFAULT_INT && variable->type != DEFAULT_INT_HEX))
+    if (variable == NULL || !variable->bound ||
+        (variable->type != DEFAULT_INT && variable->type != DEFAULT_INT_HEX))
     {
         return 0;
     }
@@ -3031,8 +3101,7 @@ const char *M_GetStringVariable(const char *name)
 
     variable = GetDefaultForName(name);
 
-    if (variable == NULL || !variable->bound
-     || variable->type != DEFAULT_STRING)
+    if (variable == NULL || !variable->bound || variable->type != DEFAULT_STRING)
     {
         return NULL;
     }
@@ -3046,8 +3115,7 @@ float M_GetFloatVariable(const char *name)
 
     variable = GetDefaultForName(name);
 
-    if (variable == NULL || !variable->bound
-     || variable->type != DEFAULT_FLOAT)
+    if (variable == NULL || !variable->bound || variable->type != DEFAULT_FLOAT)
     {
         return 0;
     }
@@ -3081,7 +3149,7 @@ static char *GetDefaultConfigDir(void)
     return M_StringDuplicate(exedir);
 }
 
-// 
+//
 // SetConfigDir:
 //
 // Sets the location of the configuration directory, where configuration
@@ -3111,12 +3179,12 @@ void M_SetConfigDir(const char *dir)
     M_MakeDirectory(configdir);
 }
 
-#define MUSIC_PACK_README \
-"Extract music packs into this directory in .flac or .ogg format;\n"   \
-"they will be automatically loaded based on filename to replace the\n" \
-"in-game music with high quality versions.\n\n" \
-"For more information check here:\n\n" \
-"  <https://www.chocolate-doom.org/wiki/index.php/Digital_music_packs>\n\n"
+#define MUSIC_PACK_README                                                                          \
+    "Extract music packs into this directory in .flac or .ogg format;\n"                           \
+    "they will be automatically loaded based on filename to replace the\n"                         \
+    "in-game music with high quality versions.\n\n"                                                \
+    "For more information check here:\n\n"                                                         \
+    "  <https://www.chocolate-doom.org/wiki/index.php/Digital_music_packs>\n\n"
 
 // Set the value of music_pack_path if it is currently empty, and create
 // the directory if necessary.
@@ -3146,8 +3214,7 @@ void M_SetMusicPackDir(void)
 
     // We write a README file with some basic instructions on how to use
     // the directory.
-    readme_path = M_StringJoin(music_pack_path, DIR_SEPARATOR_S,
-                               "README.txt", NULL);
+    readme_path = M_StringJoin(music_pack_path, DIR_SEPARATOR_S, "README.txt", NULL);
     M_WriteFile(readme_path, MUSIC_PACK_README, strlen(MUSIC_PACK_README));
 
     free(readme_path);
@@ -3200,7 +3267,7 @@ char *M_GetSaveGameDir(const char *iwadname)
     // a savegame directory, either.
     else if (!strcmp(configdir, exedir))
     {
-	savegamedir = M_StringDuplicate("");
+        savegamedir = M_StringDuplicate("");
     }
     else
     {
@@ -3211,8 +3278,7 @@ char *M_GetSaveGameDir(const char *iwadname)
 
         // eg. ~/.local/share/chocolate-doom/savegames/doom2.wad/
 
-        savegamedir = M_StringJoin(topdir, DIR_SEPARATOR_S, iwadname,
-                                   DIR_SEPARATOR_S, NULL);
+        savegamedir = M_StringJoin(topdir, DIR_SEPARATOR_S, iwadname, DIR_SEPARATOR_S, NULL);
 
         M_MakeDirectory(savegamedir);
 
@@ -3248,11 +3314,10 @@ char *M_GetAutoloadDir(const char *iwadname, boolean makedir)
     result = M_StringJoin(autoload_path, DIR_SEPARATOR_S, iwadname, NULL);
     if (makedir) // [crispy] make subdirectory creation optional
     {
-    M_MakeDirectory(result);
+        M_MakeDirectory(result);
     }
 
     // TODO: Add README file
 
     return result;
 }
-

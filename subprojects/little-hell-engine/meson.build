@@ -1,13 +1,26 @@
-project('little-hell-engine', 'c', default_options: ['default_library=static', 'buildtype=debugoptimized'])
+project('little-hell-engine', 'c', default_options: ['default_library=static', 'buildtype=debugoptimized', 'c_std=c99'])
 
+# We need LOG_USE_COLOR for the rxi/log.c library
 add_project_arguments('-DLOG_USE_COLOR', language: 'c')
 
 cc = meson.get_compiler('c')
 
-math = cc.find_library('m', required : true)
-sdl2 = dependency('SDL2')
-sdl2_net = dependency('SDL2_net')
-sdl2_mixer = dependency('SDL2_mixer')
+math = cc.find_library('m', required: true)
+
+if host_machine.system() == 'windows'
+    # Windows-specific configurations
+    static_sdl_linkage = true
+elif host_machine.system() == 'linux'
+    # Linux-specific configurations
+    static_sdl_linkage = false
+else
+    # Configurations for other operating systems
+    static_sdl_linkage = false
+endif
+
+sdl2 = dependency('SDL2', static: static_sdl_linkage)
+sdl2_net = dependency('SDL2_net', static: static_sdl_linkage)
+sdl2_mixer = dependency('SDL2_mixer', static: static_sdl_linkage)
 
 src_dir = 'src'
 system_src_dir = 'system'
@@ -23,7 +36,6 @@ engine_source_files = files(
     src_dir / 'd_mode.c',
     src_dir / 'd_iwad.c',
     src_dir / 'd_loop.c',
-    src_dir / 'i_glob.c',
     src_dir / 'i_input.c',
 
     src_dir / 'gusconf.c',
@@ -40,7 +52,6 @@ engine_source_files = files(
     src_dir / 'i_joystick.c',
     src_dir / 'i_cdmus.c',
     src_dir / 'i_endoom.c',
-    src_dir / 'i_winmusic.c',
     src_dir / 'i_videohr.c',
     src_dir / 'i_musicpack.c',
     src_dir / 'i_oplmusic.c',

@@ -16,7 +16,6 @@
 //
 
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -46,8 +45,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#define DEFAULT_RAM 16*2 /* MiB [crispy] */
-#define MIN_RAM     4*4  /* MiB [crispy] */
+#define DEFAULT_RAM 16 * 2 /* MiB [crispy] */
+#define MIN_RAM     4 * 4  /* MiB [crispy] */
 
 
 typedef struct atexit_listentry_s atexit_listentry_t;
@@ -121,7 +120,7 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
     return zonemem;
 }
 
-byte *I_ZoneBase (int *size)
+byte *I_ZoneBase(int *size)
 {
     byte *zonemem;
     int min_ram, default_ram;
@@ -139,7 +138,7 @@ byte *I_ZoneBase (int *size)
 
     if (p > 0)
     {
-        default_ram = atoi(myargv[p+1]);
+        default_ram = atoi(myargv[p + 1]);
         min_ram = default_ram;
     }
     else
@@ -159,8 +158,10 @@ byte *I_ZoneBase (int *size)
     // [crispy] if called again, allocate another zone twice as big
     i *= 2;
 
-    printf("zone memory: %p, %d MiB allocated for zone\n",
-           zonemem, *size >> 20); // [crispy] human-understandable zone heap size
+    printf(
+        "zone memory: %p, %d MiB allocated for zone\n",
+        zonemem,
+        *size >> 20); // [crispy] human-understandable zone heap size
 
     return zonemem;
 }
@@ -170,7 +171,7 @@ void I_PrintBanner(const char *msg)
     int i;
     int spaces = 35 - (strlen(msg) / 2);
 
-    for (i=0; i<spaces; ++i)
+    for (i = 0; i < spaces; ++i)
         putchar(' ');
 
     puts(msg);
@@ -180,7 +181,7 @@ void I_PrintDivider(void)
 {
     int i;
 
-    for (i=0; i<75; ++i)
+    for (i = 0; i < 75; ++i)
     {
         putchar('=');
     }
@@ -194,11 +195,10 @@ void I_PrintStartupBanner(const char *gamedescription)
     I_PrintBanner(gamedescription);
     I_PrintDivider();
 
-    printf(
-    " This is free software, covered by the GNU General Public\n"
-    " License.  There is NO warranty; not even for MERCHANTABILITY or FITNESS\n"
-    " FOR A PARTICULAR PURPOSE. You are welcome to change and distribute\n"
-    " copies under certain conditions. See the source for more information.\n");
+    printf(" This is free software, covered by the GNU General Public\n"
+           " License.  There is NO warranty; not even for MERCHANTABILITY or FITNESS\n"
+           " FOR A PARTICULAR PURPOSE. You are welcome to change and distribute\n"
+           " copies under certain conditions. See the source for more information.\n");
 
     I_PrintDivider();
 }
@@ -241,7 +241,7 @@ void I_BindVariables(void)
 // I_Quit
 //
 
-void I_Quit (void)
+void I_Quit(void)
 {
     atexit_listentry_t *entry;
 
@@ -261,14 +261,13 @@ void I_Quit (void)
 }
 
 
-
 //
 // I_Error
 //
 
 static boolean already_quitting = false;
 
-void I_Error (const char *error, ...)
+void I_Error(const char *error, ...)
 {
     char msgbuf[512];
     va_list argptr;
@@ -287,7 +286,7 @@ void I_Error (const char *error, ...)
 
     // Message first.
     va_start(argptr, error);
-    //fprintf(stderr, "\nError: ");
+    // fprintf(stderr, "\nError: ");
     vfprintf(stderr, error, argptr);
     fprintf(stderr, "\n\n");
     va_end(argptr);
@@ -326,8 +325,7 @@ void I_Error (const char *error, ...)
     // therefore be unable to otherwise see the message).
     if (exit_gui_popup && !I_ConsoleStdout())
     {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                 "todo: change me", msgbuf, NULL);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "todo: change me", msgbuf, NULL);
     }
 
     // abort();
@@ -349,7 +347,7 @@ void *I_Realloc(void *ptr, size_t size)
 
     if (size != 0 && new_ptr == NULL)
     {
-        I_Error ("I_Realloc: failed on reallocation of %zu bytes", size);
+        I_Error("I_Realloc: failed on reallocation of %zu bytes", size);
     }
 
     return new_ptr;
@@ -376,11 +374,11 @@ void *I_Realloc(void *ptr, size_t size)
 #define DOS_MEM_DUMP_SIZE 10
 
 static const unsigned char mem_dump_dos622[DOS_MEM_DUMP_SIZE] = {
-  0x57, 0x92, 0x19, 0x00, 0xF4, 0x06, 0x70, 0x00, 0x16, 0x00};
+    0x57, 0x92, 0x19, 0x00, 0xF4, 0x06, 0x70, 0x00, 0x16, 0x00};
 static const unsigned char mem_dump_win98[DOS_MEM_DUMP_SIZE] = {
-  0x9E, 0x0F, 0xC9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00};
+    0x9E, 0x0F, 0xC9, 0x00, 0x65, 0x04, 0x70, 0x00, 0x16, 0x00};
 static const unsigned char mem_dump_dosbox[DOS_MEM_DUMP_SIZE] = {
-  0x00, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00};
+    0x00, 0x00, 0x00, 0xF1, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00};
 static unsigned char mem_dump_custom[DOS_MEM_DUMP_SIZE];
 
 static const unsigned char *dos_mem_dump = mem_dump_dos622;
@@ -443,21 +441,18 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
 
     switch (size)
     {
-    case 1:
-        *((unsigned char *) value) = dos_mem_dump[offset];
-        return true;
-    case 2:
-        *((unsigned short *) value) = dos_mem_dump[offset]
-                                    | (dos_mem_dump[offset + 1] << 8);
-        return true;
-    case 4:
-        *((unsigned int *) value) = dos_mem_dump[offset]
-                                  | (dos_mem_dump[offset + 1] << 8)
-                                  | (dos_mem_dump[offset + 2] << 16)
-                                  | (dos_mem_dump[offset + 3] << 24);
-        return true;
+        case 1:
+            *((unsigned char *) value) = dos_mem_dump[offset];
+            return true;
+        case 2:
+            *((unsigned short *) value) = dos_mem_dump[offset] | (dos_mem_dump[offset + 1] << 8);
+            return true;
+        case 4:
+            *((unsigned int *) value) = dos_mem_dump[offset] | (dos_mem_dump[offset + 1] << 8) |
+                                        (dos_mem_dump[offset + 2] << 16) |
+                                        (dos_mem_dump[offset + 3] << 24);
+            return true;
     }
 
     return false;
 }
-

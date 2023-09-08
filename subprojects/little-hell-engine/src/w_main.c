@@ -19,7 +19,6 @@
 #include <stdlib.h>
 
 #include "d_iwad.h"
-#include "i_glob.h"
 #include "i_system.h"
 #include "m_argv.h"
 #include "w_main.h"
@@ -37,7 +36,7 @@ boolean W_ParseCommandLine(void)
     boolean modifiedgame = false;
     int p;
 
-    // Merged PWADs are loaded first, because they are supposed to be 
+    // Merged PWADs are loaded first, because they are supposed to be
     // modified IWADs.
 
     //!
@@ -52,7 +51,7 @@ boolean W_ParseCommandLine(void)
 
     if (p > 0)
     {
-        for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
+        for (p = p + 1; p < myargc && myargv[p][0] != '-'; ++p)
         {
             char *filename;
 
@@ -81,7 +80,7 @@ boolean W_ParseCommandLine(void)
 
     if (p > 0)
     {
-        for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
+        for (p = p + 1; p < myargc && myargv[p][0] != '-'; ++p)
         {
             char *filename;
 
@@ -94,7 +93,7 @@ boolean W_ParseCommandLine(void)
             free(filename);
         }
     }
-    
+
     // Add flats
 
     //!
@@ -109,7 +108,7 @@ boolean W_ParseCommandLine(void)
 
     if (p > 0)
     {
-        for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
+        for (p = p + 1; p < myargc && myargv[p][0] != '-'; ++p)
         {
             char *filename;
 
@@ -135,7 +134,7 @@ boolean W_ParseCommandLine(void)
 
     if (p > 0)
     {
-        for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
+        for (p = p + 1; p < myargc && myargv[p][0] != '-'; ++p)
         {
             char *filename;
 
@@ -159,7 +158,7 @@ boolean W_ParseCommandLine(void)
 
     if (p > 0)
     {
-        for (p = p + 1; p<myargc && myargv[p][0] != '-'; ++p)
+        for (p = p + 1; p < myargc && myargv[p][0] != '-'; ++p)
         {
             char *filename;
 
@@ -180,13 +179,13 @@ boolean W_ParseCommandLine(void)
     // Load the specified PWAD files.
     //
 
-    p = M_CheckParmWithArgs ("-file", 1);
+    p = M_CheckParmWithArgs("-file", 1);
     if (p)
     {
-	// the parms after p are wadfile/lump names,
-	// until end of parms or another - preceded parm
-	modifiedgame = true;            // homebrew levels
-	while (++p != myargc && myargv[p][0] != '-')
+        // the parms after p are wadfile/lump names,
+        // until end of parms or another - preceded parm
+        modifiedgame = true; // homebrew levels
+        while (++p != myargc && myargv[p][0] != '-')
         {
             char *filename;
 
@@ -194,36 +193,14 @@ boolean W_ParseCommandLine(void)
 
             // [crispy] always merge arguments of "-file" parameter
             printf(" merging %s !\n", filename);
-	    W_MergeFile(filename);
+            W_MergeFile(filename);
             free(filename);
         }
     }
 
-//    W_PrintDirectory();
+    //    W_PrintDirectory();
 
     return modifiedgame;
-}
-
-// Load all WAD files from the given directory.
-void W_AutoLoadWADs(const char *path)
-{
-    glob_t *glob;
-    const char *filename;
-
-    glob = I_StartMultiGlob(path, GLOB_FLAG_NOCASE|GLOB_FLAG_SORTED,
-                            "*.wad", "*.lmp", NULL);
-    for (;;)
-    {
-        filename = I_NextGlob(glob);
-        if (filename == NULL)
-        {
-            break;
-        }
-        printf(" [autoload] merging %s\n", filename);
-        W_MergeFile(filename);
-    }
-
-    I_EndGlob(glob);
 }
 
 // Lump names that are unique to particular game types. This lets us check
@@ -234,10 +211,10 @@ static const struct
     GameMission_t mission;
     const char *lumpname;
 } unique_lumps[] = {
-    { doom,    "POSSA1" },
-    { heretic, "IMPXA1" },
-    { hexen,   "ETTNA1" },
-    { strife,  "AGRDA1" },
+    {doom, "POSSA1"},
+    {heretic, "IMPXA1"},
+    {hexen, "ETTNA1"},
+    {strife, "AGRDA1"},
 };
 
 void W_CheckCorrectIWAD(GameMission_t mission)
@@ -253,17 +230,16 @@ void W_CheckCorrectIWAD(GameMission_t mission)
 
             if (lumpnum >= 0)
             {
-                I_Error("\nYou are trying to use a %s IWAD file with "
-                        "the %s%s binary.\nThis isn't going to work.\n"
-                        "You probably want to use the %s%s binary.",
-                        D_SuggestGameName(unique_lumps[i].mission,
-                                          indetermined),
-                        PACKAGE_STRING,
-                        D_GameMissionString(mission),
-                        PACKAGE_STRING,
-                        D_GameMissionString(unique_lumps[i].mission));
+                I_Error(
+                    "\nYou are trying to use a %s IWAD file with "
+                    "the %s%s binary.\nThis isn't going to work.\n"
+                    "You probably want to use the %s%s binary.",
+                    D_SuggestGameName(unique_lumps[i].mission, indetermined),
+                    PACKAGE_STRING,
+                    D_GameMissionString(mission),
+                    PACKAGE_STRING,
+                    D_GameMissionString(unique_lumps[i].mission));
             }
         }
     }
 }
-

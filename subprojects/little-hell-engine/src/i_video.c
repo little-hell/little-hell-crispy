@@ -49,7 +49,7 @@
 #include "z_zone.h"
 
 int SCREENWIDTH, SCREENHEIGHT, SCREENHEIGHT_4_3;
-int NONWIDEWIDTH; // [crispy] non-widescreen SCREENWIDTH
+int NONWIDEWIDTH;    // [crispy] non-widescreen SCREENWIDTH
 int WIDESCREENDELTA; // [crispy] horizontal widescreen offset
 
 // These are (1) the window (or the full screen) that our game is rendered to
@@ -77,12 +77,7 @@ static SDL_Texture *texture = NULL;
 static SDL_Texture *texture_upscaled = NULL;
 
 #ifndef CRISPY_TRUECOLOR
-static SDL_Rect blit_rect = {
-    0,
-    0,
-    MAXWIDTH,
-    MAXHEIGHT
-};
+static SDL_Rect blit_rect = {0, 0, MAXWIDTH, MAXHEIGHT};
 #endif
 
 static uint32_t pixel_format;
@@ -97,7 +92,7 @@ static SDL_Texture *grnpane = NULL;
 static int pane_alpha;
 static unsigned int rmask, gmask, bmask, amask; // [crispy] moved up here
 static const uint8_t blend_alpha = 0xa8;
-extern pixel_t* colormaps; // [crispy] evil hack to get FPS dots working as in Vanilla
+extern pixel_t *colormaps; // [crispy] evil hack to get FPS dots working as in Vanilla
 #else
 static SDL_Color palette[256];
 #endif
@@ -301,14 +296,12 @@ void I_ShutdownGraphics(void)
 }
 
 
-
 //
 // I_StartFrame
 //
-void I_StartFrame (void)
+void I_StartFrame(void)
 {
     // er?
-
 }
 
 // Adjust window_width / window_height variables to be an an aspect
@@ -321,15 +314,15 @@ static void AdjustWindowSize(void)
 
         if (old_v_w > 0 && old_v_h > 0)
         {
-          int rendered_height;
+            int rendered_height;
 
-          // rendered height does not necessarily match window height
-          if (window_height * old_v_w > window_width * old_v_h)
-            rendered_height = (window_width * old_v_h + old_v_w - 1) / old_v_w;
-          else
-            rendered_height = window_height;
+            // rendered height does not necessarily match window height
+            if (window_height * old_v_w > window_width * old_v_h)
+                rendered_height = (window_width * old_v_h + old_v_w - 1) / old_v_w;
+            else
+                rendered_height = window_height;
 
-          window_width = rendered_height * SCREENWIDTH / actualheight;
+            window_width = rendered_height * SCREENWIDTH / actualheight;
         }
 
         old_v_w = SCREENWIDTH;
@@ -370,7 +363,7 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             last_resize_time = SDL_GetTicks();
             break;
 
-        // Don't render the screen when the window is minimized:
+            // Don't render the screen when the window is minimized:
 
         case SDL_WINDOWEVENT_MINIMIZED:
             screenvisible = false;
@@ -381,11 +374,11 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             screenvisible = true;
             break;
 
-        // Update the value of window_focused when we get a focus event
-        //
-        // We try to make ourselves be well-behaved: the grab on the mouse
-        // is removed if we lose focus (such as a popup window appearing),
-        // and we dont move the mouse around if we aren't focused either.
+            // Update the value of window_focused when we get a focus event
+            //
+            // We try to make ourselves be well-behaved: the grab on the mouse
+            // is removed if we lose focus (such as a popup window appearing),
+            // and we dont move the mouse around if we aren't focused either.
 
         case SDL_WINDOWEVENT_FOCUS_GAINED:
             window_focused = true;
@@ -395,10 +388,10 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             window_focused = false;
             break;
 
-        // We want to save the user's preferred monitor to use for running the
-        // game, so that next time we're run we start on the same display. So
-        // every time the window is moved, find which display we're now on and
-        // update the video_display config variable.
+            // We want to save the user's preferred monitor to use for running the
+            // game, so that next time we're run we start on the same display. So
+            // every time the window is moved, find which display we're now on and
+            // update the video_display config variable.
 
         case SDL_WINDOWEVENT_MOVED:
             i = SDL_GetWindowDisplayIndex(screen);
@@ -419,8 +412,8 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym *sym)
 #if defined(__MACOSX__)
     flags |= (KMOD_LGUI | KMOD_RGUI);
 #endif
-    return (sym->scancode == SDL_SCANCODE_RETURN ||
-            sym->scancode == SDL_SCANCODE_KP_ENTER) && (sym->mod & flags) != 0;
+    return (sym->scancode == SDL_SCANCODE_RETURN || sym->scancode == SDL_SCANCODE_KP_ENTER) &&
+           (sym->mod & flags) != 0;
 }
 
 static void I_ToggleFullScreen(void)
@@ -470,7 +463,7 @@ void I_GetEvent(void)
                 // deliberate fall-though
 
             case SDL_KEYUP:
-		I_HandleKeyboardEvent(&sdlevent);
+                I_HandleKeyboardEvent(&sdlevent);
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
@@ -511,7 +504,7 @@ void I_GetEvent(void)
 //
 // I_StartTic
 //
-void I_StartTic (void)
+void I_StartTic(void)
 {
     if (!initialized)
     {
@@ -535,7 +528,7 @@ void I_StartTic (void)
 //
 // I_UpdateNoBlit
 //
-void I_UpdateNoBlit (void)
+void I_UpdateNoBlit(void)
 {
     // what is this?
 }
@@ -588,8 +581,7 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
     // Query renderer and limit to maximum texture dimensions of hardware:
     if (SDL_GetRendererInfo(renderer, &rinfo) != 0)
     {
-        I_Error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s",
-                SDL_GetError());
+        I_Error("CreateUpscaledTexture: SDL_GetRendererInfo() call failed: %s", SDL_GetError());
     }
 
     while (*w_upscale * SCREENWIDTH > rinfo.max_texture_width)
@@ -604,9 +596,11 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
     if ((*w_upscale < 1 && rinfo.max_texture_width > 0) ||
         (*h_upscale < 1 && rinfo.max_texture_height > 0))
     {
-        I_Error("CreateUpscaledTexture: Can't create a texture big enough for "
-                "the whole screen! Maximum texture size %dx%d",
-                rinfo.max_texture_width, rinfo.max_texture_height);
+        I_Error(
+            "CreateUpscaledTexture: Can't create a texture big enough for "
+            "the whole screen! Maximum texture size %dx%d",
+            rinfo.max_texture_width,
+            rinfo.max_texture_height);
     }
 
     // We limit the amount of texture memory used for the intermediate buffer,
@@ -617,13 +611,14 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
 
     if (max_scaling_buffer_pixels < SCREENWIDTH * SCREENHEIGHT)
     {
-        I_Error("CreateUpscaledTexture: max_scaling_buffer_pixels too small "
-                "to create a texture buffer: %d < %d",
-                max_scaling_buffer_pixels, SCREENWIDTH * SCREENHEIGHT);
+        I_Error(
+            "CreateUpscaledTexture: max_scaling_buffer_pixels too small "
+            "to create a texture buffer: %d < %d",
+            max_scaling_buffer_pixels,
+            SCREENWIDTH * SCREENHEIGHT);
     }
 
-    while (*w_upscale * *h_upscale * SCREENWIDTH * SCREENHEIGHT
-           > max_scaling_buffer_pixels)
+    while (*w_upscale * *h_upscale * SCREENWIDTH * SCREENHEIGHT > max_scaling_buffer_pixels)
     {
         if (*w_upscale > *h_upscale)
         {
@@ -637,11 +632,14 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
 
     if (*w_upscale != orig_w || *h_upscale != orig_h)
     {
-        printf("CreateUpscaledTexture: Limited texture size to %dx%d "
-               "(max %d pixels, max texture size %dx%d)\n",
-               *w_upscale * SCREENWIDTH, *h_upscale * SCREENHEIGHT,
-               max_scaling_buffer_pixels,
-               rinfo.max_texture_width, rinfo.max_texture_height);
+        printf(
+            "CreateUpscaledTexture: Limited texture size to %dx%d "
+            "(max %d pixels, max texture size %dx%d)\n",
+            *w_upscale * SCREENWIDTH,
+            *h_upscale * SCREENHEIGHT,
+            max_scaling_buffer_pixels,
+            rinfo.max_texture_width,
+            rinfo.max_texture_height);
     }
 }
 
@@ -714,11 +712,12 @@ static void CreateUpscaledTexture(boolean force)
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    new_texture = SDL_CreateTexture(renderer,
-                                pixel_format,
-                                SDL_TEXTUREACCESS_TARGET,
-                                w_upscale*SCREENWIDTH,
-                                h_upscale*SCREENHEIGHT);
+    new_texture = SDL_CreateTexture(
+        renderer,
+        pixel_format,
+        SDL_TEXTUREACCESS_TARGET,
+        w_upscale * SCREENWIDTH,
+        h_upscale * SCREENHEIGHT);
 
     old_texture = texture_upscaled;
     texture_upscaled = new_texture;
@@ -736,7 +735,7 @@ fixed_t fractionaltic;
 //
 // I_FinishUpdate
 //
-void I_FinishUpdate (void)
+void I_FinishUpdate(void)
 {
     static int lasttic;
     int tics;
@@ -790,44 +789,45 @@ void I_FinishUpdate (void)
 
     if (display_fps_dots)
     {
-	i = I_GetTime();
-	tics = i - lasttic;
-	lasttic = i;
-	if (tics > 20) tics = 20;
+        i = I_GetTime();
+        tics = i - lasttic;
+        lasttic = i;
+        if (tics > 20)
+            tics = 20;
 
-	for (i=0 ; i<tics*4 ; i+=4)
+        for (i = 0; i < tics * 4; i += 4)
 #ifndef CRISPY_TRUECOLOR
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0xff;
+            I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0xff;
 #else
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = colormaps[0xff];
+            I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = colormaps[0xff];
 #endif
-	for ( ; i<20*4 ; i+=4)
+        for (; i < 20 * 4; i += 4)
 #ifndef CRISPY_TRUECOLOR
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0x0;
+            I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = 0x0;
 #else
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = colormaps[0x0];
+            I_VideoBuffer[(SCREENHEIGHT - 1) * SCREENWIDTH + i] = colormaps[0x0];
 #endif
     }
 
-	// [crispy] [AM] Real FPS counter
-	{
-		static int lastmili;
-		static int fpscount;
-		int mili;
+    // [crispy] [AM] Real FPS counter
+    {
+        static int lastmili;
+        static int fpscount;
+        int mili;
 
-		fpscount++;
+        fpscount++;
 
-		i = SDL_GetTicks();
-		mili = i - lastmili;
+        i = SDL_GetTicks();
+        mili = i - lastmili;
 
-		// Update FPS counter every second
-		if (mili >= 1000)
-		{
-			crispy->fps = (fpscount * 1000) / mili;
-			fpscount = 0;
-			lastmili = i;
-		}
-	}
+        // Update FPS counter every second
+        if (mili >= 1000)
+        {
+            crispy->fps = (fpscount * 1000) / mili;
+            fpscount = 0;
+            lastmili = i;
+        }
+    }
 
     // Draw disk icon before blit, if necessary.
     V_DrawDiskIcon();
@@ -842,8 +842,8 @@ void I_FinishUpdate (void)
         {
             // "flash" the pillars/letterboxes with palette changes, emulating
             // VGA "porch" behaviour (GitHub issue #832)
-            SDL_SetRenderDrawColor(renderer, palette[0].r, palette[0].g,
-                palette[0].b, SDL_ALPHA_OPAQUE);
+            SDL_SetRenderDrawColor(
+                renderer, palette[0].r, palette[0].g, palette[0].b, SDL_ALPHA_OPAQUE);
         }
     }
 
@@ -863,28 +863,28 @@ void I_FinishUpdate (void)
 
     if (crispy->smoothscaling && !force_software_renderer)
     {
-    // Render this intermediate texture into the upscaled texture
-    // using "nearest" integer scaling.
+        // Render this intermediate texture into the upscaled texture
+        // using "nearest" integer scaling.
 
-    SDL_SetRenderTarget(renderer, texture_upscaled);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_SetRenderTarget(renderer, texture_upscaled);
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
 
-    // Finally, render this upscaled texture to screen using linear scaling.
+        // Finally, render this upscaled texture to screen using linear scaling.
 
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+        SDL_SetRenderTarget(renderer, NULL);
+        SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
     }
     else
     {
-	SDL_SetRenderTarget(renderer, NULL);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_SetRenderTarget(renderer, NULL);
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
     }
 
 #ifdef CRISPY_TRUECOLOR
     if (curpane)
     {
-	SDL_SetTextureAlphaMod(curpane, pane_alpha);
-	SDL_RenderCopy(renderer, curpane, NULL, NULL);
+        SDL_SetTextureAlphaMod(curpane, pane_alpha);
+        SDL_RenderCopy(renderer, curpane, NULL, NULL);
     }
 #endif
 
@@ -933,9 +933,9 @@ void I_FinishUpdate (void)
 //
 // I_ReadScreen
 //
-void I_ReadScreen (pixel_t* scr)
+void I_ReadScreen(pixel_t *scr)
 {
-    memcpy(scr, I_VideoBuffer, SCREENWIDTH*SCREENHEIGHT*sizeof(*scr));
+    memcpy(scr, I_VideoBuffer, SCREENWIDTH * SCREENHEIGHT * sizeof(*scr));
 }
 
 
@@ -944,34 +944,34 @@ void I_ReadScreen (pixel_t* scr)
 //
 // [crispy] intermediate gamma levels
 byte **gamma2table = NULL;
-void I_SetGammaTable (void)
+void I_SetGammaTable(void)
 {
-	int i;
+    int i;
 
-	gamma2table = malloc(9 * sizeof(*gamma2table));
+    gamma2table = malloc(9 * sizeof(*gamma2table));
 
-	// [crispy] 5 original gamma levels
-	for (i = 0; i < 5; i++)
-	{
-		gamma2table[2*i] = (byte *)gammatable[i];
-	}
+    // [crispy] 5 original gamma levels
+    for (i = 0; i < 5; i++)
+    {
+        gamma2table[2 * i] = (byte *) gammatable[i];
+    }
 
-	// [crispy] 4 intermediate gamma levels
-	for (i = 0; i < 4; i++)
-	{
-		int j;
+    // [crispy] 4 intermediate gamma levels
+    for (i = 0; i < 4; i++)
+    {
+        int j;
 
-		gamma2table[2*i+1] = malloc(256 * sizeof(**gamma2table));
+        gamma2table[2 * i + 1] = malloc(256 * sizeof(**gamma2table));
 
-		for (j = 0; j < 256; j++)
-		{
-			gamma2table[2*i+1][j] = (gamma2table[2*i][j] + gamma2table[2*i+2][j]) / 2;
-		}
-	}
+        for (j = 0; j < 256; j++)
+        {
+            gamma2table[2 * i + 1][j] = (gamma2table[2 * i][j] + gamma2table[2 * i + 2][j]) / 2;
+        }
+    }
 }
 
 #ifndef CRISPY_TRUECOLOR
-void I_SetPalette (byte *doompalette)
+void I_SetPalette(byte *doompalette)
 {
     int i;
 
@@ -981,7 +981,7 @@ void I_SetPalette (byte *doompalette)
         I_SetGammaTable();
     }
 
-    for (i=0; i<256; ++i)
+    for (i = 0; i < 256; ++i)
     {
         // Zero out the bottom two bits of each channel - the PC VGA
         // controller only supports 6 bits of accuracy.
@@ -1002,13 +1002,13 @@ int I_GetPaletteIndex(int r, int g, int b)
     int best, best_diff, diff;
     int i;
 
-    best = 0; best_diff = INT_MAX;
+    best = 0;
+    best_diff = INT_MAX;
 
     for (i = 0; i < 256; ++i)
     {
-        diff = (r - palette[i].r) * (r - palette[i].r)
-             + (g - palette[i].g) * (g - palette[i].g)
-             + (b - palette[i].b) * (b - palette[i].b);
+        diff = (r - palette[i].r) * (r - palette[i].r) + (g - palette[i].g) * (g - palette[i].g) +
+               (b - palette[i].b) * (b - palette[i].b);
 
         if (diff < best_diff)
         {
@@ -1025,38 +1025,38 @@ int I_GetPaletteIndex(int r, int g, int b)
     return best;
 }
 #else
-void I_SetPalette (int palette)
+void I_SetPalette(int palette)
 {
     switch (palette)
     {
-	case 0:
-	    curpane = NULL;
-	    break;
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
-	    curpane = redpane;
-	    pane_alpha = 0xff * palette / 9;
-	    break;
-	case 9:
-	case 10:
-	case 11:
-	case 12:
-	    curpane = yelpane;
-	    pane_alpha = 0xff * (palette - 8) / 8;
-	    break;
-	case 13:
-	    curpane = grnpane;
-	    pane_alpha = 0xff * 125 / 1000;
-	    break;
-	default:
-	    I_Error("Unknown palette: %d!\n", palette);
-	    break;
+        case 0:
+            curpane = NULL;
+            break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            curpane = redpane;
+            pane_alpha = 0xff * palette / 9;
+            break;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            curpane = yelpane;
+            pane_alpha = 0xff * (palette - 8) / 8;
+            break;
+        case 13:
+            curpane = grnpane;
+            pane_alpha = 0xff * 125 / 1000;
+            break;
+        default:
+            I_Error("Unknown palette: %d!\n", palette);
+            break;
     }
 }
 #endif
@@ -1097,10 +1097,16 @@ void I_InitWindowIcon(void)
 {
     SDL_Surface *surface;
 
-    surface = SDL_CreateRGBSurfaceFrom((void *) icon_data, icon_w, icon_h,
-                                       32, icon_w * 4,
-                                       0xffu << 24, 0xffu << 16,
-                                       0xffu << 8, 0xffu << 0);
+    surface = SDL_CreateRGBSurfaceFrom(
+        (void *) icon_data,
+        icon_w,
+        icon_h,
+        32,
+        icon_w * 4,
+        0xffu << 24,
+        0xffu << 16,
+        0xffu << 8,
+        0xffu << 0);
 
     SDL_SetWindowIcon(screen, surface);
     SDL_FreeSurface(surface);
@@ -1128,7 +1134,7 @@ void I_GraphicsCheckCommandLine(void)
     // Disable blitting the screen.
     //
 
-    noblit = M_CheckParm ("-noblit");
+    noblit = M_CheckParm("-noblit");
 
     //!
     // @category video
@@ -1313,8 +1319,11 @@ static void CenterWindow(int *x, int *y, int w, int h)
 
     if (SDL_GetDisplayBounds(video_display, &bounds) < 0)
     {
-        fprintf(stderr, "CenterWindow: Failed to read display bounds "
-                        "for display #%d!\n", video_display);
+        fprintf(
+            stderr,
+            "CenterWindow: Failed to read display bounds "
+            "for display #%d!\n",
+            video_display);
         return;
     }
 
@@ -1328,10 +1337,12 @@ void I_GetWindowPosition(int *x, int *y, int w, int h)
     // and if it doesn't, reset it.
     if (video_display < 0 || video_display >= SDL_GetNumVideoDisplays())
     {
-        fprintf(stderr,
-                "I_GetWindowPosition: We were configured to run on display #%d, "
-                "but it no longer exists (max %d). Moving to display 0.\n",
-                video_display, SDL_GetNumVideoDisplays() - 1);
+        fprintf(
+            stderr,
+            "I_GetWindowPosition: We were configured to run on display #%d, "
+            "but it no longer exists (max %d). Moving to display 0.\n",
+            video_display,
+            SDL_GetNumVideoDisplays() - 1);
         video_display = 0;
     }
 
@@ -1427,8 +1438,7 @@ static void SetVideoMode(void)
 
         if (screen == NULL)
         {
-            I_Error("Error creating window for video startup: %s",
-            SDL_GetError());
+            I_Error("Error creating window for video startup: %s", SDL_GetError());
         }
 
         pixel_format = SDL_GetWindowPixelFormat(screen);
@@ -1445,8 +1455,8 @@ static void SetVideoMode(void)
 
     if (SDL_GetCurrentDisplayMode(video_display, &mode) != 0)
     {
-        I_Error("Could not get display mode for video display #%d: %s",
-        video_display, SDL_GetError());
+        I_Error(
+            "Could not get display mode for video display #%d: %s", video_display, SDL_GetError());
     }
 
     // Turn on vsync if we aren't in a -timedemo
@@ -1494,8 +1504,7 @@ static void SetVideoMode(void)
 
     if (renderer == NULL)
     {
-        I_Error("Error creating renderer for screen window: %s",
-                SDL_GetError());
+        I_Error("Error creating renderer for screen window: %s", SDL_GetError());
     }
 
     // Important: Set the "logical size" of the rendering context. At the same
@@ -1504,9 +1513,7 @@ static void SetVideoMode(void)
 
     if (aspect_ratio_correct || integer_scaling)
     {
-        SDL_RenderSetLogicalSize(renderer,
-                                 SCREENWIDTH,
-                                 actualheight);
+        SDL_RenderSetLogicalSize(renderer, SCREENWIDTH, actualheight);
     }
 
     // Force integer scales for resolution-independent rendering.
@@ -1531,9 +1538,7 @@ static void SetVideoMode(void)
 
     if (screenbuffer == NULL)
     {
-        screenbuffer = SDL_CreateRGBSurface(0,
-                                            SCREENWIDTH, SCREENHEIGHT, 8,
-                                            0, 0, 0, 0);
+        screenbuffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0);
         SDL_FillRect(screenbuffer, NULL, 0);
     }
 #endif
@@ -1549,11 +1554,9 @@ static void SetVideoMode(void)
 
     if (argbbuffer == NULL)
     {
-        SDL_PixelFormatEnumToMasks(pixel_format, &bpp,
-                                   &rmask, &gmask, &bmask, &amask);
-        argbbuffer = SDL_CreateRGBSurface(0,
-                                          SCREENWIDTH, SCREENHEIGHT, bpp,
-                                          rmask, gmask, bmask, amask);
+        SDL_PixelFormatEnumToMasks(pixel_format, &bpp, &rmask, &gmask, &bmask, &amask);
+        argbbuffer =
+            SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, bpp, rmask, gmask, bmask, amask);
 #ifdef CRISPY_TRUECOLOR
         SDL_FillRect(argbbuffer, NULL, I_MapRGB(0xff, 0x0, 0x0));
         redpane = SDL_CreateTextureFromSurface(renderer, argbbuffer);
@@ -1585,10 +1588,8 @@ static void SetVideoMode(void)
     // The SDL_TEXTUREACCESS_STREAMING flag means that this texture's content
     // is going to change frequently.
 
-    texture = SDL_CreateTexture(renderer,
-                                pixel_format,
-                                SDL_TEXTUREACCESS_STREAMING,
-                                SCREENWIDTH, SCREENHEIGHT);
+    texture = SDL_CreateTexture(
+        renderer, pixel_format, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
 
     // Workaround for SDL 2.0.14+ alt-tab bug (taken from Doom Retro via Prboom-plus and Woof)
 #if defined(_WIN32)
@@ -1597,7 +1598,7 @@ static void SetVideoMode(void)
         SDL_GetVersion(&ver);
         if (ver.major == 2 && ver.minor == 0 && (ver.patch == 14 || ver.patch == 16))
         {
-           SDL_SetHintWithPriority(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "1", SDL_HINT_OVERRIDE);
+            SDL_SetHintWithPriority(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "1", SDL_HINT_OVERRIDE);
         }
     }
 #endif
@@ -1608,62 +1609,62 @@ static void SetVideoMode(void)
 }
 
 // [crispy] re-calculate SCREENWIDTH, SCREENHEIGHT, NONWIDEWIDTH and WIDESCREENDELTA
-void I_GetScreenDimensions (void)
+void I_GetScreenDimensions(void)
 {
-	SDL_DisplayMode mode;
-	int w = 16, h = 10;
-	int ah;
+    SDL_DisplayMode mode;
+    int w = 16, h = 10;
+    int ah;
 
-	SCREENWIDTH = ORIGWIDTH << crispy->hires;
-	SCREENHEIGHT = ORIGHEIGHT << crispy->hires;
+    SCREENWIDTH = ORIGWIDTH << crispy->hires;
+    SCREENHEIGHT = ORIGHEIGHT << crispy->hires;
 
-	NONWIDEWIDTH = SCREENWIDTH;
+    NONWIDEWIDTH = SCREENWIDTH;
 
-	ah = (aspect_ratio_correct == 1) ? (6 * SCREENHEIGHT / 5) : SCREENHEIGHT;
+    ah = (aspect_ratio_correct == 1) ? (6 * SCREENHEIGHT / 5) : SCREENHEIGHT;
 
-	if (SDL_GetCurrentDisplayMode(video_display, &mode) == 0)
-	{
-		// [crispy] sanity check: really widescreen display?
-		if (mode.w * ah >= mode.h * SCREENWIDTH)
-		{
-			w = mode.w;
-			h = mode.h;
-		}
-	}
+    if (SDL_GetCurrentDisplayMode(video_display, &mode) == 0)
+    {
+        // [crispy] sanity check: really widescreen display?
+        if (mode.w * ah >= mode.h * SCREENWIDTH)
+        {
+            w = mode.w;
+            h = mode.h;
+        }
+    }
 
-	// [crispy] widescreen rendering makes no sense without aspect ratio correction
-	if (crispy->widescreen && aspect_ratio_correct == 1)
-	{
-		switch(crispy->widescreen)
-		{
-			case RATIO_16_10:
-				w = 16;
-				h = 10;
-				break;
-			case RATIO_16_9:
-				w = 16;
-				h = 9;
-				break;
-			case RATIO_21_9:
-				w = 21;
-				h = 9;
-				break;
-			default:
-				break;
-		}
+    // [crispy] widescreen rendering makes no sense without aspect ratio correction
+    if (crispy->widescreen && aspect_ratio_correct == 1)
+    {
+        switch (crispy->widescreen)
+        {
+            case RATIO_16_10:
+                w = 16;
+                h = 10;
+                break;
+            case RATIO_16_9:
+                w = 16;
+                h = 9;
+                break;
+            case RATIO_21_9:
+                w = 21;
+                h = 9;
+                break;
+            default:
+                break;
+        }
 
-		SCREENWIDTH = w * ah / h;
-		// [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
-		SCREENWIDTH = (SCREENWIDTH + (crispy->hires ? 0 : 3)) & (int)~3;
-		// [crispy] ... but never exceeds MAXWIDTH (array size!)
-		SCREENWIDTH = MIN(SCREENWIDTH, MAXWIDTH);
-	}
+        SCREENWIDTH = w * ah / h;
+        // [crispy] make sure SCREENWIDTH is an integer multiple of 4 ...
+        SCREENWIDTH = (SCREENWIDTH + (crispy->hires ? 0 : 3)) & (int) ~3;
+        // [crispy] ... but never exceeds MAXWIDTH (array size!)
+        SCREENWIDTH = MIN(SCREENWIDTH, MAXWIDTH);
+    }
 
-	WIDESCREENDELTA = ((SCREENWIDTH - NONWIDEWIDTH) >> crispy->hires) / 2;
+    WIDESCREENDELTA = ((SCREENWIDTH - NONWIDEWIDTH) >> crispy->hires) / 2;
 }
 
 // [crispy] calls native SDL vsync toggle
-void I_ToggleVsync (void)
+void I_ToggleVsync(void)
 {
 #if SDL_VERSION_ATLEAST(2, 0, 18)
     SDL_RenderSetVSync(renderer, crispy->vsync);
@@ -1780,7 +1781,8 @@ void I_InitGraphics(void)
 
     // clear out any events waiting at the start and center the mouse
 
-    while (SDL_PollEvent(&dummy));
+    while (SDL_PollEvent(&dummy))
+        ;
 
     initialized = true;
 
@@ -1791,274 +1793,270 @@ void I_InitGraphics(void)
 
 // [crispy] re-initialize only the parts of the rendering stack that are really necessary
 
-void I_ReInitGraphics (int reinit)
+void I_ReInitGraphics(int reinit)
 {
-	// [crispy] re-set rendering resolution and re-create framebuffers
-	if (reinit & REINIT_FRAMEBUFFERS)
-	{
-		unsigned int rmask, gmask, bmask, amask;
-		int unused_bpp;
+    // [crispy] re-set rendering resolution and re-create framebuffers
+    if (reinit & REINIT_FRAMEBUFFERS)
+    {
+        unsigned int rmask, gmask, bmask, amask;
+        int unused_bpp;
 
-		I_GetScreenDimensions();
+        I_GetScreenDimensions();
 
 #ifndef CRISPY_TRUECOLOR
-		blit_rect.w = SCREENWIDTH;
-		blit_rect.h = SCREENHEIGHT;
+        blit_rect.w = SCREENWIDTH;
+        blit_rect.h = SCREENHEIGHT;
 #endif
 
-		// [crispy] re-initialize resolution-agnostic patch drawing
-		V_Init();
+        // [crispy] re-initialize resolution-agnostic patch drawing
+        V_Init();
 
 #ifndef CRISPY_TRUECOLOR
-		SDL_FreeSurface(screenbuffer);
-		screenbuffer = SDL_CreateRGBSurface(0,
-				                    SCREENWIDTH, SCREENHEIGHT, 8,
-				                    0, 0, 0, 0);
+        SDL_FreeSurface(screenbuffer);
+        screenbuffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0);
 #endif
 
-		SDL_FreeSurface(argbbuffer);
-		SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp,
-		                           &rmask, &gmask, &bmask, &amask);
-		argbbuffer = SDL_CreateRGBSurface(0,
-		                                  SCREENWIDTH, SCREENHEIGHT, 32,
-		                                  rmask, gmask, bmask, amask);
+        SDL_FreeSurface(argbbuffer);
+        SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp, &rmask, &gmask, &bmask, &amask);
+        argbbuffer =
+            SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 32, rmask, gmask, bmask, amask);
 #ifndef CRISPY_TRUECOLOR
-		// [crispy] re-set the framebuffer pointer
-		I_VideoBuffer = screenbuffer->pixels;
+        // [crispy] re-set the framebuffer pointer
+        I_VideoBuffer = screenbuffer->pixels;
 #else
-		I_VideoBuffer = argbbuffer->pixels;
+        I_VideoBuffer = argbbuffer->pixels;
 #endif
-		V_RestoreBuffer();
+        V_RestoreBuffer();
 
-		// [crispy] it will get re-created below with the new resolution
-		SDL_DestroyTexture(texture);
-	}
+        // [crispy] it will get re-created below with the new resolution
+        SDL_DestroyTexture(texture);
+    }
 
-	// [crispy] re-create renderer
-	if (reinit & REINIT_RENDERER)
-	{
-		SDL_RendererInfo info = {0};
-		int flags;
+    // [crispy] re-create renderer
+    if (reinit & REINIT_RENDERER)
+    {
+        SDL_RendererInfo info = {0};
+        int flags;
 
-		SDL_GetRendererInfo(renderer, &info);
-		flags = info.flags;
+        SDL_GetRendererInfo(renderer, &info);
+        flags = info.flags;
 
-		if (crispy->vsync && !(flags & SDL_RENDERER_SOFTWARE))
-		{
-			flags |= SDL_RENDERER_PRESENTVSYNC;
-		}
-		else
-		{
-			flags &= ~SDL_RENDERER_PRESENTVSYNC;
-		}
+        if (crispy->vsync && !(flags & SDL_RENDERER_SOFTWARE))
+        {
+            flags |= SDL_RENDERER_PRESENTVSYNC;
+        }
+        else
+        {
+            flags &= ~SDL_RENDERER_PRESENTVSYNC;
+        }
 
-		SDL_DestroyRenderer(renderer);
-		renderer = SDL_CreateRenderer(screen, -1, flags);
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_DestroyRenderer(renderer);
+        renderer = SDL_CreateRenderer(screen, -1, flags);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-		// [crispy] the texture gets destroyed in SDL_DestroyRenderer(), force its re-creation
-		texture_upscaled = NULL;
-	}
+        // [crispy] the texture gets destroyed in SDL_DestroyRenderer(), force its re-creation
+        texture_upscaled = NULL;
+    }
 
-	// [crispy] re-create textures
-	if (reinit & REINIT_TEXTURES)
-	{
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+    // [crispy] re-create textures
+    if (reinit & REINIT_TEXTURES)
+    {
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
-		texture = SDL_CreateTexture(renderer,
-		                            pixel_format,
-		                            SDL_TEXTUREACCESS_STREAMING,
-		                            SCREENWIDTH, SCREENHEIGHT);
+        texture = SDL_CreateTexture(
+            renderer, pixel_format, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
 
-		// [crispy] force its re-creation
-		CreateUpscaledTexture(true);
-	}
+        // [crispy] force its re-creation
+        CreateUpscaledTexture(true);
+    }
 
-	// [crispy] re-set logical rendering resolution
-	if (reinit & REINIT_ASPECTRATIO)
-	{
-		if (aspect_ratio_correct == 1)
-		{
-			actualheight = 6 * SCREENHEIGHT / 5;
-		}
-		else
-		{
-			actualheight = SCREENHEIGHT;
-		}
+    // [crispy] re-set logical rendering resolution
+    if (reinit & REINIT_ASPECTRATIO)
+    {
+        if (aspect_ratio_correct == 1)
+        {
+            actualheight = 6 * SCREENHEIGHT / 5;
+        }
+        else
+        {
+            actualheight = SCREENHEIGHT;
+        }
 
-		if (aspect_ratio_correct || integer_scaling)
-		{
-			SDL_RenderSetLogicalSize(renderer,
-			                         SCREENWIDTH,
-			                         actualheight);
-		}
-		else
-		{
-			SDL_RenderSetLogicalSize(renderer, 0, 0);
-		}
+        if (aspect_ratio_correct || integer_scaling)
+        {
+            SDL_RenderSetLogicalSize(renderer, SCREENWIDTH, actualheight);
+        }
+        else
+        {
+            SDL_RenderSetLogicalSize(renderer, 0, 0);
+        }
 
-		#if SDL_VERSION_ATLEAST(2, 0, 5)
-		SDL_RenderSetIntegerScale(renderer, integer_scaling);
-		#endif
-	}
+#if SDL_VERSION_ATLEAST(2, 0, 5)
+        SDL_RenderSetIntegerScale(renderer, integer_scaling);
+#endif
+    }
 
-	// [crispy] adjust the window size and re-set the palette
-	need_resize = true;
+    // [crispy] adjust the window size and re-set the palette
+    need_resize = true;
 }
 
 // [crispy] take screenshot of the rendered image
 
 void I_RenderReadPixels(byte **data, int *w, int *h, int *p)
 {
-	SDL_Rect rect;
-	SDL_PixelFormat *format;
-	int temp;
-	uint32_t png_format;
-	byte *pixels;
+    SDL_Rect rect;
+    SDL_PixelFormat *format;
+    int temp;
+    uint32_t png_format;
+    byte *pixels;
 
-	// [crispy] adjust cropping rectangle if necessary
-	rect.x = rect.y = 0;
-	SDL_GetRendererOutputSize(renderer, &rect.w, &rect.h);
-	if (aspect_ratio_correct || integer_scaling)
-	{
-		if (integer_scaling)
-		{
-			int temp1, temp2, scale;
-			temp1 = rect.w;
-			temp2 = rect.h;
-			scale = MIN(rect.w / SCREENWIDTH, rect.h / actualheight);
+    // [crispy] adjust cropping rectangle if necessary
+    rect.x = rect.y = 0;
+    SDL_GetRendererOutputSize(renderer, &rect.w, &rect.h);
+    if (aspect_ratio_correct || integer_scaling)
+    {
+        if (integer_scaling)
+        {
+            int temp1, temp2, scale;
+            temp1 = rect.w;
+            temp2 = rect.h;
+            scale = MIN(rect.w / SCREENWIDTH, rect.h / actualheight);
 
-			rect.w = SCREENWIDTH * scale;
-			rect.h = actualheight * scale;
+            rect.w = SCREENWIDTH * scale;
+            rect.h = actualheight * scale;
 
-			rect.x = (temp1 - rect.w) / 2;
-			rect.y = (temp2 - rect.h) / 2;
-		}
-		else
-		if (rect.w * actualheight > rect.h * SCREENWIDTH)
-		{
-			temp = rect.w;
-			rect.w = rect.h * SCREENWIDTH / actualheight;
-			rect.x = (temp - rect.w) / 2;
-		}
-		else
-		if (rect.h * SCREENWIDTH > rect.w * actualheight)
-		{
-			temp = rect.h;
-			rect.h = rect.w * actualheight / SCREENWIDTH;
-			rect.y = (temp - rect.h) / 2;
-		}
-	}
+            rect.x = (temp1 - rect.w) / 2;
+            rect.y = (temp2 - rect.h) / 2;
+        }
+        else if (rect.w * actualheight > rect.h * SCREENWIDTH)
+        {
+            temp = rect.w;
+            rect.w = rect.h * SCREENWIDTH / actualheight;
+            rect.x = (temp - rect.w) / 2;
+        }
+        else if (rect.h * SCREENWIDTH > rect.w * actualheight)
+        {
+            temp = rect.h;
+            rect.h = rect.w * actualheight / SCREENWIDTH;
+            rect.y = (temp - rect.h) / 2;
+        }
+    }
 
-	// [crispy] native PNG pixel format
+    // [crispy] native PNG pixel format
 #if SDL_VERSION_ATLEAST(2, 0, 5)
-	png_format = SDL_PIXELFORMAT_RGB24;
+    png_format = SDL_PIXELFORMAT_RGB24;
 #else
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
-	png_format = SDL_PIXELFORMAT_ABGR8888;
+    png_format = SDL_PIXELFORMAT_ABGR8888;
 #else
-	png_format = SDL_PIXELFORMAT_RGBA8888;
+    png_format = SDL_PIXELFORMAT_RGBA8888;
 #endif
 #endif
-	format = SDL_AllocFormat(png_format);
-	temp = rect.w * format->BytesPerPixel; // [crispy] pitch
+    format = SDL_AllocFormat(png_format);
+    temp = rect.w * format->BytesPerPixel; // [crispy] pitch
 
-	// [crispy] As far as I understand the issue, SDL_RenderPresent()
-	// may return early, i.e. before it has actually finished rendering the
-	// current texture to screen -- from where we want to capture it.
-	// However, it does never return before it has finished rendering the
-	// *previous* texture.
-	// Thus, we add a second call to SDL_RenderPresent() here to make sure
-	// that it has at least finished rendering the previous texture, which
-	// already contains the scene that we actually want to capture.
-	if (crispy->post_rendering_hook)
-	{
-		SDL_RenderCopy(renderer, crispy->smoothscaling ? texture_upscaled : texture, NULL, NULL);
-		SDL_RenderPresent(renderer);
-	}
+    // [crispy] As far as I understand the issue, SDL_RenderPresent()
+    // may return early, i.e. before it has actually finished rendering the
+    // current texture to screen -- from where we want to capture it.
+    // However, it does never return before it has finished rendering the
+    // *previous* texture.
+    // Thus, we add a second call to SDL_RenderPresent() here to make sure
+    // that it has at least finished rendering the previous texture, which
+    // already contains the scene that we actually want to capture.
+    if (crispy->post_rendering_hook)
+    {
+        SDL_RenderCopy(renderer, crispy->smoothscaling ? texture_upscaled : texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+    }
 
-	// [crispy] allocate memory for screenshot image
-	pixels = malloc(rect.h * temp);
-	SDL_RenderReadPixels(renderer, &rect, format->format, pixels, temp);
+    // [crispy] allocate memory for screenshot image
+    pixels = malloc(rect.h * temp);
+    SDL_RenderReadPixels(renderer, &rect, format->format, pixels, temp);
 
-	*data = pixels;
-	*w = rect.w;
-	*h = rect.h;
-	*p = temp;
+    *data = pixels;
+    *w = rect.w;
+    *h = rect.h;
+    *p = temp;
 
-	SDL_FreeFormat(format);
+    SDL_FreeFormat(format);
 }
 
 // Bind all variables controlling video options into the configuration
 // file system.
 void I_BindVideoVariables(void)
 {
-    M_BindIntVariable("use_mouse",                 &usemouse);
-    M_BindIntVariable("fullscreen",                &fullscreen);
-    M_BindIntVariable("video_display",             &video_display);
-    M_BindIntVariable("aspect_ratio_correct",      &aspect_ratio_correct);
-    M_BindIntVariable("integer_scaling",           &integer_scaling);
-    M_BindIntVariable("vga_porch_flash",           &vga_porch_flash);
-    M_BindIntVariable("startup_delay",             &startup_delay);
-    M_BindIntVariable("fullscreen_width",          &fullscreen_width);
-    M_BindIntVariable("fullscreen_height",         &fullscreen_height);
-    M_BindIntVariable("force_software_renderer",   &force_software_renderer);
+    M_BindIntVariable("use_mouse", &usemouse);
+    M_BindIntVariable("fullscreen", &fullscreen);
+    M_BindIntVariable("video_display", &video_display);
+    M_BindIntVariable("aspect_ratio_correct", &aspect_ratio_correct);
+    M_BindIntVariable("integer_scaling", &integer_scaling);
+    M_BindIntVariable("vga_porch_flash", &vga_porch_flash);
+    M_BindIntVariable("startup_delay", &startup_delay);
+    M_BindIntVariable("fullscreen_width", &fullscreen_width);
+    M_BindIntVariable("fullscreen_height", &fullscreen_height);
+    M_BindIntVariable("force_software_renderer", &force_software_renderer);
     M_BindIntVariable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
-    M_BindIntVariable("window_width",              &window_width);
-    M_BindIntVariable("window_height",             &window_height);
-    M_BindIntVariable("grabmouse",                 &grabmouse);
-    M_BindStringVariable("video_driver",           &video_driver);
-    M_BindStringVariable("window_position",        &window_position);
-    M_BindIntVariable("usegamma",                  &usegamma);
-    M_BindIntVariable("png_screenshots",           &png_screenshots);
+    M_BindIntVariable("window_width", &window_width);
+    M_BindIntVariable("window_height", &window_height);
+    M_BindIntVariable("grabmouse", &grabmouse);
+    M_BindStringVariable("video_driver", &video_driver);
+    M_BindStringVariable("window_position", &window_position);
+    M_BindIntVariable("usegamma", &usegamma);
+    M_BindIntVariable("png_screenshots", &png_screenshots);
 }
 
 #ifdef CRISPY_TRUECOLOR
-const pixel_t I_BlendAdd (const pixel_t bg, const pixel_t fg)
+const pixel_t I_BlendAdd(const pixel_t bg, const pixel_t fg)
 {
-	uint32_t r, g, b;
+    uint32_t r, g, b;
 
-	if ((r = (fg & rmask) + (bg & rmask)) > rmask) r = rmask;
-	if ((g = (fg & gmask) + (bg & gmask)) > gmask) g = gmask;
-	if ((b = (fg & bmask) + (bg & bmask)) > bmask) b = bmask;
+    if ((r = (fg & rmask) + (bg & rmask)) > rmask)
+        r = rmask;
+    if ((g = (fg & gmask) + (bg & gmask)) > gmask)
+        g = gmask;
+    if ((b = (fg & bmask) + (bg & bmask)) > bmask)
+        b = bmask;
 
-	return amask | r | g | b;
+    return amask | r | g | b;
 }
 
 // [crispy] http://stereopsis.com/doubleblend.html
-const pixel_t I_BlendDark (const pixel_t bg, const int d)
+const pixel_t I_BlendDark(const pixel_t bg, const int d)
 {
-	const uint32_t ag = (bg & 0xff00ff00) >> 8;
-	const uint32_t rb =  bg & 0x00ff00ff;
+    const uint32_t ag = (bg & 0xff00ff00) >> 8;
+    const uint32_t rb = bg & 0x00ff00ff;
 
-	uint32_t sag = d * ag;
-	uint32_t srb = d * rb;
+    uint32_t sag = d * ag;
+    uint32_t srb = d * rb;
 
-	sag = sag & 0xff00ff00;
-	srb = (srb >> 8) & 0x00ff00ff;
+    sag = sag & 0xff00ff00;
+    srb = (srb >> 8) & 0x00ff00ff;
 
-	return amask | sag | srb;
+    return amask | sag | srb;
 }
 
-const pixel_t I_BlendOver (const pixel_t bg, const pixel_t fg)
+const pixel_t I_BlendOver(const pixel_t bg, const pixel_t fg)
 {
-	const uint32_t r = ((blend_alpha * (fg & rmask) + (0xff - blend_alpha) * (bg & rmask)) >> 8) & rmask;
-	const uint32_t g = ((blend_alpha * (fg & gmask) + (0xff - blend_alpha) * (bg & gmask)) >> 8) & gmask;
-	const uint32_t b = ((blend_alpha * (fg & bmask) + (0xff - blend_alpha) * (bg & bmask)) >> 8) & bmask;
+    const uint32_t r =
+        ((blend_alpha * (fg & rmask) + (0xff - blend_alpha) * (bg & rmask)) >> 8) & rmask;
+    const uint32_t g =
+        ((blend_alpha * (fg & gmask) + (0xff - blend_alpha) * (bg & gmask)) >> 8) & gmask;
+    const uint32_t b =
+        ((blend_alpha * (fg & bmask) + (0xff - blend_alpha) * (bg & bmask)) >> 8) & bmask;
 
-	return amask | r | g | b;
+    return amask | r | g | b;
 }
 
-const pixel_t (*blendfunc) (const pixel_t fg, const pixel_t bg) = I_BlendOver;
+const pixel_t (*blendfunc)(const pixel_t fg, const pixel_t bg) = I_BlendOver;
 
-const pixel_t I_MapRGB (const uint8_t r, const uint8_t g, const uint8_t b)
+const pixel_t I_MapRGB(const uint8_t r, const uint8_t g, const uint8_t b)
 {
-/*
-	return amask |
-	        (((r * rmask) >> 8) & rmask) |
-	        (((g * gmask) >> 8) & gmask) |
-	        (((b * bmask) >> 8) & bmask);
-*/
-	return SDL_MapRGB(argbbuffer->format, r, g, b);
+    /*
+            return amask |
+                    (((r * rmask) >> 8) & rmask) |
+                    (((g * gmask) >> 8) & gmask) |
+                    (((b * bmask) >> 8) & bmask);
+    */
+    return SDL_MapRGB(argbbuffer->format, r, g, b);
 }
 #endif

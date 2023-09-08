@@ -28,17 +28,17 @@
 
 typedef struct musinfo_s
 {
-	mobj_t *mapthing;
-	mobj_t *lastmapthing;
-	int tics;
-	int current_item;
-	int items[MAX_MUS_ENTRIES];
-	boolean from_savegame;
+    mobj_t *mapthing;
+    mobj_t *lastmapthing;
+    int tics;
+    int current_item;
+    int items[MAX_MUS_ENTRIES];
+    boolean from_savegame;
 } musinfo_t;
 
 extern musinfo_t musinfo;
 
-extern void S_ParseMusInfo (const char *mapid);
-extern void T_MusInfo (void);
+extern void S_ParseMusInfo(const char *mapid);
+extern void T_MusInfo(void);
 
 #endif

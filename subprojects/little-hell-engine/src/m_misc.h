@@ -14,7 +14,7 @@
 //
 // DESCRIPTION:
 //      Miscellaneous.
-//    
+//
 
 
 #ifndef __M_MISC__
@@ -55,8 +55,7 @@ const char *M_StrCaseStr(const char *haystack, const char *needle);
 char *M_StringDuplicate(const char *orig);
 boolean M_StringCopy(char *dest, const char *src, size_t dest_size);
 boolean M_StringConcat(char *dest, const char *src, size_t dest_size);
-char *M_StringReplace(const char *haystack, const char *needle,
-                      const char *replacement);
+char *M_StringReplace(const char *haystack, const char *needle, const char *replacement);
 char *M_StringJoin(const char *s, ...);
 boolean M_StringStartsWith(const char *s, const char *prefix);
 boolean M_StringEndsWith(const char *s, const char *suffix);
@@ -71,40 +70,42 @@ char *M_CleanString(char *s); // [crispy] un-static
 #ifdef DEBUG_LINKED_LISTS
 
 
-#define LINKED_LIST_CHECK_NO_CYCLE(list_type, list, next_member)  \
-    do                                                            \
-    {                                                             \
-        if (list != NULL) {                                       \
-            list_type *slow, *fast;                               \
-            slow = list;                                          \
-            fast = list->next_member;                             \
-            while (fast) {                                        \
-                if (!fast->next_member) {                         \
-                    break;                                        \
-                }                                                 \
-                fast = fast->next_member->next_member;            \
-                slow = slow->next_member;                         \
-                if (slow == fast) {                               \
-                    fprintf(stderr, "loop in linked list " # list " in %s:%d", __FILE__, __LINE__); \
-                    __builtin_trap();                             \
-                }                                                 \
-            }                                                     \
-        }                                                         \
-    } while (0)                                                   \
+#define LINKED_LIST_CHECK_NO_CYCLE(list_type, list, next_member)                                   \
+    do                                                                                             \
+    {                                                                                              \
+        if (list != NULL)                                                                          \
+        {                                                                                          \
+            list_type *slow, *fast;                                                                \
+            slow = list;                                                                           \
+            fast = list->next_member;                                                              \
+            while (fast)                                                                           \
+            {                                                                                      \
+                if (!fast->next_member)                                                            \
+                {                                                                                  \
+                    break;                                                                         \
+                }                                                                                  \
+                fast = fast->next_member->next_member;                                             \
+                slow = slow->next_member;                                                          \
+                if (slow == fast)                                                                  \
+                {                                                                                  \
+                    fprintf(stderr, "loop in linked list " #list " in %s:%d", __FILE__, __LINE__); \
+                    __builtin_trap();                                                              \
+                }                                                                                  \
+            }                                                                                      \
+        }                                                                                          \
+    } while (0)
 
 
-
-#else  // DEBUG_LINKED_LISTS
-
-
-#define LINKED_LIST_CHECK_NO_CYCLE(list_type, list, next_member)  \
-    do                                                            \
-    {                                                             \
-    } while (0)                                                   \
+#else // DEBUG_LINKED_LISTS
 
 
-#endif  // DEBUG_LINKED_LISTS
+#define LINKED_LIST_CHECK_NO_CYCLE(list_type, list, next_member)                                   \
+    do                                                                                             \
+    {                                                                                              \
+    } while (0)
+
+
+#endif // DEBUG_LINKED_LISTS
 
 
 #endif
-

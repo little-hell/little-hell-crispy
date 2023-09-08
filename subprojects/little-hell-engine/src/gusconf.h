@@ -26,4 +26,3 @@ extern int gus_ram_kb;
 boolean GUS_WriteConfig(char *path);
 
 #endif /* #ifndef __GUSCONF_H__ */
-

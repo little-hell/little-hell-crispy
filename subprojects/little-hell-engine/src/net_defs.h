@@ -16,7 +16,7 @@
 //
 
 #ifndef NET_DEFS_H
-#define NET_DEFS_H 
+#define NET_DEFS_H
 
 #include <stdio.h>
 
@@ -100,7 +100,7 @@ struct _net_addr_s
 };
 
 // Magic number sent when connecting to check this is a valid client
-#define NET_MAGIC_NUMBER     1454104972U
+#define NET_MAGIC_NUMBER 1454104972U
 
 // Old magic number used by Chocolate Doom versions before v3.0:
 #define NET_OLD_MAGIC_NUMBER 3436803284U
@@ -203,7 +203,7 @@ typedef struct
     int new_sync;
     int timelimit;
     int loadgame;
-    int random;  // [Strife only]
+    int random; // [Strife only]
 
     // These fields are only used by the server when sending a game
     // start message:
@@ -217,14 +217,14 @@ typedef struct
 
 } net_gamesettings_t;
 
-#define NET_TICDIFF_FORWARD      (1 << 0)
-#define NET_TICDIFF_SIDE         (1 << 1)
-#define NET_TICDIFF_TURN         (1 << 2)
-#define NET_TICDIFF_BUTTONS      (1 << 3)
-#define NET_TICDIFF_CONSISTANCY  (1 << 4)
-#define NET_TICDIFF_CHATCHAR     (1 << 5)
-#define NET_TICDIFF_RAVEN        (1 << 6)
-#define NET_TICDIFF_STRIFE       (1 << 7)
+#define NET_TICDIFF_FORWARD     (1 << 0)
+#define NET_TICDIFF_SIDE        (1 << 1)
+#define NET_TICDIFF_TURN        (1 << 2)
+#define NET_TICDIFF_BUTTONS     (1 << 3)
+#define NET_TICDIFF_CONSISTANCY (1 << 4)
+#define NET_TICDIFF_CHATCHAR    (1 << 5)
+#define NET_TICDIFF_RAVEN       (1 << 6)
+#define NET_TICDIFF_STRIFE      (1 << 7)
 
 typedef struct
 {
@@ -234,7 +234,7 @@ typedef struct
 
 // Complete set of ticcmds from all players
 
-typedef struct 
+typedef struct
 {
     signed int latency;
     unsigned int seq;
