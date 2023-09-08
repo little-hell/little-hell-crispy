@@ -37,7 +37,7 @@
 // as commands per game tick.
 #include "d_ticcmd.h"
 
-#include "net_defs.h"
+#include "littlehell/net/defs.h"
 
 
 //

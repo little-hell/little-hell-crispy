@@ -36,7 +36,7 @@
 // Game mode/mission
 #include "d_mode.h"
 
-#include "net_defs.h"
+#include "littlehell/net/defs.h"
 
 #include "crispy.h"
 
