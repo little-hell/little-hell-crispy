@@ -1,13 +1,26 @@
 project('little-hell-engine', 'c', default_options: ['default_library=static', 'buildtype=debugoptimized'])
 
+# We need LOG_USE_COLOR for the rxi/log.c library
 add_project_arguments('-DLOG_USE_COLOR', language: 'c')
 
 cc = meson.get_compiler('c')
 
 math = cc.find_library('m', required: true)
-sdl2 = dependency('SDL2', static: true)
-sdl2_net = dependency('SDL2_net', static: true)
-sdl2_mixer = dependency('SDL2_mixer', static: true)
+
+if host_machine.system() == 'windows'
+    # Windows-specific configurations
+    static_sdl_linkage = true
+elif host_machine.system() == 'linux'
+    # Linux-specific configurations
+    static_sdl_linkage = false
+else
+    # Configurations for other operating systems
+    static_sdl_linkage = false
+endif
+
+sdl2 = dependency('SDL2', static: static_sdl_linkage)
+sdl2_net = dependency('SDL2_net', static: static_sdl_linkage)
+sdl2_mixer = dependency('SDL2_mixer', static: static_sdl_linkage)
 
 src_dir = 'src'
 system_src_dir = 'system'
