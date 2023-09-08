@@ -4,10 +4,10 @@ add_project_arguments('-DLOG_USE_COLOR', language: 'c')
 
 cc = meson.get_compiler('c')
 
-math = cc.find_library('m', required : true)
-sdl2 = dependency('SDL2')
-sdl2_net = dependency('SDL2_net')
-sdl2_mixer = dependency('SDL2_mixer')
+math = cc.find_library('m', required: true)
+sdl2 = dependency('SDL2', static: true)
+sdl2_net = dependency('SDL2_net', static: true)
+sdl2_mixer = dependency('SDL2_mixer', static: true)
 
 src_dir = 'src'
 system_src_dir = 'system'
