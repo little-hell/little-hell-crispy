@@ -224,7 +224,7 @@ if meson.is_subproject()
       include_directories: [
         include_directories(libs_src_dir),
         include_directories(src_dir),
-        #include_directories(littlehell_include_dir)
+        include_directories(littlehell_include_dir)
       ]
     )
 endif

@@ -25,9 +25,9 @@
 
 #include "m_argv.h"
 
-#include "net_common.h"
-#include "net_sdl.h"
-#include "net_server.h"
+#include "net/common.h"
+#include "net/sdl.h"
+#include "net/server.h"
 
 //
 // People can become confused about how dedicated servers work.  Game
