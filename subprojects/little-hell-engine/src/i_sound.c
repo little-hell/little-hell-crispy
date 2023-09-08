@@ -88,9 +88,6 @@ static const sound_module_t *sound_modules[] = {
 // Compiled-in music modules:
 
 static const music_module_t *music_modules[] = {
-#ifdef _WIN32
-    &music_win_module,
-#endif
 #ifdef HAVE_FLUIDSYNTH
     &music_fl_module,
 #endif // HAVE_FLUIDSYNTH
@@ -165,15 +162,6 @@ static void InitMusicModule(void)
                 music_modules[i]->sound_devices,
                 music_modules[i]->num_sound_devices))
         {
-#ifdef _WIN32
-            // Skip the native Windows MIDI module if using Timidity.
-
-            if (strcmp(timidity_cfg_path, "") && music_modules[i] == &music_win_module)
-            {
-                continue;
-            }
-#endif
-
             // Initialize the module
 
             if (music_modules[i]->Init())
@@ -548,12 +536,6 @@ void I_BindSoundVariables(void)
     M_BindStringVariable("timidity_cfg_path", &timidity_cfg_path);
     M_BindStringVariable("gus_patch_path", &gus_patch_path);
     M_BindIntVariable("gus_ram_kb", &gus_ram_kb);
-#ifdef _WIN32
-    M_BindStringVariable("winmm_midi_device", &winmm_midi_device);
-    M_BindIntVariable("winmm_complevel", &winmm_complevel);
-    M_BindIntVariable("winmm_reset_type", &winmm_reset_type);
-    M_BindIntVariable("winmm_reset_delay", &winmm_reset_delay);
-#endif
 
 #ifdef HAVE_FLUIDSYNTH
     M_BindIntVariable("fsynth_chorus_active", &fsynth_chorus_active);
