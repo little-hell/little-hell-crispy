@@ -14,6 +14,7 @@ game_source_files = files(
     'hu_lib.c',
     'hu_stuff.c',
     'info.c',
+    'log.c',
     'm_crispy.c',
     'm_menu.c',
     'm_random.c',

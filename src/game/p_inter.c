@@ -27,6 +27,8 @@
 #include "m_random.h"
 #include "i_system.h"
 
+#include "log.h"
+
 #include "am_map.h"
 
 #include "p_local.h"
@@ -320,11 +322,23 @@ boolean P_GivePower(player_t *player, int /*powertype_t*/ power)
 }
 
 
-//
-// P_TouchSpecialThing
-//
+/** A special thing is a power up. **/
 void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 {
+    log_debug("Something (%x) touched a special item (%x)", toucher, special);
+
+	if (toucher == NULL)
+	{
+		log_error("Toucher (%x) shouldn't be NULL", toucher);
+		return;
+	}
+
+	if (special == NULL)
+	{
+		log_error("Thing (%x) shouldn't be NULL", special);
+		return;
+	}
+
     player_t *player;
     int i;
     fixed_t delta;
@@ -336,6 +350,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     if (delta > toucher->height || delta < -8 * FRACUNIT)
     {
         // out of reach
+		log_error("Thing is out of reach for the player.");
         return;
     }
 
@@ -346,8 +361,10 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     // Dead thing touching.
     // Can happen with a sliding player corpse.
     if (toucher->health <= 0)
+	{
+    	log_debug("That something (%x) was a dead player corpse.", toucher);
         return;
-
+	}
     // Identify by sprite.
     switch (special->sprite)
     {
