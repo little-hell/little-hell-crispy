@@ -88,9 +88,6 @@ static const sound_module_t *sound_modules[] = {
 // Compiled-in music modules:
 
 static const music_module_t *music_modules[] = {
-#ifdef _WIN32
-    &music_win_module,
-#endif
 #ifdef HAVE_FLUIDSYNTH
     &music_fl_module,
 #endif // HAVE_FLUIDSYNTH

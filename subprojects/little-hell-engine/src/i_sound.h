@@ -263,7 +263,6 @@ extern const sound_module_t sound_pcsound_module;
 extern const music_module_t music_sdl_module;
 extern const music_module_t music_opl_module;
 extern const music_module_t music_pack_module;
-extern const music_module_t music_win_module;
 extern const music_module_t music_fl_module;
 
 // For OPL module:

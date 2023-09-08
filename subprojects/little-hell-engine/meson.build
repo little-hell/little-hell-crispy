@@ -40,7 +40,6 @@ engine_source_files = files(
     src_dir / 'i_joystick.c',
     src_dir / 'i_cdmus.c',
     src_dir / 'i_endoom.c',
-    src_dir / 'i_winmusic.c',
     src_dir / 'i_videohr.c',
     src_dir / 'i_musicpack.c',
     src_dir / 'i_oplmusic.c',
