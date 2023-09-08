@@ -1,5 +1,5 @@
-project('little-hell-example', 'c', default_options: ['buildtype=debugoptimized'])
-add_project_arguments('-Wfatal-errors', language: 'c')
+project('little-hell-example', 'c', default_options: ['buildtype=debugoptimized', 'c_std=c99'])
+add_project_arguments('-Wfatal-errors', '-Wpedantic', language: 'c')
 
 package_name = 'Little Hell Example'
 package_string = 'little-hell-example'
