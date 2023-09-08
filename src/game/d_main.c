@@ -1336,36 +1336,6 @@ void D_DoomMain(void)
 
     crispy->moreammo = M_ParmExists("-doubleammo");
 
-    //!
-    // @category mod
-    //
-    // Disable auto-loading of .wad and .deh files.
-    //
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
-    {
-        char *autoload_dir;
-
-        // common auto-loaded files for all Doom flavors
-
-        if (gamemission < pack_chex && gamevariant != freedoom)
-        {
-            autoload_dir = M_GetAutoloadDir("doom-all", true);
-            if (autoload_dir != NULL)
-            {
-                W_AutoLoadWADs(autoload_dir);
-                free(autoload_dir);
-            }
-        }
-
-        // auto-loaded files per IWAD
-        autoload_dir = M_GetAutoloadDir(D_SaveGameIWADName(gamemission, gamevariant), true);
-        if (autoload_dir != NULL)
-        {
-            W_AutoLoadWADs(autoload_dir);
-            free(autoload_dir);
-        }
-    }
-
     // Load PWAD files.
     modifiedgame = W_ParseCommandLine();
 
@@ -1438,34 +1408,6 @@ void D_DoomMain(void)
         else
         {
             I_Error("W_LumpDump: The '-lumpdump' parameter requires an argument.");
-        }
-    }
-
-    // Debug:
-    //    W_PrintDirectory();
-
-    // [crispy] add wad files from autoload PWAD directories
-
-    if (!M_ParmExists("-noautoload") && gamemode != shareware)
-    {
-        int i;
-
-        for (i = 0; loadparms[i]; i++)
-        {
-            int p;
-            p = M_CheckParmWithArgs(loadparms[i], 1);
-            if (p)
-            {
-                while (++p != myargc && myargv[p][0] != '-')
-                {
-                    char *autoload_dir;
-                    if ((autoload_dir = M_GetAutoloadDir(M_BaseName(myargv[p]), false)))
-                    {
-                        W_AutoLoadWADs(autoload_dir);
-                        free(autoload_dir);
-                    }
-                }
-            }
         }
     }
 
