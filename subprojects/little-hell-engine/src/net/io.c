@@ -19,8 +19,10 @@
 #include <stdio.h>
 
 #include "i_system.h"
-#include "net_defs.h"
-#include "net_io.h"
+
+#include "littlehell/net/defs.h"
+#include "net/io.h"
+
 #include "z_zone.h"
 
 #define MAX_MODULES 16

@@ -12,15 +12,14 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//      Loopback network module for server compiled into the client
+//     Networking module which uses SDL_net
 //
 
-#ifndef NET_LOOP_H
-#define NET_LOOP_H
+#ifndef NET_SDL_H
+#define NET_SDL_H
 
-#include "net_defs.h"
+#include "littlehell/net/defs.h"
 
-extern net_module_t net_loop_client_module;
-extern net_module_t net_loop_server_module;
+extern net_module_t net_sdl_module;
 
-#endif /* #ifndef NET_LOOP_H */
+#endif /* #ifndef NET_SDL_H */

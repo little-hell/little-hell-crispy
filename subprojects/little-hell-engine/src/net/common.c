@@ -26,10 +26,10 @@
 #include "m_argv.h"
 #include "m_misc.h"
 
-#include "net_common.h"
-#include "net_io.h"
-#include "net_packet.h"
-#include "net_structrw.h"
+#include "net/common.h"
+#include "net/io.h"
+#include "net/packet.h"
+#include "net/structrw.h"
 
 // connections time out after 30 seconds
 

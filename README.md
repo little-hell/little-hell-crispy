@@ -58,7 +58,7 @@ Note that while we are installing CMake as a package, it's being used by Meson t
 
 After you gotten the dependencies sorted out for your specific platform in the section(s) above, the rest of the build process is universal regardless of what system you're on, thanks to Meson and Ninja.
 
-From the project directory, run the following at a terminal (Linux/macOS/BSD) or a MSYS2 MINGW64 shell (Windows):
+From the project directory, run the following at a terminal (Linux/macOS/BSD) or a MSYS2 shell (Windows):
 
 ```
 meson setup build
