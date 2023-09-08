@@ -24,13 +24,14 @@
 #include "i_timer.h"
 #include "m_misc.h"
 
-#include "net_common.h"
-#include "net_defs.h"
-#include "net_io.h"
-#include "net_packet.h"
-#include "net_query.h"
-#include "net_structrw.h"
-#include "net_sdl.h"
+#include "littlehell/net/defs.h"
+#include "littlehell/net/query.h"
+
+#include "net/common.h"
+#include "net/io.h"
+#include "net/packet.h"
+#include "net/structrw.h"
+#include "net/sdl.h"
 
 // DNS address of the Internet master server.
 

@@ -29,10 +29,11 @@
 #include "m_argv.h"
 #include "m_misc.h"
 
-#include "net_client.h"
-#include "net_gui.h"
-#include "net_query.h"
-#include "net_server.h"
+#include "littlehell/net/client.h"
+#include "littlehell/net/query.h"
+
+#include "net/gui.h"
+#include "net/server.h"
 
 #include "libs/textscreen/textscreen.h"
 

@@ -23,10 +23,13 @@
 #include "i_system.h"
 #include "m_argv.h"
 #include "m_misc.h"
-#include "net_defs.h"
-#include "net_io.h"
-#include "net_packet.h"
-#include "net_sdl.h"
+
+#include "littlehell/net/defs.h"
+
+#include "net/io.h"
+#include "net/packet.h"
+#include "net/sdl.h"
+
 #include "z_zone.h"
 
 //

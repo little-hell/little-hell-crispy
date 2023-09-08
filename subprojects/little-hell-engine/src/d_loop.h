@@ -19,7 +19,7 @@
 #ifndef __D_LOOP__
 #define __D_LOOP__
 
-#include "net_defs.h"
+#include "littlehell/net/defs.h"
 #include "m_fixed.h"
 
 

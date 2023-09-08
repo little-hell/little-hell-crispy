@@ -71,19 +71,18 @@ engine_source_files = files(
     src_dir / 'm_controls.c',
     src_dir / 'm_misc.c',
     src_dir / 'm_fixed.c',
-    src_dir / 'net_client.c',
-    src_dir / 'net_common.c',
-    src_dir / 'net_dedicated.c',
-    src_dir / 'net_gui.c',
-    src_dir / 'net_defs.h',
-    src_dir / 'net_io.c',
-    src_dir / 'net_loop.c',
-    src_dir / 'net_packet.c',
-    src_dir / 'net_petname.c',
-    src_dir / 'net_query.c',
-    src_dir / 'net_sdl.c',
-    src_dir / 'net_server.c',
-    src_dir / 'net_structrw.c',
+    src_dir / 'net' / 'client.c',
+    src_dir / 'net' / 'common.c',
+    src_dir / 'net' / 'dedicated.c',
+    src_dir / 'net' / 'gui.c',
+    src_dir / 'net' / 'io.c',
+    src_dir / 'net' / 'loop.c',
+    src_dir / 'net' / 'packet.c',
+    src_dir / 'net' / 'petname.c',
+    src_dir / 'net' / 'query.c',
+    src_dir / 'net' / 'sdl.c',
+    src_dir / 'net' / 'server.c',
+    src_dir / 'net' / 'structrw.c',
     src_dir / 'sha1.c',
     src_dir / 'memio.c',
     src_dir / 'tables.c',
@@ -190,13 +189,13 @@ pcsound_source_files = files(
 
 pcsound = library('pcsound', pcsound_source_files, dependencies: sdl2_mixer)
 
-#littlehell_include_dir = 'include/'
+littlehell_include_dir = 'include/'
 
 littlehell_lib = library('littlehell', engine_source_files,
     include_directories: [
       include_directories(libs_src_dir),
-      #include_directories(littlehell_include_dir),
-      include_directories(src_dir)
+      include_directories(src_dir),
+      include_directories(littlehell_include_dir)
     ],
     dependencies: [
       sdl2,
