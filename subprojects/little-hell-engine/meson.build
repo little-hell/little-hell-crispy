@@ -1,4 +1,4 @@
-project('little-hell-engine', 'c', default_options: ['default_library=static', 'buildtype=debugoptimized'])
+project('little-hell-engine', 'c', default_options: ['default_library=static', 'buildtype=debugoptimized', 'c_std=c99'])
 
 # We need LOG_USE_COLOR for the rxi/log.c library
 add_project_arguments('-DLOG_USE_COLOR', language: 'c')
@@ -36,7 +36,6 @@ engine_source_files = files(
     src_dir / 'd_mode.c',
     src_dir / 'd_iwad.c',
     src_dir / 'd_loop.c',
-    src_dir / 'i_glob.c',
     src_dir / 'i_input.c',
 
     src_dir / 'gusconf.c',
