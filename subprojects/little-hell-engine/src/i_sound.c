@@ -536,12 +536,6 @@ void I_BindSoundVariables(void)
     M_BindStringVariable("timidity_cfg_path", &timidity_cfg_path);
     M_BindStringVariable("gus_patch_path", &gus_patch_path);
     M_BindIntVariable("gus_ram_kb", &gus_ram_kb);
-#ifdef _WIN32
-    M_BindStringVariable("winmm_midi_device", &winmm_midi_device);
-    M_BindIntVariable("winmm_complevel", &winmm_complevel);
-    M_BindIntVariable("winmm_reset_type", &winmm_reset_type);
-    M_BindIntVariable("winmm_reset_delay", &winmm_reset_delay);
-#endif
 
 #ifdef HAVE_FLUIDSYNTH
     M_BindIntVariable("fsynth_chorus_active", &fsynth_chorus_active);
