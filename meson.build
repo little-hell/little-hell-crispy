@@ -26,7 +26,7 @@ engine_dep = dependency('littlehell', required: false)
 
 # If the dependency isn't installed system-wide, build the subproject:
 if not engine_dep.found()
-    littlehell_subproj = subproject('little-hell-engine')
+    littlehell_subproj = subproject('engine')
     littlehell_dep = littlehell_subproj.get_variable('littlehell_dep')
 endif
 

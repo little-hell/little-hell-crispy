@@ -25,7 +25,7 @@
 #include "z_zone.h"
 
 
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "doomdef.h"
 #include "m_misc.h"

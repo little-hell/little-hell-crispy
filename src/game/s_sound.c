@@ -33,7 +33,7 @@
 #include "m_argv.h"
 
 #include "p_local.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 #include "z_zone.h"
 
 // when to clip out sounds

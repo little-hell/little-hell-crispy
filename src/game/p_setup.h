@@ -20,7 +20,7 @@
 #ifndef __P_SETUP__
 #define __P_SETUP__
 
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 
 extern lumpinfo_t *maplumpinfo;

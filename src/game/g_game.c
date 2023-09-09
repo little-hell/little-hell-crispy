@@ -24,6 +24,9 @@
 #include "doomkeys.h"
 #include "doomstat.h"
 
+#include "littlehell/input/input.h"
+#include "littlehell/wad/wad.h"
+
 #include "z_zone.h"
 #include "f_finale.h"
 #include "m_argv.h"
@@ -33,7 +36,6 @@
 #include "m_random.h"
 #include "i_system.h"
 #include "i_timer.h"
-#include "i_input.h"
 #include "i_swap.h"
 #include "i_video.h"
 
@@ -53,7 +55,6 @@
 // Needs access to LFB.
 #include "v_video.h"
 
-#include "w_wad.h"
 
 #include "p_local.h"
 
