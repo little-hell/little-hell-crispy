@@ -24,7 +24,7 @@
 
 #include "i_system.h"
 #include "z_zone.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "doomdef.h"
 #include "doomstat.h"

@@ -19,7 +19,7 @@
 
 #include "crispy.h"
 #include "doomstat.h"
-#include "i_input.h" // [crispy] start/stop text input
+#include "littlehell/input/input.h" // [crispy] start/stop text input
 #include "m_menu.h"  // [crispy] M_SetDefaultDifficulty()
 #include "p_local.h" // [crispy] thinkercap
 #include "s_sound.h"

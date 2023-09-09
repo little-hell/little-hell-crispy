@@ -1,0 +1,3 @@
+[submodule "subprojects/engine"]
+	path = subprojects/engine
+	url = git@github.com:little-hell/engine

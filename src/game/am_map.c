@@ -24,7 +24,7 @@
 #include "doomdef.h"
 #include "st_stuff.h"
 #include "p_local.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "m_cheat.h"
 #include "m_controls.h"

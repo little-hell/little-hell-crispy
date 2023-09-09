@@ -27,7 +27,7 @@
 #include "i_swap.h"
 #include "i_system.h"
 
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "g_game.h"
 

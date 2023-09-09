@@ -30,7 +30,7 @@
 #include "doomdef.h"
 #include "doomstat.h"
 #include "w_checksum.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "d_loop.h"
 

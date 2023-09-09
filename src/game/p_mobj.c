@@ -32,7 +32,7 @@
 #include "s_sound.h"
 #include "s_musinfo.h" // [crispy] S_ParseMusInfo()
 #include "i_swap.h"    // [crispy] SHORT()
-#include "w_wad.h"     // [crispy] W_CacheLumpNum()
+#include "littlehell/wad/wad.h"     // [crispy] W_CacheLumpNum()
 
 #include "doomstat.h"
 

@@ -31,7 +31,7 @@
 #include "g_game.h"
 
 #include "i_system.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 
 #include "doomdef.h"
 #include "p_local.h"

@@ -32,11 +32,14 @@
 #include "dstrings.h"
 #include "sounds.h"
 
-#include "d_iwad.h"
+#include "littlehell/wad/iwad.h"
+#include "littlehell/wad/wad.h"
+
+#include "littlehell/input/input.h"
+#include "littlehell/input/joystick.h"
 
 #include "z_zone.h"
 #include "w_main.h"
-#include "w_wad.h"
 #include "s_sound.h"
 #include "v_diskicon.h"
 #include "v_video.h"
@@ -52,8 +55,6 @@
 #include "p_saveg.h"
 
 #include "i_endoom.h"
-#include "i_input.h"
-#include "i_joystick.h"
 #include "i_system.h"
 #include "i_timer.h"
 #include "i_video.h"

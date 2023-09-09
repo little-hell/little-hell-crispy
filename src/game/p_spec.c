@@ -33,7 +33,7 @@
 #include "m_misc.h"
 #include "m_random.h"
 #include "v_snow.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 #include "r_swirl.h" // [crispy] R_InitDistortedFlats()
 
 #include "r_local.h"

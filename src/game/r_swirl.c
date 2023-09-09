@@ -22,7 +22,7 @@
 #include <tables.h>
 
 #include <i_system.h>
-#include <w_wad.h>
+#include "littlehell/wad/wad.h"
 #include <z_zone.h>
 
 #include "doomstat.h"

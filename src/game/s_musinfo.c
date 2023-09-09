@@ -30,7 +30,7 @@
 #include "m_misc.h"
 #include "r_defs.h"
 #include "s_sound.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 #include "z_zone.h"
 
 #include "s_musinfo.h"

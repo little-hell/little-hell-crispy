@@ -24,7 +24,7 @@
 
 #include "z_zone.h"
 
-#include "i_input.h"
+#include "littlehell/input/input.h"
 #include "i_swap.h"
 #include "i_video.h"
 
@@ -33,7 +33,7 @@
 #include "m_controls.h"
 #include "m_misc.h"
 #include "m_menu.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 #include "m_argv.h"   // [crispy] M_ParmExists()
 #include "st_stuff.h" // [crispy] ST_HEIGHT, ST_WIDESCREENDELTA
 #include "p_setup.h"  // maplumpinfo

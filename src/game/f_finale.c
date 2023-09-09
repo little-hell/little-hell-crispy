@@ -26,7 +26,7 @@
 #include "i_swap.h"
 #include "z_zone.h"
 #include "v_video.h"
-#include "w_wad.h"
+#include "littlehell/wad/wad.h"
 #include "s_sound.h"
 
 // Data.
